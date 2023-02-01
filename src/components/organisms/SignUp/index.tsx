@@ -10,7 +10,7 @@ import Radio from 'components/atoms/Input/Radio'
 
 const SignUp = () => (
     <div className='grid min-h-screen grid-cols-2 items-center gap-14'>
-        <div className='flex flex-col items-end py-10'>
+        <section className='flex flex-col items-end py-10'>
             <div className='w-[500px]'>
                 <div className='flex items-center justify-between'>
                     <Link to='/'>
@@ -63,7 +63,7 @@ const SignUp = () => (
                     </Button>
                 </div>
             </div>
-        </div>
+        </section>
         <div className='h-full w-full overflow-hidden'>
             <img src={WomamCar} className='h-full w-full object-cover' />
         </div>

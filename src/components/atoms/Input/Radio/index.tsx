@@ -1,4 +1,3 @@
-import React from 'react'
 import RadioMui, { RadioProps } from '@mui/material/Radio'
 
 const Radio = ({ ...props }: RadioProps) => {
