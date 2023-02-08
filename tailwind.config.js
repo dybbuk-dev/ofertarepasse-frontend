@@ -20,6 +20,7 @@ module.exports = {
                     500: '#737380',
                     600: '#C8C6C6',
                     700: '#E3E3E3',
+                    900: '#F9F9F9',
                 },
                 facebook: {
                     DEFAULT: '#1877F2',

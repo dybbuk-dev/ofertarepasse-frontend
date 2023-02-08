@@ -7,7 +7,7 @@ import Button from 'components/atoms/Button'
 
 const SignIn = () => (
     <div className='grid h-screen grid-cols-2 items-center gap-14'>
-        <div className='flex flex-col items-end py-10'>
+        <section className='flex flex-col items-end py-10'>
             <div className='w-[500px]'>
                 <div className='flex items-center justify-between'>
                     <Link to='/'>
@@ -44,7 +44,7 @@ const SignIn = () => (
                     </Button>
                 </div>
             </div>
-        </div>
+        </section>
         <div className='h-full w-full overflow-hidden'>
             <img src={MenCar} className='h-full w-full object-cover' />
         </div>

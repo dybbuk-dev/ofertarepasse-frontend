@@ -109,9 +109,11 @@ const Home = () => {
                         </div>
                         <div className='relative flex items-center py-8'>
                             <SearchInput placeholder='Digite marca ou modelo do carro' />
-                            <Button className='absolute right-0 top-5 !w-max !bg-primary !px-10 font-semibold text-white'>
-                                Buscar Veículos
-                            </Button>
+                            <Link to='/search'>
+                                <Button className='absolute right-0 top-5 !w-max !bg-primary !px-10 font-semibold text-white'>
+                                    Buscar Veículos
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                     <img src={MenOferta} className='h-[400px] w-[400px] object-contain' />
