@@ -13,7 +13,6 @@ interface IDefaultTemplate extends React.HTMLAttributes<HTMLDivElement> {
 const DefaultTemplate: React.FC<IDefaultTemplate> = ({
     title,
     children,
-    container = true,
     hasMenu = true,
     hasFooter = true,
     ...props
@@ -25,10 +24,7 @@ const DefaultTemplate: React.FC<IDefaultTemplate> = ({
     return (
         <div>
             {hasMenu ? <Menu /> : null}
-            <main
-                className={`${container ? 'container mx-auto' : ''} ${props.className}`}
-                {...props}
-            >
+            <main className={`${props.className ?? ''}`} {...props}>
                 {children}
             </main>
             {hasFooter ? <Footer /> : null}
