@@ -14,7 +14,7 @@ const Input = ({ type, className = '', classInput, ...props }: IInput) => {
             className={`relative flex w-full items-center rounded-full border border-gray-400 py-3 px-5 ${className}`}
         >
             <input
-                className={`w-full text-[14px] text-gray-300 outline-none ${classInput}`}
+                className={`w-full bg-transparent text-[14px] text-gray-300 outline-none ${classInput}`}
                 type={visible ? 'text' : type}
                 {...props}
             />

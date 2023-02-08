@@ -51,15 +51,8 @@ const SignUp = () => (
                     </RadioGroup>
                     <Input placeholder='example@example.com' className='mb-3' />
                     <Input placeholder='********' />
-                    <div className='my-5 flex justify-end'>
-                        <Link to='#'>
-                            <span className='text-[13px] font-medium text-gray-400 underline underline-offset-2'>
-                                Esqueci minha senha
-                            </span>
-                        </Link>
-                    </div>
-                    <Button className='bg-primary text-left font-semibold text-white'>
-                        Entrar
+                    <Button className='mt-3 bg-primary text-left font-semibold text-white'>
+                        Criar conta
                     </Button>
                 </div>
             </div>

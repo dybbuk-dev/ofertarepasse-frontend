@@ -90,77 +90,89 @@ const Footer = () => {
     ]
 
     return (
-        <footer className='container mx-auto'>
-            <section className='mt-24'>
-                <div className='mb-10 flex items-center justify-between font-medium'>
-                    <p>Recomendados para você</p>
-                    <Link to='/'>
-                        <span className='text-primary'>Ver todos veículos disponíveis</span>
-                    </Link>
-                </div>
-                <div className='grid grid-cols-5 gap-5'>
-                    {forYou.map((item) => (
-                        <Link to={`/info/${item.id}`} key={item.id}>
-                            <Card data={item} />
+        <footer>
+            <section className='container mx-auto'>
+                <section className='mt-24'>
+                    <div className='mb-10 flex items-center justify-between font-medium'>
+                        <p>Recomendados para você</p>
+                        <Link to='/'>
+                            <span className='text-primary'>Ver todos veículos disponíveis</span>
                         </Link>
-                    ))}
-                </div>
-            </section>
-            <section className='mt-24 mb-[200px] flex items-center justify-center'>
-                <div className='grid w-[85%] grid-cols-2 items-center justify-items-center'>
-                    <p className='text-4xl font-semibold text-gray-200'>
-                        Cuide melhor do seu <br />
-                        veículo e <span className='text-primary'>economize muito.</span>
-                    </p>
-                    <div className='flex items-center justify-center gap-8'>
-                        <img src={MenWithPhone} />
-                        <div>
-                            <p className='font-medium text-gray-200'>
-                                Conheça o Blog Oficial
-                                <br /> do OfertaRepasse.
-                            </p>
-                            <Button className='mt-4 bg-primary text-white'>Conhecer Blog</Button>
+                    </div>
+                    <div className='grid grid-cols-5 gap-5'>
+                        {forYou.map((item) => (
+                            <Link to={`/info/${item.id}`} key={item.id}>
+                                <Card data={item} />
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+                <section className='mt-24 mb-[200px] flex items-center justify-center'>
+                    <div className='grid h-[330px] w-full grid-cols-2 items-center justify-items-center rounded-2xl bg-gray-900'>
+                        <p className='text-4xl font-semibold text-gray-200'>
+                            Cuide melhor do seu <br />
+                            veículo e <span className='text-primary'>economize muito.</span>
+                        </p>
+                        <div className='relative flex h-full w-full items-center justify-center'>
+                            <img src={MenWithPhone} className='absolute bottom-0 right-[55%]' />
+                            <div className='ml-[200px]'>
+                                <p className='font-medium text-gray-200'>
+                                    Conheça o Blog Oficial
+                                    <br /> do OfertaRepasse.
+                                </p>
+                                <Button className='mt-4 bg-primary text-white'>
+                                    Conhecer Blog
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </section>
-            <div className='grid grid-cols-6'>
-                {items.map((item) => (
-                    <div key={item.title}>
-                        <p className='mb-6 text-xl font-semibold text-gray-200'>{item.title}</p>
-                        <div className='flex flex-col'>
-                            {item.items.map((link, index) => (
-                                <Link to='/' key={index}>
-                                    <span
-                                        className={
-                                            'ease text-sm font-medium text-gray-200 duration-200 hover:text-primary'
-                                        }
-                                    >
-                                        {link}
+            <section className='border-t border-[#f4f4f4] pt-[100px]'>
+                <div className='container mx-auto'>
+                    <div className='grid grid-cols-6'>
+                        {items.map((item) => (
+                            <div key={item.title}>
+                                <p className='mb-6 text-sm font-semibold text-gray-200'>
+                                    {item.title}
+                                </p>
+                                <div className='flex flex-col'>
+                                    {item.items.map((link, index) => (
+                                        <Link to='/' key={index}>
+                                            <span
+                                                className={
+                                                    'ease text-sm font-medium text-gray-200 duration-200 hover:text-primary'
+                                                }
+                                            >
+                                                {link}
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                        <div className='col-span-5 flex items-center justify-between text-sm'>
+                            <p className='font-medium'>
+                                Atendimento de <strong>Segunda a Sexta</strong> 07:30 ás 18:00 -{' '}
+                                <strong>Sábado</strong> 07:30 ás 12:00
+                            </p>
+                            <p>
+                                Fale com nosso time{' '}
+                                <Link to='/'>
+                                    <span className='font-semibold text-primary'>
+                                        Iniciar Chat Online
                                     </span>
                                 </Link>
-                            ))}
+                            </p>
                         </div>
                     </div>
-                ))}
-                <div className='col-span-5 flex items-center justify-between'>
-                    <p className='font-medium'>
-                        Atendimento de <strong>Segunda a Sexta</strong> 07:30 ás 18:00 -{' '}
-                        <strong>Sábado</strong> 07:30 ás 12:00
-                    </p>
-                    <p>
-                        Fale com nosso time{' '}
-                        <Link to='/'>
-                            <span className='font-semibold text-primary'>Iniciar Chat Online</span>
-                        </Link>
-                    </p>
+                    <div className='mt-8 border-t border-[#ECECEC] py-10'>
+                        <span className='text-sm font-medium text-gray-200'>
+                            OfertaRepasse. Todos Direitos Reservados.
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div className='mt-8 py-4'>
-                <span className='font-medium text-gray-200'>
-                    OfertaRepasse. Todos Direitos Reservados.
-                </span>
-            </div>
+            </section>
         </footer>
     )
 }

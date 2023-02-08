@@ -84,92 +84,100 @@ const Home = () => {
 
     return (
         <DefaultTemplate>
-            <section className='mt-24'>
-                <p className='text-[2.7rem] font-bold'>
-                    Veículos com valores abaixo da FIPE é só na{' '}
-                    <span className='text-primary'>ofertarepasse.</span>
-                </p>
-                <p className='text-[2.3rem] text-primary'>
-                    Bom pra quem vende, ótimo pra quem compra.
-                </p>
-                <div className='grid grid-cols-[1fr_auto] items-center gap-16 px-[3vw]'>
-                    <div>
-                        <div className='flex items-center gap-5 border-b border-gray-700 py-4'>
-                            {itemsBuy.map((item, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setOptionBuy(item.value)}
-                                    className={`ease font-medium capitalize duration-200 ${
-                                        item.value === optionBuy ? 'text-primary' : 'text-gray-500'
-                                    }`}
-                                >
-                                    {item.label}
-                                </button>
-                            ))}
+            <section className='w-full bg-gray-900 pt-[250px]'>
+                <div className='container mx-auto'>
+                    <p className='text-[2.7rem] font-bold'>
+                        Veículos com valores abaixo da FIPE é só na{' '}
+                        <span className='text-primary'>ofertarepasse.</span>
+                    </p>
+                    <p className='text-[2.3rem] text-primary'>
+                        Bom pra quem vende, ótimo pra quem compra.
+                    </p>
+                    <div className='grid grid-cols-[1fr_auto] items-center gap-16'>
+                        <div className='rounded-2xl bg-white py-8'>
+                            <div className='mx-8 flex items-center gap-5 border-b border-gray-700 pb-4'>
+                                {itemsBuy.map((item, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setOptionBuy(item.value)}
+                                        className={`ease font-medium capitalize duration-200 ${
+                                            item.value === optionBuy
+                                                ? 'text-primary'
+                                                : 'text-gray-500'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className='relative pt-10'>
+                                <SearchInput placeholder='Digite marca ou modelo do carro' />
+                                <Link to='/search'>
+                                    <Button className='absolute right-5 top-6 !w-max !bg-primary !px-10 font-semibold text-white'>
+                                        Buscar Veículos
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
-                        <div className='relative flex items-center py-8'>
-                            <SearchInput placeholder='Digite marca ou modelo do carro' />
-                            <Link to='/search'>
-                                <Button className='absolute right-0 top-5 !w-max !bg-primary !px-10 font-semibold text-white'>
-                                    Buscar Veículos
-                                </Button>
-                            </Link>
-                        </div>
+                        <img src={MenOferta} className='h-[400px] w-[400px] object-contain' />
                     </div>
-                    <img src={MenOferta} className='h-[400px] w-[400px] object-contain' />
                 </div>
             </section>
-            <section className='mt-24'>
-                <div className='mb-10 flex items-center justify-between font-medium'>
-                    <p>Anúncios em Destaque</p>
-                    <Link to='/'>
-                        <span className='text-primary'>Ver todos veículos disponíveis</span>
-                    </Link>
-                </div>
-                <div className='grid grid-cols-5 gap-5'>
-                    {items.map((item) => (
-                        <Link to={`/info/${item.id}`} key={item.id}>
-                            <Card data={item} />
+            <section className='container mx-auto'>
+                <section className='mt-24'>
+                    <div className='mb-10 flex items-center justify-between font-medium'>
+                        <p>Anúncios em Destaque</p>
+                        <Link to='/'>
+                            <span className='text-primary'>Ver todos veículos disponíveis</span>
                         </Link>
-                    ))}
-                </div>
-            </section>
-            <section className='mt-24'>
-                <div className='flex items-center justify-between'>
-                    <p className='text-lg font-medium text-gray-200'>A Marca do seu novo veículo</p>
-                    <div className='grid grid-cols-7 items-center justify-items-end'>
-                        {brands.map((brand, index) => (
-                            <img key={index} src={brand} className='w-[70%] object-contain' />
+                    </div>
+                    <div className='grid grid-cols-5 gap-5'>
+                        {items.map((item) => (
+                            <Link to={`/info/${item.id}`} key={item.id}>
+                                <Card data={item} />
+                            </Link>
                         ))}
                     </div>
-                </div>
-            </section>
-            <section className='mt-24'>
-                <div className='grid grid-cols-2 rounded-xl bg-gradient-to-r from-secondary to-primary'>
-                    <div className='p-10'>
-                        <p className='text-3xl font-semibold text-white'>
-                            Bom pra quem vende. <br />
-                            Ótimo pra quem compra.
+                </section>
+                <section className='mt-24'>
+                    <div className='flex items-center justify-between rounded-2xl border-[3px] border-gray-900 py-8 px-10'>
+                        <p className='text-lg font-medium text-gray-200'>
+                            A Marca do seu novo veículo
                         </p>
-                        <p className='mt-4 mb-10 font-medium text-white'>
-                            Encontre motos e carros com valores abaixo da tabela fipe.
-                        </p>
-                        <div className='flex items-center gap-4'>
-                            <Button className='!bg-white py-5 font-semibold text-primary'>
-                                Encontrar meu veículo
-                            </Button>
-                            <Button className='!bg-secondary py-5 font-semibold text-white'>
-                                Vender meu veículo
-                            </Button>
+                        <div className='grid grid-cols-7 items-center justify-items-end'>
+                            {brands.map((brand, index) => (
+                                <img key={index} src={brand} className='w-[70%] object-contain' />
+                            ))}
                         </div>
                     </div>
-                    <div className='relative flex items-center justify-center'>
-                        <img
-                            src={MenWithWoman}
-                            className='absolute bottom-0 w-[345px] object-contain'
-                        />
+                </section>
+                <section className='mt-36'>
+                    <div className='grid grid-cols-2 rounded-xl bg-gradient-to-r from-secondary to-[#ff9d57]'>
+                        <div className='p-14'>
+                            <p className='text-3xl font-semibold text-white'>
+                                Bom pra quem vende. <br />
+                                Ótimo pra quem compra.
+                            </p>
+                            <p className='mt-4 mb-10 font-medium text-white'>
+                                Encontre motos e carros com valores abaixo da tabela fipe.
+                            </p>
+                            <div className='flex items-center gap-4'>
+                                <Button className='!bg-white !py-5 font-semibold text-primary'>
+                                    Encontrar meu veículo
+                                </Button>
+                                <Button className='!bg-secondary !py-5 font-semibold text-white'>
+                                    Vender meu veículo
+                                </Button>
+                            </div>
+                        </div>
+                        <div className='relative flex items-center justify-center'>
+                            <img
+                                src={MenWithWoman}
+                                className='absolute bottom-0 w-[345px] object-contain'
+                            />
+                        </div>
                     </div>
-                </div>
+                </section>
             </section>
         </DefaultTemplate>
     )
