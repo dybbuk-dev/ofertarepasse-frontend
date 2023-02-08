@@ -19,13 +19,19 @@ const Search = () => {
         marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
         vendedor: ['Concessionária', 'Loja', 'Pessoa Física'],
         opcionais: ['Airbag', 'Alarme', 'Ar Condicionado', 'Ar Quente'],
-        cambio: ['Automática', 'Automática Sequencial', 'Automatizada', 'Automatizada dct'],
+        cambio: [
+            'Automática',
+            'Automática Sequencial',
+            'Automatizada',
+            'Automatizada dct',
+            'Manual',
+        ],
         combustivel: ['Álcool', 'Álcool e gás natural', 'Diesel', 'Gás Natural'],
         finalPlaca: ['1 e 2', '3 e 4', '5 e 6', '7 e 8', '9 e 0'],
         blindagem: ['Sim', 'Não'],
         cores: ['Amarelo', 'Azul', 'Bege', 'Branco'],
         carroceria: ['Sedã', 'Utilitário Esportivo', 'Cupê'],
-        caracteristicas: ['Aceita Troca', 'Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
+        caracteristicas: ['Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
     }
 
     const items = [
@@ -104,8 +110,8 @@ const Search = () => {
     ]
 
     return (
-        <div>
-            <section className='grid grid-cols-[300px_1fr] items-center'>
+        <div className='bg-gray-900'>
+            <section className='container mx-auto mt-[150px] grid grid-cols-[300px_1fr] items-center border-y border-gray-700 py-10'>
                 <button className='flex items-center gap-2 text-gray-400'>
                     <IoLocationOutline className='text-lg' />
                     <span className='underline underline-offset-2'>Escolha uma Localização</span>
@@ -165,7 +171,7 @@ const Search = () => {
                             <div className='ease h-[7px] w-[15px] rounded border border-gray-500 duration-200' />
                         </button>
                         <button onClick={() => setVisibleFilter(!visibleFilter)}>
-                            <Filter />
+                            <Filter color={visibleFilter ? '#484854' : '#F3722C'} />
                         </button>
                         <button className='ml-5 flex items-center gap-[2px] text-sm text-gray-200'>
                             Mais Relevantes
@@ -175,11 +181,11 @@ const Search = () => {
                 </div>
             </section>
             <section
-                className={`mt-10 grid gap-8 ${
-                    visibleFilter ? 'grid-cols-[300px_1fr]' : 'grid-cols-1'
-                } border-t border-gray-700 py-10`}
+                className={`container mx-auto grid gap-8 ${
+                    visibleFilter ? 'grid-cols-[325px_1fr]' : 'grid-cols-1'
+                }`}
             >
-                <div className={visibleFilter ? 'block' : 'hidden'}>
+                <div className={visibleFilter ? 'block bg-white py-10 px-3' : 'hidden'}>
                     <div className='border-b border-gray-700 pb-10'>
                         <p className='text-sm font-medium text-gray-200'>Marcas</p>
                         <div className='my-3 flex flex-col'>
@@ -263,40 +269,6 @@ const Search = () => {
                         </div>
                     </div>
                     <div className='border-b border-gray-700 py-10'>
-                        <p className='text-sm font-medium text-gray-200'>Vendedor</p>
-                        <div className='my-3 flex flex-col'>
-                            {checkboxFields.vendedor.map((item) => (
-                                <label
-                                    key={item}
-                                    role='button'
-                                    className='text-sm font-medium text-gray-400'
-                                >
-                                    <Checkbox />
-                                    {item}
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='text-sm font-medium text-gray-200'>Opcionais</p>
-                        <div className='my-3 flex flex-col'>
-                            {checkboxFields.opcionais.map((item) => (
-                                <label
-                                    key={item}
-                                    role='button'
-                                    className='text-sm font-medium text-gray-400'
-                                >
-                                    <Checkbox />
-                                    {item}
-                                </label>
-                            ))}
-                        </div>
-                        <button className='flex items-center gap-1 text-sm font-semibold text-gray-400'>
-                            Ver todos os opcionais
-                            <IoChevronForwardOutline />
-                        </button>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
                         <p className='text-sm font-medium text-gray-200'>Câmbio</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.cambio.map((item) => (
@@ -316,40 +288,6 @@ const Search = () => {
                         </button>
                     </div>
                     <div className='border-b border-gray-700 py-10'>
-                        <p className='text-sm font-medium text-gray-200'>Combustível</p>
-                        <div className='my-3 flex flex-col'>
-                            {checkboxFields.combustivel.map((item) => (
-                                <label
-                                    key={item}
-                                    role='button'
-                                    className='text-sm font-medium text-gray-400'
-                                >
-                                    <Checkbox />
-                                    {item}
-                                </label>
-                            ))}
-                        </div>
-                        <button className='flex items-center gap-1 text-sm font-semibold text-gray-400'>
-                            Ver todos os combustível
-                            <IoChevronForwardOutline />
-                        </button>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='text-sm font-medium text-gray-200'>Final da Placa</p>
-                        <div className='my-3 flex flex-col'>
-                            {checkboxFields.finalPlaca.map((item) => (
-                                <label
-                                    key={item}
-                                    role='button'
-                                    className='text-sm font-medium text-gray-400'
-                                >
-                                    <Checkbox />
-                                    {item}
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
                         <p className='text-sm font-medium text-gray-200'>Blindagem</p>
                         <div className='my-3 flex items-center gap-4'>
                             {checkboxFields.blindagem.map((item) => (
@@ -363,44 +301,6 @@ const Search = () => {
                                 </label>
                             ))}
                         </div>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='text-sm font-medium text-gray-200'>Cores</p>
-                        <div className='my-3 flex flex-col'>
-                            {checkboxFields.cores.map((item) => (
-                                <label
-                                    key={item}
-                                    role='button'
-                                    className='text-sm font-medium text-gray-400'
-                                >
-                                    <Checkbox />
-                                    {item}
-                                </label>
-                            ))}
-                        </div>
-                        <button className='flex items-center gap-1 text-sm font-semibold text-gray-400'>
-                            Ver todas as cores
-                            <IoChevronForwardOutline />
-                        </button>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='text-sm font-medium text-gray-200'>Cores</p>
-                        <div className='my-3 flex flex-col'>
-                            {checkboxFields.cores.map((item) => (
-                                <label
-                                    key={item}
-                                    role='button'
-                                    className='text-sm font-medium text-gray-400'
-                                >
-                                    <Checkbox />
-                                    {item}
-                                </label>
-                            ))}
-                        </div>
-                        <button className='flex items-center gap-1 text-sm font-semibold text-gray-400'>
-                            Ver todas as cores
-                            <IoChevronForwardOutline />
-                        </button>
                     </div>
                     <div className='border-b border-gray-700 py-10'>
                         <p className='text-sm font-medium text-gray-200'>Carroceria</p>
@@ -440,23 +340,29 @@ const Search = () => {
                             <IoChevronForwardOutline />
                         </button>
                     </div>
-                    <div className='border-b border-gray-700 py-7'>
-                        <label role='button' className='text-sm font-medium text-gray-400'>
-                            <Checkbox />
-                            Apenas anúncios com foto
-                        </label>
-                    </div>
                     <button className='mt-8 flex items-center gap-2 text-gray-400'>
                         Limpar filtros
                         <IoCloseOutline />
                     </button>
                 </div>
-                <div className={`${'grid-cols-' + amountColums} grid h-max gap-x-4 gap-y-8`}>
-                    {items.map((item) => (
-                        <Link to={`/info/${item.id}`} key={item.id} className='h-max'>
-                            <Card data={item} inline={amountColums === 1} />
-                        </Link>
-                    ))}
+                <div className={`${!visibleFilter ? 'flex justify-center' : ''}`}>
+                    <div
+                        className={`${
+                            'grid-cols-' + amountColums
+                        } mt-10 grid h-max gap-x-4 gap-y-8 ${
+                            !visibleFilter ? 'max-w-[1200px]' : ''
+                        }`}
+                    >
+                        {items.map((item) => (
+                            <Link to={`/info/${item.id}`} key={item.id} className='h-max'>
+                                <Card
+                                    data={item}
+                                    inline={amountColums === 1}
+                                    inverseColors={true}
+                                />
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </section>
         </div>
