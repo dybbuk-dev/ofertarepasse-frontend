@@ -5,6 +5,7 @@ import SignIn from 'pages/SignIn'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import SignUp from 'pages/SignUp'
 import Home from 'pages/Home'
+import HomeDashboard from 'pages/Dashboard/Home'
 import Info from 'pages/Info'
 import Search from 'pages/Search'
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
     {
         path: '/info/:id',
         element: <Info />,
+    },
+    {
+        path: '/dashboard',
+        element: <HomeDashboard />,
     },
 ])
 
