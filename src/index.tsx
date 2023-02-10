@@ -8,6 +8,8 @@ import Home from 'pages/Home'
 import HomeDashboard from 'pages/Dashboard/Home'
 import Info from 'pages/Info'
 import Search from 'pages/Search'
+import Advertiser from 'pages/Dashboard/Advertiser'
+import Customers from 'pages/Dashboard/Customers'
 
 const router = createBrowserRouter([
     {
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
     {
         path: '/dashboard',
         element: <HomeDashboard />,
+    },
+    {
+        path: '/dashboard/advertiser',
+        element: <Advertiser />,
+    },
+    {
+        path: '/dashboard/customers',
+        element: <Customers />,
     },
 ])
 

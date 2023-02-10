@@ -5,7 +5,7 @@ import User from 'assets/icon/User'
 import PieChart from 'assets/icon/PieChart'
 import GridSmall from 'assets/icon/GridSmall'
 import UserCircle from 'assets/icon/UserCircle'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const MenuDasboard = () => {
     const location = useLocation()
@@ -19,12 +19,12 @@ const MenuDasboard = () => {
         {
             icon: <UserCircle />,
             label: 'Anunciantes',
-            href: '',
+            href: '/dashboard/advertiser',
         },
         {
             icon: <User />,
             label: 'Clientes',
-            href: '',
+            href: '/dashboard/customers',
         },
         {
             icon: <PieChart />,
@@ -51,19 +51,26 @@ const MenuDasboard = () => {
             <div className='flex min-h-[calc(100vh-100px)] w-full flex-col justify-between rounded-r-2xl bg-white py-7 px-5'>
                 <div>
                     {buttons.map((item, index) => (
-                        <button
-                            key={index}
-                            className={`mb-4 grid w-full grid-cols-[20px_1fr] items-center gap-3 rounded-lg px-5 py-4 ${
-                                location.pathname === item.href
-                                    ? 'bg-primary-opacity-100 text-primary'
-                                    : 'text-gray-200'
-                            }`}
-                        >
-                            <div className='flex items-center justify-center text-xl'>
-                                {item.icon}
-                            </div>
-                            <p className='text-left text-sm'>{item.label}</p>
-                        </button>
+                        <Link key={index} to={item.href}>
+                            <button
+                                className={`mb-4 grid w-full grid-cols-[20px_1fr] items-center gap-3 rounded-lg px-5 py-4 ${
+                                    location.pathname === item.href
+                                        ? 'bg-primary-opacity-100 text-primary'
+                                        : 'text-gray-200'
+                                }`}
+                            >
+                                <div
+                                    className={`flex items-center justify-center text-xl ${
+                                        location.pathname === item.href
+                                            ? '[&>svg>path]:fill-primary'
+                                            : '[&>svg>path]:fill-gray-200'
+                                    }`}
+                                >
+                                    {item.icon}
+                                </div>
+                                <p className='text-left text-sm'>{item.label}</p>
+                            </button>
+                        </Link>
                     ))}
                 </div>
                 <div className='flex flex-col gap-3 px-5'>

@@ -35,6 +35,9 @@ module.exports = {
             fontFamily: {
                 inter: ['Inter', 'sans-serif'],
             },
+            fontSize: {
+                smd: '15px',
+            },
         },
     },
     plugins: [],

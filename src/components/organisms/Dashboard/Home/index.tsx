@@ -54,7 +54,7 @@ const HomeDashboard = () => {
                         color: '#17171B',
                     },
                 },
-                data: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'],
+                data: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado', 'Domingo'],
             },
         ],
         yAxis: [
@@ -73,14 +73,14 @@ const HomeDashboard = () => {
             {
                 name: 'Usuários Ativos',
                 type: 'bar',
-                barGap: 2,
+                barGap: 1.3,
                 itemStyle: {
                     color: '#F3722C',
                 },
                 emphasis: {
                     focus: 'series',
                 },
-                data: [320, 332, 301, 334, 390],
+                data: [425, 332, 301, 334, 390, 900, 300],
                 barWidth: 5,
                 label: {
                     fontSize: 20,
@@ -95,7 +95,7 @@ const HomeDashboard = () => {
                 itemStyle: {
                     color: '#83BF6E',
                 },
-                data: [220, 182, 191, 234, 290],
+                data: [220, 182, 191, 234, 290, 500, 500],
                 barWidth: 5,
             },
             {
@@ -107,7 +107,7 @@ const HomeDashboard = () => {
                 itemStyle: {
                     color: '#484854',
                 },
-                data: [150, 232, 201, 154, 190],
+                data: [150, 232, 201, 154, 190, 600, 250],
                 barWidth: 5,
             },
         ],
