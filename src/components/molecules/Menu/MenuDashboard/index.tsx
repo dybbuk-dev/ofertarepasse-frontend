@@ -29,17 +29,17 @@ const MenuDasboard = () => {
         {
             icon: <PieChart />,
             label: 'Negociação',
-            href: '',
+            href: '/dashboard/negotiations',
         },
         {
             icon: <Money />,
             label: 'Vendidos',
-            href: '',
+            href: '/dashboard/sold',
         },
         {
             icon: <GridSmall />,
             label: 'Anúncios',
-            href: '',
+            href: '/dashboard/adverts',
         },
     ]
 

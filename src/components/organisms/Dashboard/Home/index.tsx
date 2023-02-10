@@ -1,6 +1,6 @@
 import { IoArrowDownOutline, IoArrowUpOutline, IoChevronUpOutline } from 'react-icons/io5'
 import ReactECharts from 'echarts-for-react'
-import * as React from 'react'
+import CountUp from 'react-countup'
 
 const HomeDashboard = () => {
     const negotiations = [
@@ -121,7 +121,11 @@ const HomeDashboard = () => {
                 <div className='mt-10 grid grid-cols-3 rounded-2xl bg-white py-10 px-16'>
                     <div>
                         <div className='flex items-center gap-1'>
-                            <span className='text-6xl font-medium'>968</span>
+                            <CountUp start={0} end={968} duration={1}>
+                                {({ countUpRef }) => (
+                                    <span className='text-6xl font-medium' ref={countUpRef} />
+                                )}
+                            </CountUp>
                             <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-green'>
                                 <IoArrowUpOutline />
                                 28%
@@ -131,7 +135,11 @@ const HomeDashboard = () => {
                     </div>
                     <div className='justify-self-center'>
                         <div className='flex items-center gap-1'>
-                            <span className='text-6xl font-medium'>1.268</span>
+                            <CountUp start={0} end={1268} duration={1}>
+                                {({ countUpRef }) => (
+                                    <span className='text-6xl font-medium' ref={countUpRef} />
+                                )}
+                            </CountUp>
                             <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-green'>
                                 <IoArrowUpOutline />
                                 15%
@@ -141,7 +149,11 @@ const HomeDashboard = () => {
                     </div>
                     <div className='justify-self-end'>
                         <div className='flex items-center gap-1'>
-                            <span className='text-6xl font-medium'>688</span>
+                            <CountUp start={0} end={688} duration={1}>
+                                {({ countUpRef }) => (
+                                    <span className='text-6xl font-medium' ref={countUpRef} />
+                                )}
+                            </CountUp>
                             <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-red-500'>
                                 <IoArrowDownOutline />
                                 10%

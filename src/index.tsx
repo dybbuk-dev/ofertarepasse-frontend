@@ -10,6 +10,9 @@ import Info from 'pages/Info'
 import Search from 'pages/Search'
 import Advertiser from 'pages/Dashboard/Advertiser'
 import Customers from 'pages/Dashboard/Customers'
+import Negotiations from 'pages/Dashboard/Negotiations'
+import Sold from 'pages/Dashboard/Sold'
+import Adverts from 'pages/Dashboard/Adverts'
 
 const router = createBrowserRouter([
     {
@@ -43,6 +46,18 @@ const router = createBrowserRouter([
     {
         path: '/dashboard/customers',
         element: <Customers />,
+    },
+    {
+        path: '/dashboard/negotiations',
+        element: <Negotiations />,
+    },
+    {
+        path: '/dashboard/sold',
+        element: <Sold />,
+    },
+    {
+        path: '/dashboard/adverts',
+        element: <Adverts />,
     },
 ])
 

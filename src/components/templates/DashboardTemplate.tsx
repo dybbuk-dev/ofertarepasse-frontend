@@ -24,7 +24,7 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
                 <div className='flex h-[100px] items-center rounded-b-2xl bg-white px-10'>
                     <InputSimple placeholder='Pesquise por usuários, anúncios, clientes, negociações...' />
                     <div className='flex items-center justify-end'>
-                        <Button className='flex w-[225px] items-center justify-center !bg-primary-opacity-100 text-sm font-medium text-primary'>
+                        <Button className='flex w-max items-center justify-center whitespace-nowrap !bg-primary-opacity-100 text-sm font-medium text-primary'>
                             <IoAddOutline className='text-2xl' />
                             Criar anúncio
                         </Button>
