@@ -74,7 +74,9 @@ const MenuDasboard = () => {
                     ))}
                 </div>
                 <div className='flex flex-col gap-3 px-5'>
-                    <button className='text-left text-sm text-gray-100'>Configurações</button>
+                    <Link to='/dashboard/configations'>
+                        <button className='text-left text-sm text-gray-100'>Configurações</button>
+                    </Link>
                     <button className='text-left text-sm text-gray-100'>Suporte</button>
                     <button className='text-left text-sm text-gray-100'>Sair</button>
                 </div>

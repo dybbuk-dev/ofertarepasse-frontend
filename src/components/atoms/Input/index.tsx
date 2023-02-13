@@ -3,7 +3,7 @@ import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5'
 
 interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
     type?: React.InputHTMLAttributes<HTMLInputElement>['type']
-    classInput?: string
+    classInput?: React.InputHTMLAttributes<HTMLInputElement>['className']
 }
 
 const Input = ({ type, className = '', classInput, ...props }: IInput) => {

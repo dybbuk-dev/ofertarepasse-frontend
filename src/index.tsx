@@ -13,6 +13,7 @@ import Customers from 'pages/Dashboard/Customers'
 import Negotiations from 'pages/Dashboard/Negotiations'
 import Sold from 'pages/Dashboard/Sold'
 import Adverts from 'pages/Dashboard/Adverts'
+import Configurations from 'pages/Dashboard/Configurations'
 
 const router = createBrowserRouter([
     {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
     {
         path: '/dashboard/adverts',
         element: <Adverts />,
+    },
+    {
+        path: '/dashboard/configations',
+        element: <Configurations />,
     },
 ])
 
