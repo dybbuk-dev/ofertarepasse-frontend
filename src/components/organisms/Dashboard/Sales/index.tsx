@@ -5,13 +5,20 @@ import { MdOutlineCloudDownload } from 'react-icons/md'
 import InputSimple from 'components/atoms/Input/Simple'
 import MenInCar from 'assets/images/men_in_car.png'
 import Checkbox from 'components/atoms/Input/Checkbox'
+import {
+    IoCloseCircleOutline,
+    IoCreateOutline,
+    IoDocumentOutline,
+    IoPencil,
+    IoTrashOutline,
+} from 'react-icons/io5'
 
 const Adverts = () => {
     const [filter, setFilter] = React.useState({
         action: '',
     })
 
-    const titlesTable = ['', 'Veículo', 'Valor', 'Anunciante', 'Cliente', 'Status', 'ID']
+    const titlesTable = ['', 'Veículo', 'Valor', 'Status', 'Cliente', 'Criado em']
 
     const items = [
         {
@@ -29,138 +36,12 @@ const Adverts = () => {
                 image: MenInCar,
                 name: 'Ibisem Alves',
             },
-            status: 'Finalizada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Finalizada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Finalizada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Ag. Sinal',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Cancelada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Finalizada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Sinal Pago',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
             status: 'Processando',
-            id: 12345,
+            createdAt: new Date(),
         },
         {
             vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
                 title: 'Honda Civic',
                 description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             },
@@ -173,8 +54,8 @@ const Adverts = () => {
                 image: MenInCar,
                 name: 'Ibisem Alves',
             },
-            status: 'Ag. Sinal',
-            id: 12345,
+            status: 'Sinal Pago',
+            createdAt: new Date(),
         },
         {
             vehicle: {
@@ -192,7 +73,43 @@ const Adverts = () => {
                 name: 'Ibisem Alves',
             },
             status: 'Finalizada',
-            id: 12345,
+            createdAt: new Date(),
+        },
+        {
+            vehicle: {
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
+                title: 'Honda Civic',
+                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
+            },
+            value: 89.9,
+            advertiser: {
+                image: MenInCar,
+                name: 'Italo Eduardo',
+            },
+            customer: {
+                image: MenInCar,
+                name: 'Ibisem Alves',
+            },
+            status: 'Cancelada',
+            createdAt: new Date(),
+        },
+        {
+            vehicle: {
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
+                title: 'Honda Civic',
+                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
+            },
+            value: 89.9,
+            advertiser: {
+                image: MenInCar,
+                name: 'Italo Eduardo',
+            },
+            customer: {
+                image: MenInCar,
+                name: 'Ibisem Alves',
+            },
+            status: 'Em Análise',
+            createdAt: new Date(),
         },
         {
             vehicle: {
@@ -210,7 +127,25 @@ const Adverts = () => {
                 name: 'Ibisem Alves',
             },
             status: 'Finalizada',
-            id: 12345,
+            createdAt: new Date(),
+        },
+        {
+            vehicle: {
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
+                title: 'Honda Civic',
+                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
+            },
+            value: 89.9,
+            advertiser: {
+                image: MenInCar,
+                name: 'Italo Eduardo',
+            },
+            customer: {
+                image: MenInCar,
+                name: 'Ibisem Alves',
+            },
+            status: 'Finalizada',
+            createdAt: new Date(),
         },
         {
             vehicle: {
@@ -228,43 +163,7 @@ const Adverts = () => {
                 name: 'Ibisem Alves',
             },
             status: 'Cancelada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Sinal Pago',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Ag. Sinal',
-            id: 12345,
+            createdAt: new Date(),
         },
         {
             vehicle: {
@@ -281,26 +180,8 @@ const Adverts = () => {
                 image: MenInCar,
                 name: 'Ibisem Alves',
             },
-            status: 'Cancelada',
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://blog.nakata.com.br/wp-content/uploads/2020/08/post_thumbnail-1f77e8996174df4fb19587977331de22-780x450.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Sinal Pago',
-            id: 12345,
+            status: 'Em Análise',
+            createdAt: new Date(),
         },
     ]
 
@@ -308,9 +189,9 @@ const Adverts = () => {
         <div>
             <div className='flex items-center justify-between'>
                 <div>
-                    <span className='text-3xl font-light text-gray-200'>Minhas Negociações</span>
+                    <span className='text-3xl font-light text-gray-200'>Minhas Vendas</span>
                     <p className='mt-3 text-sm text-gray-200'>
-                        Total de <span className='font-semibold'>73</span> registros entre{' '}
+                        Total de <span className='font-semibold'>13</span> registros entre{' '}
                         <span className='font-semibold'>05/12/2022</span> e{' '}
                         <span className='font-semibold'>04/01/2023</span>
                     </p>
@@ -384,7 +265,6 @@ const Adverts = () => {
                                 statusColor.text = '#FF6A55'
                                 statusColor.background = '#FEF8F4'
                                 break
-
                             case 'sinal pago':
                                 statusColor.text = '#6E8ABF'
                                 statusColor.background = '#ECF2FF'
@@ -423,26 +303,6 @@ const Adverts = () => {
                                         R${item.value.toFixed(3)}
                                     </span>
                                 </td>
-                                <td className='flex w-max items-center justify-between py-6'>
-                                    <div className='flex w-max items-center gap-2'>
-                                        <img
-                                            src={item.advertiser.image}
-                                            alt={`Foto de ${item.advertiser}`}
-                                            className='h-[35px] w-[35px] rounded-full object-cover'
-                                        />
-                                        <p className='text-black'>{item.advertiser.name}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-2 py-6'>
-                                        <img
-                                            src={item.customer.image}
-                                            alt={`Foto de ${item.customer}`}
-                                            className='h-[35px] w-[35px] rounded-full object-cover'
-                                        />
-                                        <p className='text-black'>{item.customer.name}</p>
-                                    </div>
-                                </td>
                                 <td>
                                     <div
                                         className='flex w-max items-center gap-2 rounded-full px-4 py-1 text-sm'
@@ -458,12 +318,43 @@ const Adverts = () => {
                                             }}
                                         />
                                         <span>{item.status}</span>
+                                        <IoPencil />
                                     </div>
                                 </td>
                                 <td>
-                                    <span>
-                                        <strong>ID</strong> {item.id}
-                                    </span>
+                                    <div className='flex items-center gap-2 py-6'>
+                                        <img
+                                            src={item.customer.image}
+                                            alt={`Foto de ${item.customer}`}
+                                            className='h-[35px] w-[35px] rounded-full object-cover'
+                                        />
+                                        <p className='text-black'>{item.customer.name}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span>{item.createdAt.toLocaleDateString()}</span>
+                                </td>
+                                <td>
+                                    <div className='flex gap-3 text-lg '>
+                                        <IoCloseCircleOutline
+                                            role='button'
+                                            className='hover:text-primary'
+                                        />
+                                        <IoTrashOutline
+                                            role='button'
+                                            className='hover:text-primary'
+                                        />
+                                        <IoCreateOutline
+                                            role='button'
+                                            className='hover:text-primary'
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <IoDocumentOutline
+                                        role='button'
+                                        className='text-xl hover:text-primary'
+                                    />
                                 </td>
                             </tr>
                         )

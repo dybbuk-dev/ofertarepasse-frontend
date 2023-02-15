@@ -17,6 +17,9 @@ import AdminAdverts from 'pages/Admin/Adverts'
 import AdminConfigurations from 'pages/Admin/Configurations'
 import DashboardHome from 'pages/Dashboard/Home'
 import DashboardSold from 'pages/Dashboard/Sold'
+import DashboardAdverts from 'pages/Dashboard/Adverts'
+import DashboardSales from 'pages/Dashboard/Sales'
+import DashboardConfigurations from 'pages/Dashboard/Configurations'
 
 const router = createBrowserRouter([
     {
@@ -64,7 +67,7 @@ const router = createBrowserRouter([
         element: <AdminAdverts />,
     },
     {
-        path: '/admin/configations',
+        path: '/admin/configurations',
         element: <AdminConfigurations />,
     },
     {
@@ -74,6 +77,18 @@ const router = createBrowserRouter([
     {
         path: '/dashboard/negotiations',
         element: <DashboardSold />,
+    },
+    {
+        path: '/dashboard/adverts',
+        element: <DashboardAdverts />,
+    },
+    {
+        path: '/dashboard/sales',
+        element: <DashboardSales />,
+    },
+    {
+        path: '/dashboard/configurations',
+        element: <DashboardConfigurations />,
     },
 ])
 

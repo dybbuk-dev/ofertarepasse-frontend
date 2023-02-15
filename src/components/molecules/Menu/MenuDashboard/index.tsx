@@ -49,8 +49,22 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                     ))}
                 </div>
                 <div className='flex flex-col gap-3 px-5'>
-                    <Link to='/admin/configations'>
-                        <button className='text-left text-sm text-gray-100'>Configurações</button>
+                    <Link
+                        to={
+                            location.pathname.search('/admin') !== -1
+                                ? '/admin/configurations'
+                                : '/dashboard/configurations'
+                        }
+                    >
+                        <button
+                            className={`text-left text-sm ${
+                                location.pathname.search('/configurations') !== -1
+                                    ? 'text-primary'
+                                    : 'text-gray-100'
+                            }`}
+                        >
+                            Configurações
+                        </button>
                     </Link>
                     <button className='text-left text-sm text-gray-100'>Suporte</button>
                     <button className='text-left text-sm text-gray-100'>Sair</button>

@@ -37,7 +37,7 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
         {
             icon: <Money />,
             label: 'Vendidos',
-            href: '/dashboard/sold',
+            href: '/dashboard/sales',
         },
     ]
 

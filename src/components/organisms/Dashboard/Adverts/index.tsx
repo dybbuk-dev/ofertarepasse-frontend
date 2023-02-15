@@ -1,0 +1,216 @@
+import Select from 'components/atoms/Select'
+import * as React from 'react'
+import InputMask from 'react-input-mask'
+import { MdOutlineCloudDownload } from 'react-icons/md'
+import InputSimple from 'components/atoms/Input/Simple'
+import { IoDocumentOutline, IoPencil, IoTrashOutline } from 'react-icons/io5'
+import Target from 'assets/icon/Target'
+import Eye from 'assets/icon/Eye'
+
+const Adverts = () => {
+    const [filter, setFilter] = React.useState({
+        action: '',
+    })
+
+    const titlesTable = [
+        'Veículo',
+        'Proposta',
+        'Vizualizações',
+        'Valor',
+        'Status',
+        'ID',
+        'Gerenciar',
+    ]
+
+    const items = [
+        {
+            vehicle: {
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
+                title: 'Honda Civic',
+                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
+            },
+            proposals: 868,
+            views: 12.569,
+            value: 89.9,
+            active: true,
+            id: 12345,
+        },
+        {
+            vehicle: {
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
+                title: 'Honda Civic',
+                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
+            },
+            proposals: 868,
+            views: 12.569,
+            value: 89.9,
+            active: false,
+            id: 12345,
+        },
+        {
+            vehicle: {
+                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
+                title: 'Honda Civic',
+                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
+            },
+            proposals: 868,
+            views: 12.569,
+            value: 89.9,
+            active: true,
+            id: 12345,
+        },
+    ]
+
+    return (
+        <div>
+            <div className='flex items-center justify-between'>
+                <div>
+                    <span className='text-3xl font-light text-gray-200'>Meus Anúncios</span>
+                    <p className='mt-3 text-sm text-gray-200'>
+                        Total de <span className='font-semibold'>156</span> registros entre{' '}
+                        <span className='font-semibold'>05/12/2022</span> e{' '}
+                        <span className='font-semibold'>04/01/2023</span>
+                    </p>
+                </div>
+                <div>
+                    <span className='text-sm font-medium'>Período</span>
+                    <div className='mt-2 flex gap-3'>
+                        <div className='relative flex w-[125px] items-center overflow-hidden rounded border border-gray-100'>
+                            <InputMask
+                                mask='99/99/9999'
+                                className='w-full py-2 pl-8 text-sm text-gray-100 outline-none'
+                            />
+                            <p className='absolute left-3 text-sm text-gray-100'>de</p>
+                        </div>
+                        <div className='relative flex w-[125px] items-center overflow-hidden rounded border border-gray-100'>
+                            <InputMask
+                                mask='99/99/9999'
+                                className='w-full py-2 pl-8 text-sm text-gray-100 outline-none'
+                            />
+                            <p className='absolute left-2 text-sm text-gray-100'>até</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-3'>
+                <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
+                <InputSimple
+                    className='rounded-xl bg-white px-5 py-3'
+                    placeholder='Faça uma busca por nome, local, telefone, e-mail'
+                />
+                <Select
+                    label='100 registros'
+                    onChange={(e) => setFilter({ ...filter, action: e })}
+                />
+                <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
+                    <MdOutlineCloudDownload className='text-xl' />
+                    Exportar
+                </button>
+                <Select label='Ordenar por' onChange={(e) => setFilter({ ...filter, action: e })} />
+            </div>
+            <div className='mb-10 rounded-xl bg-white'>
+                <table className='w-full'>
+                    <tr className='border-b border-gray-900'>
+                        {titlesTable.map((item, index) => (
+                            <th
+                                key={item}
+                                className={`py-6 text-left text-sm font-medium capitalize text-black ${
+                                    index === 0 ? 'pl-6' : ''
+                                }`}
+                            >
+                                {item}
+                            </th>
+                        ))}
+                    </tr>
+                    {items.map((item, index) => (
+                        <tr
+                            key={index}
+                            className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
+                        >
+                            <td className='py-6 pl-6'>
+                                <div className='flex items-center gap-2'>
+                                    <img
+                                        src={item.vehicle.image}
+                                        className='h-[40px] w-[60px] rounded-lg object-cover'
+                                    />
+                                    <div>
+                                        <p className='text-smd text-gray-400'>
+                                            {item.vehicle.title}
+                                        </p>
+                                        <p className='text-xs text-gray-500 line-clamp-1'>
+                                            {item.vehicle.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div className='flex items-center gap-1'>
+                                    <Target />
+                                    <span>{item.proposals}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div className='flex items-center gap-1'>
+                                    <Eye />
+                                    <span>{item.views}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span className='font-bold text-gray-400'>
+                                    R${item.value.toFixed(3)}
+                                </span>
+                            </td>
+                            <td>
+                                <div
+                                    className={`flex w-max items-center gap-2 rounded-full ${
+                                        item.active ? 'bg-green-100' : 'bg-gray-900'
+                                    } px-4 py-1`}
+                                >
+                                    <div
+                                        className={`h-[8px] w-[8px] rounded-full ${
+                                            item.active ? 'bg-green' : 'bg-gray-600'
+                                        }`}
+                                    />
+                                    <span
+                                        className={` ${
+                                            item.active ? 'text-green' : 'text-gray-600'
+                                        }`}
+                                    >
+                                        {item.active ? 'Ativo' : 'Inativo'}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <span>
+                                    <strong>ID</strong> {item.id}
+                                </span>
+                            </td>
+                            <td>
+                                <div className='flex items-center gap-2'>
+                                    <IoTrashOutline
+                                        role='button'
+                                        className='text-xl hover:text-primary'
+                                    />
+                                    <IoPencil
+                                        role='button'
+                                        className='text-xl hover:text-primary'
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div className='flex items-center gap-2'>
+                                    <IoDocumentOutline
+                                        role='button'
+                                        className='text-xl hover:text-primary'
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </table>
+            </div>
+        </div>
+    )
+}
+
+export default Adverts
