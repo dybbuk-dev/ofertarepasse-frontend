@@ -1,12 +1,12 @@
-import HomeDashboard from 'components/organisms/Dashboard/Home'
+import SoldComponent from 'components/organisms/Dashboard/Sold'
 import DashboardTemplate from 'components/templates/DashboardTemplate'
 
-const Home = () => {
+const Sold = () => {
     return (
         <DashboardTemplate>
-            <HomeDashboard />
+            <SoldComponent />
         </DashboardTemplate>
     )
 }
 
-export default Home
+export default Sold
