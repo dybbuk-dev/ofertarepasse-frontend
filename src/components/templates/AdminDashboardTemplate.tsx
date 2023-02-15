@@ -10,34 +10,46 @@ import MenInCar from 'assets/images/men_in_car.png'
 import InputSimple from 'components/atoms/Input/Simple'
 import Money from 'assets/icon/Money'
 import Grid from 'assets/icon/Grid'
+import User from 'assets/icon/User'
 import PieChart from 'assets/icon/PieChart'
 import GridSmall from 'assets/icon/GridSmall'
+import UserCircle from 'assets/icon/UserCircle'
 
-interface IDashboardTemplate {
+interface IAdminDashboardTemplate {
     children: React.ReactNode
 }
 
-const DashboardTemplate = ({ children }: IDashboardTemplate) => {
+const AdminDashboardTemplate = ({ children }: IAdminDashboardTemplate) => {
     const buttonsMenu = [
         {
             icon: <Grid />,
             label: 'Dashboard',
-            href: '/dashboard',
+            href: '/admin',
+        },
+        {
+            icon: <UserCircle />,
+            label: 'Anunciantes',
+            href: '/admin/advertiser',
+        },
+        {
+            icon: <User />,
+            label: 'Clientes',
+            href: '/admin/customers',
         },
         {
             icon: <PieChart />,
             label: 'Negociação',
-            href: '/dashboard/negotiations',
-        },
-        {
-            icon: <GridSmall />,
-            label: 'Anúncios',
-            href: '/dashboard/adverts',
+            href: '/admin/negotiations',
         },
         {
             icon: <Money />,
             label: 'Vendidos',
-            href: '/dashboard/sold',
+            href: '/admin/sold',
+        },
+        {
+            icon: <GridSmall />,
+            label: 'Anúncios',
+            href: '/admin/adverts',
         },
     ]
 
@@ -73,4 +85,4 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
     )
 }
 
-export default DashboardTemplate
+export default AdminDashboardTemplate

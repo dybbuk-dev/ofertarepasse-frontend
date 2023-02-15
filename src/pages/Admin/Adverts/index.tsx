@@ -1,5 +1,5 @@
-import AdvertsComponent from 'components/organisms/Dashboard/Adverts'
-import DashboardTemplate from 'components/templates/DashboardTemplate'
+import AdvertsComponent from 'components/organisms/Admin/Adverts'
+import DashboardTemplate from 'components/templates/AdminDashboardTemplate'
 
 const Adverts = () => {
     return (

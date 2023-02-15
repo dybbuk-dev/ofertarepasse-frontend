@@ -5,15 +5,17 @@ import SignIn from 'pages/SignIn'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import SignUp from 'pages/SignUp'
 import Home from 'pages/Home'
-import HomeDashboard from 'pages/Dashboard/Home'
 import Info from 'pages/Info'
 import Search from 'pages/Search'
-import Advertiser from 'pages/Dashboard/Advertiser'
-import Customers from 'pages/Dashboard/Customers'
-import Negotiations from 'pages/Dashboard/Negotiations'
-import Sold from 'pages/Dashboard/Sold'
-import Adverts from 'pages/Dashboard/Adverts'
-import Configurations from 'pages/Dashboard/Configurations'
+
+import AdminHome from 'pages/Admin/Home'
+import AdminAdvertiser from 'pages/Admin/Advertiser'
+import AdminCustomers from 'pages/Admin/Customers'
+import AdminNegotiations from 'pages/Admin/Negotiations'
+import AdminSold from 'pages/Admin/Sold'
+import AdminAdverts from 'pages/Admin/Adverts'
+import AdminConfigurations from 'pages/Admin/Configurations'
+import DashboardHome from 'pages/Dashboard/Home'
 
 const router = createBrowserRouter([
     {
@@ -37,32 +39,36 @@ const router = createBrowserRouter([
         element: <Info />,
     },
     {
+        path: '/admin',
+        element: <AdminHome />,
+    },
+    {
+        path: '/admin/advertiser',
+        element: <AdminAdvertiser />,
+    },
+    {
+        path: '/admin/customers',
+        element: <AdminCustomers />,
+    },
+    {
+        path: '/admin/negotiations',
+        element: <AdminNegotiations />,
+    },
+    {
+        path: '/admin/sold',
+        element: <AdminSold />,
+    },
+    {
+        path: '/admin/adverts',
+        element: <AdminAdverts />,
+    },
+    {
+        path: '/admin/configations',
+        element: <AdminConfigurations />,
+    },
+    {
         path: '/dashboard',
-        element: <HomeDashboard />,
-    },
-    {
-        path: '/dashboard/advertiser',
-        element: <Advertiser />,
-    },
-    {
-        path: '/dashboard/customers',
-        element: <Customers />,
-    },
-    {
-        path: '/dashboard/negotiations',
-        element: <Negotiations />,
-    },
-    {
-        path: '/dashboard/sold',
-        element: <Sold />,
-    },
-    {
-        path: '/dashboard/adverts',
-        element: <Adverts />,
-    },
-    {
-        path: '/dashboard/configations',
-        element: <Configurations />,
+        element: <DashboardHome />,
     },
 ])
 

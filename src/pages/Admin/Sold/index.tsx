@@ -1,5 +1,5 @@
-import SoldComponent from 'components/organisms/Dashboard/Sold'
-import DashboardTemplate from 'components/templates/DashboardTemplate'
+import SoldComponent from 'components/organisms/Admin/Sold'
+import DashboardTemplate from 'components/templates/AdminDashboardTemplate'
 
 const Sold = () => {
     return (

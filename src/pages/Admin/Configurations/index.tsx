@@ -1,5 +1,5 @@
-import DashboardTemplate from 'components/templates/DashboardTemplate'
-import ConfigurationsComponent from 'components/organisms/Dashboard/Configurations'
+import DashboardTemplate from 'components/templates/AdminDashboardTemplate'
+import ConfigurationsComponent from 'components/organisms/Admin/Configurations'
 
 const Configurations = () => {
     return (

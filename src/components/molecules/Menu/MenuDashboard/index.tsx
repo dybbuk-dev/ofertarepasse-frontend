@@ -1,52 +1,27 @@
 import LogoAdm from 'assets/images/logoDashboardAdm.png'
-import Money from 'assets/icon/Money'
-import Grid from 'assets/icon/Grid'
-import User from 'assets/icon/User'
-import PieChart from 'assets/icon/PieChart'
-import GridSmall from 'assets/icon/GridSmall'
-import UserCircle from 'assets/icon/UserCircle'
+import LogoPro from 'assets/images/logoDashboardPro.png'
+
 import { Link, useLocation } from 'react-router-dom'
+import React from 'react'
 
-const MenuDasboard = () => {
+interface IMenuDashboard {
+    buttons: Array<{
+        icon: React.ReactNode
+        label: string
+        href: string
+    }>
+}
+
+const MenuDasboard = ({ buttons }: IMenuDashboard) => {
     const location = useLocation()
-
-    const buttons = [
-        {
-            icon: <Grid />,
-            label: 'Dashboard',
-            href: '/dashboard',
-        },
-        {
-            icon: <UserCircle />,
-            label: 'Anunciantes',
-            href: '/dashboard/advertiser',
-        },
-        {
-            icon: <User />,
-            label: 'Clientes',
-            href: '/dashboard/customers',
-        },
-        {
-            icon: <PieChart />,
-            label: 'Negociação',
-            href: '/dashboard/negotiations',
-        },
-        {
-            icon: <Money />,
-            label: 'Vendidos',
-            href: '/dashboard/sold',
-        },
-        {
-            icon: <GridSmall />,
-            label: 'Anúncios',
-            href: '/dashboard/adverts',
-        },
-    ]
 
     return (
         <nav className='flex min-h-screen w-full flex-col items-center'>
             <div className='flex h-[100px] w-full items-center px-5'>
-                <img src={LogoAdm} alt='Oferta Repasse ADM' />
+                <img
+                    src={location.pathname.search('/admin') !== -1 ? LogoAdm : LogoPro}
+                    alt='Oferta Repasse ADM'
+                />
             </div>
             <div className='flex min-h-[calc(100vh-100px)] w-full flex-col justify-between rounded-r-2xl bg-white py-7 px-5'>
                 <div>
@@ -74,7 +49,7 @@ const MenuDasboard = () => {
                     ))}
                 </div>
                 <div className='flex flex-col gap-3 px-5'>
-                    <Link to='/dashboard/configations'>
+                    <Link to='/admin/configations'>
                         <button className='text-left text-sm text-gray-100'>Configurações</button>
                     </Link>
                     <button className='text-left text-sm text-gray-100'>Suporte</button>

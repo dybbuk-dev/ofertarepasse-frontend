@@ -1,5 +1,5 @@
-import NegotiationsComponent from 'components/organisms/Dashboard/Negotiations'
-import DashboardTemplate from 'components/templates/DashboardTemplate'
+import NegotiationsComponent from 'components/organisms/Admin/Negotiations'
+import DashboardTemplate from 'components/templates/AdminDashboardTemplate'
 
 const Negotiations = () => {
     return (
