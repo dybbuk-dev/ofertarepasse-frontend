@@ -8,6 +8,9 @@ module.exports = {
             colors: {
                 primary: {
                     DEFAULT: '#F3722C',
+                    opacity: {
+                        100: '#F3722C10',
+                    },
                 },
                 secondary: {
                     DEFAULT: '#F94144',
@@ -25,11 +28,17 @@ module.exports = {
                 facebook: {
                     DEFAULT: '#1877F2',
                 },
+                green: {
+                    DEFAULT: '#83BF6E',
+                },
             },
             fontFamily: {
                 inter: ['Inter', 'sans-serif'],
             },
+            fontSize: {
+                smd: '15px',
+            },
         },
     },
-    plugins: [],
+    plugins: [require('@tailwindcss/line-clamp')],
 }

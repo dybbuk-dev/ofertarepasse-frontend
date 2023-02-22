@@ -8,6 +8,19 @@ import Home from 'pages/Home'
 import Info from 'pages/Info'
 import Search from 'pages/Search'
 
+import AdminHome from 'pages/Admin/Home'
+import AdminAdvertiser from 'pages/Admin/Advertiser'
+import AdminCustomers from 'pages/Admin/Customers'
+import AdminNegotiations from 'pages/Admin/Negotiations'
+import AdminSold from 'pages/Admin/Sold'
+import AdminAdverts from 'pages/Admin/Adverts'
+import AdminConfigurations from 'pages/Admin/Configurations'
+import DashboardHome from 'pages/Dashboard/Home'
+import DashboardSold from 'pages/Dashboard/Sold'
+import DashboardAdverts from 'pages/Dashboard/Adverts'
+import DashboardSales from 'pages/Dashboard/Sales'
+import DashboardConfigurations from 'pages/Dashboard/Configurations'
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -28,6 +41,54 @@ const router = createBrowserRouter([
     {
         path: '/info/:id',
         element: <Info />,
+    },
+    {
+        path: '/admin',
+        element: <AdminHome />,
+    },
+    {
+        path: '/admin/advertiser',
+        element: <AdminAdvertiser />,
+    },
+    {
+        path: '/admin/customers',
+        element: <AdminCustomers />,
+    },
+    {
+        path: '/admin/negotiations',
+        element: <AdminNegotiations />,
+    },
+    {
+        path: '/admin/sold',
+        element: <AdminSold />,
+    },
+    {
+        path: '/admin/adverts',
+        element: <AdminAdverts />,
+    },
+    {
+        path: '/admin/configurations',
+        element: <AdminConfigurations />,
+    },
+    {
+        path: '/dashboard',
+        element: <DashboardHome />,
+    },
+    {
+        path: '/dashboard/negotiations',
+        element: <DashboardSold />,
+    },
+    {
+        path: '/dashboard/adverts',
+        element: <DashboardAdverts />,
+    },
+    {
+        path: '/dashboard/sales',
+        element: <DashboardSales />,
+    },
+    {
+        path: '/dashboard/configurations',
+        element: <DashboardConfigurations />,
     },
 ])
 
