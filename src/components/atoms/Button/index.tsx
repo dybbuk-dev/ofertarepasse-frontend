@@ -1,4 +1,4 @@
-interface IButton extends React.HTMLAttributes<HTMLButtonElement> {
+interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children?: React.ReactNode
 }
 
