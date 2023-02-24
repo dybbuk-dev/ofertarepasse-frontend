@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/display-name */
 import React from 'react'
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5'
 
@@ -6,7 +8,9 @@ interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
     classInput?: React.InputHTMLAttributes<HTMLInputElement>['className']
 }
 
-const Input = ({ type, className = '', classInput, ...props }: IInput) => {
+type Ref = any
+
+const Input = React.forwardRef<Ref, IInput>(({ type, className, classInput, ...props }, ref) => {
     const [visible, setVisible] = React.useState(false)
 
     return (
@@ -16,15 +20,20 @@ const Input = ({ type, className = '', classInput, ...props }: IInput) => {
             <input
                 className={`w-full bg-transparent text-[14px] text-gray-300 outline-none ${classInput}`}
                 type={visible ? 'text' : type}
+                ref={ref}
                 {...props}
             />
             {!!type && type === 'password' ? (
-                <button className='absolute right-4 text-xl' onClick={() => setVisible(!visible)}>
+                <button
+                    className='absolute right-4 text-xl'
+                    onClick={() => setVisible(!visible)}
+                    type='button'
+                >
                     {visible ? <IoEyeOutline /> : <IoEyeOffOutline />}
                 </button>
             ) : null}
         </div>
     )
-}
+})
 
 export default Input

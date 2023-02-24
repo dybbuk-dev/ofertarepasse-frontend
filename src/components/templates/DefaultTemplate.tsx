@@ -1,11 +1,11 @@
 import Footer from 'components/molecules/Footer'
 import Menu from 'components/molecules/Menu'
 import React from 'react'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 interface IDefaultTemplate extends React.HTMLAttributes<HTMLDivElement> {
     title?: string
     children: React.ReactNode
-    container?: boolean
     hasMenu?: boolean
     hasFooter?: boolean
 }

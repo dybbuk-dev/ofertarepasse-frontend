@@ -3,7 +3,7 @@ import DefaultTemplate from 'components/templates/DefaultTemplate'
 
 const SignIn = () => {
     return (
-        <DefaultTemplate container={false} title='Entrar' hasMenu={false} hasFooter={false}>
+        <DefaultTemplate title='Entrar' hasMenu={false} hasFooter={false}>
             <SignInComponent />
         </DefaultTemplate>
     )
