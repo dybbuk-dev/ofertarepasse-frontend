@@ -20,6 +20,7 @@ import DashboardSold from 'pages/Dashboard/Sold'
 import DashboardAdverts from 'pages/Dashboard/Adverts'
 import DashboardSales from 'pages/Dashboard/Sales'
 import DashboardConfigurations from 'pages/Dashboard/Configurations'
+import DashboardCreateAdverts from 'pages/Dashboard/Adverts/Create'
 import { ToastContainer } from 'react-toastify'
 
 const router = createBrowserRouter([
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
     {
         path: '/dashboard/adverts',
         element: <DashboardAdverts />,
+    },
+    {
+        path: '/dashboard/adverts/create',
+        element: <DashboardCreateAdverts />,
     },
     {
         path: '/dashboard/sales',

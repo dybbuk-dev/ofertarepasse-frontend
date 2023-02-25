@@ -8,7 +8,7 @@ interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
     classInput?: React.InputHTMLAttributes<HTMLInputElement>['className']
 }
 
-type Ref = any
+type Ref = HTMLInputElement
 
 const Input = React.forwardRef<Ref, IInput>(({ type, className, classInput, ...props }, ref) => {
     const [visible, setVisible] = React.useState(false)
