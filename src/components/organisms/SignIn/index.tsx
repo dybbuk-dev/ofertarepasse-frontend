@@ -5,8 +5,8 @@ import ButtonSocial from 'components/atoms/Button/Social'
 import Input from 'components/atoms/Input'
 import Button from 'components/atoms/Button'
 import { useForm } from 'react-hook-form'
-import api from 'services/api'
 import { toast } from 'react-toastify'
+import { useAuth } from 'hooks/auth'
 
 interface IDataForm {
     email: string
@@ -15,16 +15,14 @@ interface IDataForm {
 
 const SignIn = () => {
     const { register, handleSubmit } = useForm<IDataForm>()
+    const { signIn } = useAuth()
     const navigate = useNavigate()
 
     const onSubmit = async (dataForm: IDataForm) => {
-        const { data } = await api.post('/api/auth/login', {
-            email: dataForm.email,
-            password: dataForm.password,
-        })
+        const { error, message } = await signIn(dataForm.email, dataForm.password)
 
-        if (data && data.error) {
-            toast.error(data.message)
+        if (error) {
+            toast.error(message)
         } else {
             navigate('/')
         }
