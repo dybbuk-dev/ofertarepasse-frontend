@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import Logo from 'assets/images/logo.png'
 import Person from 'assets/icon/Person'
+import { useAuth } from 'hooks/auth'
 
 const Menu = () => {
+    const { user } = useAuth()
     const items = [
         {
             label: 'Comprar',
@@ -48,19 +50,31 @@ const Menu = () => {
                         <Link to='/'>
                             <img src={Logo} />
                         </Link>
-                        <div className='flex items-center gap-8'>
-                            <Link to='/signup'>
-                                <span className='text-sm font-medium text-gray-100'>
-                                    Criar Conta Grátis
-                                </span>
-                            </Link>
-                            <Link to='/signin'>
-                                <span className='flex items-center gap-1 text-sm font-medium text-gray-100'>
-                                    <Person />
-                                    Entrar
-                                </span>
-                            </Link>
-                        </div>
+                        {user ? (
+                            <div className='flex items-center gap-2'>
+                                <p className='text-sm font-medium text-gray-400'>{user.name}</p>
+                                <Link to='/dashboard'>
+                                    <img
+                                        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4rsSzLimlQyniEtUV4-1raljzFhS45QBeAw&usqp=CAU'
+                                        className='h-[50px] w-[50px] rounded-full object-cover'
+                                    />
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className='flex items-center gap-8'>
+                                <Link to='/signup'>
+                                    <span className='text-sm font-medium text-gray-100'>
+                                        Criar Conta Grátis
+                                    </span>
+                                </Link>
+                                <Link to='/signin'>
+                                    <span className='flex items-center gap-1 text-sm font-medium text-gray-100'>
+                                        <Person />
+                                        Entrar
+                                    </span>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             </nav>
