@@ -21,6 +21,7 @@ import DashboardAdverts from 'pages/Dashboard/Adverts'
 import DashboardSales from 'pages/Dashboard/Sales'
 import DashboardConfigurations from 'pages/Dashboard/Configurations'
 import { ToastContainer } from 'react-toastify'
+import AuthProvider from 'contexts/auth'
 
 const router = createBrowserRouter([
     {
@@ -96,7 +97,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <React.StrictMode>
-        <ToastContainer theme='colored' />
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <ToastContainer theme='colored' />
+            <RouterProvider router={router} />
+        </AuthProvider>
     </React.StrictMode>
 )
