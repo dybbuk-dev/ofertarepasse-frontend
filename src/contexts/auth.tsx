@@ -1,4 +1,3 @@
-import axios from 'axios'
 import * as React from 'react'
 import api from 'services/api'
 

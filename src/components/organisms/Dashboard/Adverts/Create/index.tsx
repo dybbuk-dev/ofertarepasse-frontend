@@ -7,6 +7,9 @@ import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
 import { IoCheckmarkOutline, IoChevronDownOutline } from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
+import api from 'services/api'
+import { useAuth } from 'hooks/auth'
+import { toast } from 'react-toastify'
 
 interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
     title: string
@@ -23,7 +26,28 @@ interface ISelect {
         label: string
         value: string
     }>
-    name: string
+    name: any
+}
+
+interface IDataForm {
+    plate: string
+    brand: string
+    model: string
+    modelYear: number
+    manufactureYear: number
+    version: string
+    color: string
+    amountDoors: number
+    exchange: string
+    armored: boolean
+    kilometer: number
+    differential: string
+    value: number
+    details: string
+    userId: string
+    city: string
+    state: string
+    fuel: string
 }
 
 type RefInput = HTMLInputElement
@@ -75,14 +99,47 @@ const CreateAdverts = () => {
     const [itemsDetails, setItemsDetails] = React.useState<Array<string>>([])
     const [highlight, setHighlight] = React.useState<Array<string>>([])
 
-    const { register, handleSubmit, setValue } = useForm()
+    const { register, handleSubmit, setValue } = useForm<IDataForm>()
+    const { user } = useAuth()
 
-    React.useEffect(() => {
-        register('itemsDetails')
-        register('highlight')
-    }, [])
+    const onSubmit = async (dataForm: IDataForm) => {
+        const { data } = await api.post(
+            '/api/v1/adverts',
+            {
+                plate: dataForm.plate,
+                brand: dataForm.brand,
+                model: dataForm.model,
+                modelYear: dataForm.modelYear,
+                manufactureYear: dataForm.manufactureYear,
+                version: dataForm.version,
+                color: dataForm.color,
+                amountDoors: dataForm.amountDoors,
+                exchange: dataForm.exchange,
+                armored: dataForm.armored,
+                kilometer: dataForm.kilometer,
+                differential: dataForm.differential,
+                value: dataForm.value,
+                details: dataForm.details,
+                userId: user?.id,
+                city: 'Pradópolis',
+                state: 'São Paulo',
+                fuel: dataForm.fuel,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        )
 
-    const onSubmit = async (data: any) => console.log(data)
+        if (data && data.error) {
+            toast.error(
+                'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
+            )
+        } else {
+            toast.success('Anúncio criado')
+        }
+    }
 
     const handleSelectItem = (
         state: Array<string>,
@@ -203,8 +260,8 @@ const CreateAdverts = () => {
                                     value: 'fiat',
                                 },
                             ]}
-                            {...register('brands')}
-                            name='brands'
+                            {...register('brand')}
+                            name='brand'
                         />
                         <Select
                             title='Modelo'
@@ -235,8 +292,8 @@ const CreateAdverts = () => {
                                     value: 'fiat',
                                 },
                             ]}
-                            {...register('yearModel')}
-                            name='yearModel'
+                            {...register('modelYear')}
+                            name='modelYear'
                         />
                         <Select
                             title='Ano da Fabricação'
@@ -251,8 +308,8 @@ const CreateAdverts = () => {
                                     value: 'fiat',
                                 },
                             ]}
-                            {...register('yearManufacture')}
-                            name='yearManufacture'
+                            {...register('manufactureYear')}
+                            name='manufactureYear'
                         />
                         <Select
                             title='Versão'
@@ -291,12 +348,16 @@ const CreateAdverts = () => {
                             placeholder='Selecione o combustível'
                             options={[
                                 {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
+                                    label: 'Gasolina',
+                                    value: 'gasolina',
                                 },
                                 {
-                                    label: 'Fiat',
-                                    value: 'fiat',
+                                    label: 'Etanol',
+                                    value: 'etanol',
+                                },
+                                {
+                                    label: 'Gasolina/Etanol',
+                                    value: 'flex',
                                 },
                             ]}
                             {...register('fuel')}
@@ -346,12 +407,12 @@ const CreateAdverts = () => {
                         <Input
                             title='Quanto seu veículo já rodou?'
                             placeholder='0 km'
-                            {...register('km')}
+                            {...register('kilometer')}
                         />
                         <TextArea
                             title='Diferenciais do seu veículo'
                             maxLength={500}
-                            {...register('differentials')}
+                            {...register('differential')}
                         />
                         <Input title='Valor' placeholder='R$' {...register('value')} />
 
@@ -379,6 +440,7 @@ const CreateAdverts = () => {
                             {itemsInfoVehicle.map((item, index) => (
                                 <button
                                     key={index}
+                                    type='button'
                                     className={`rounded-full  px-7 py-2 font-semibold text-gray-200 ${
                                         itemsDetails.find((itemFind) => itemFind === item)
                                             ? 'bg-primary'
@@ -401,6 +463,7 @@ const CreateAdverts = () => {
                             {itemsInfoVehicle.map((item, index) => (
                                 <button
                                     key={index}
+                                    type='button'
                                     className={`rounded-full  px-7 py-2 font-semibold text-gray-200 ${
                                         highlight.find((itemFind) => itemFind === item)
                                             ? 'bg-primary'
@@ -412,7 +475,10 @@ const CreateAdverts = () => {
                                 </button>
                             ))}
                         </div>
-                        <Button className='mt-20 flex !w-max items-center gap-2 bg-primary'>
+                        <Button
+                            className='mt-20 flex !w-max items-center gap-2 bg-primary'
+                            type='submit'
+                        >
                             <IoCheckmarkOutline className='text-2xl' /> Pronto, publicar meu anúncio
                         </Button>
                     </form>

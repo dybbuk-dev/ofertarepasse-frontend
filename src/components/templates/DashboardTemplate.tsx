@@ -14,12 +14,15 @@ import Grid from 'assets/icon/Grid'
 import PieChart from 'assets/icon/PieChart'
 import GridSmall from 'assets/icon/GridSmall'
 import { Link } from 'react-router-dom'
+import { useAuth } from 'hooks/auth'
 
 interface IDashboardTemplate {
     children: React.ReactNode
 }
 
 const DashboardTemplate = ({ children }: IDashboardTemplate) => {
+    const { user } = useAuth()
+
     const buttonsMenu = [
         {
             icon: <Grid />,
@@ -65,8 +68,11 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
                             <IoNotificationsOutline />
                         </div>
                         <img
-                            src={MenInCar}
-                            alt='Image profile'
+                            src={
+                                user
+                                    ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4rsSzLimlQyniEtUV4-1raljzFhS45QBeAw&usqp=CAU'
+                                    : MenInCar
+                            }
                             className='h-[50px] w-[50px] rounded-full object-cover'
                         />
                     </div>
