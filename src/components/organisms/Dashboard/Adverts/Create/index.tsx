@@ -2,16 +2,17 @@
 /* eslint-disable react/display-name */
 import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
-import Checkbox from 'components/atoms/Input/Checkbox'
+import InputMask, { ReactInputMask, Props } from 'react-input-mask'
 import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
-import { IoCheckmarkOutline, IoChevronDownOutline } from 'react-icons/io5'
+import { IoCheckmarkOutline } from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
-interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
+interface IInput extends Props {
     title: string
 }
 
@@ -19,39 +20,33 @@ interface ITextArea extends React.InputHTMLAttributes<HTMLTextAreaElement> {
     title: string
 }
 
-interface ISelect {
-    title: string
-    placeholder: string
-    options: Array<{
-        label: string
-        value: string
-    }>
-    name: any
-}
-
 interface IDataForm {
+    images: FileList
     plate: string
-    brand: string
-    model: string
-    modelYear: number
-    manufactureYear: number
-    version: string
-    color: string
-    amountDoors: number
-    exchange: string
-    armored: boolean
     kilometer: number
-    differential: string
+    about: string
     value: number
-    details: string
     userId: string
-    city: string
-    state: string
-    fuel: string
 }
 
-type RefInput = HTMLInputElement
+interface IBox {
+    title: string
+    value: string
+}
+
+type RefInput = ReactInputMask
 type RefTextarea = HTMLTextAreaElement
+
+const Box = ({ title, value }: IBox) => (
+    <div className='rounded-xl bg-white'>
+        <div className='border-b border-gray-700 px-5 py-4'>
+            <p className='text-gray-400'>{title}</p>
+        </div>
+        <p className='w-full bg-transparent px-5 py-4 text-smd font-medium text-gray-400 outline-none'>
+            {value}
+        </p>
+    </div>
+)
 
 const Input = React.forwardRef<RefInput, IInput>(({ title, ...props }, ref) => {
     return (
@@ -59,7 +54,7 @@ const Input = React.forwardRef<RefInput, IInput>(({ title, ...props }, ref) => {
             <div className='border-b border-gray-700 px-5 py-4'>
                 <p className='text-gray-400'>{title}</p>
             </div>
-            <input
+            <InputMask
                 className='w-full bg-transparent px-5 py-4 text-smd font-medium text-gray-400 outline-none'
                 ref={ref}
                 {...props}
@@ -96,34 +91,62 @@ const TextArea = React.forwardRef<RefTextarea, ITextArea>(({ title, maxLength, .
 })
 
 const CreateAdverts = () => {
-    const [itemsDetails, setItemsDetails] = React.useState<Array<string>>([])
     const [highlight, setHighlight] = React.useState<Array<string>>([])
+    const [infoPlate, setInfoPlate] = React.useState<any>(null)
+    const [loading, setLoading] = React.useState(false)
 
-    const { register, handleSubmit, setValue } = useForm<IDataForm>()
+    const { register, handleSubmit, watch } = useForm<IDataForm>()
     const { user } = useAuth()
+    const navigate = useNavigate()
 
     const onSubmit = async (dataForm: IDataForm) => {
+        setLoading(true)
+        // console.log({
+        //     plate: infoPlate.veiculo.placa,
+        //     brand: infoPlate.veiculo.marca_modelo.split('/')[0],
+        //     model: infoPlate.veiculo.marca_modelo.split('/')[1],
+        //     modelYear: infoPlate.veiculo.ano.split('/')[0],
+        //     manufactureYear: infoPlate.veiculo.ano.split('/')[1],
+        //     version: infoPlate.fipes[0].marca_modelo,
+        //     color: infoPlate.veiculo.cor,
+        //     kilometer: dataForm.kilometer,
+        //     about: dataForm.about,
+        //     value: dataForm.value,
+        //     userId: user?.id,
+        //     city: infoPlate.veiculo.municipio,
+        //     state: infoPlate.veiculo.uf,
+        //     fuel:
+        //         infoPlate.veiculo.combustivel.search('/') !== -1
+        //             ? 'Flex'
+        //             : infoPlate.veiculo.combustivel,
+        //     amountPeaple: infoPlate.veiculo.quantidade_passageiro,
+        //     rolling: infoPlate.veiculo.cilindradas,
+        //     highlight: highlight,
+        // })
+
         const { data } = await api.post(
             '/api/v1/adverts',
             {
-                plate: dataForm.plate,
-                brand: dataForm.brand,
-                model: dataForm.model,
-                modelYear: dataForm.modelYear,
-                manufactureYear: dataForm.manufactureYear,
-                version: dataForm.version,
-                color: dataForm.color,
-                amountDoors: dataForm.amountDoors,
-                exchange: dataForm.exchange,
-                armored: dataForm.armored,
+                plate: infoPlate.veiculo.placa,
+                brand: infoPlate.veiculo.marca_modelo.split('/')[0],
+                model: infoPlate.veiculo.marca_modelo.split('/')[1],
+                modelYear: infoPlate.veiculo.ano.split('/')[0],
+                manufactureYear: infoPlate.veiculo.ano.split('/')[1],
+                version: infoPlate.fipes[0].marca_modelo,
+                color: infoPlate.veiculo.cor,
                 kilometer: dataForm.kilometer,
-                differential: dataForm.differential,
+                about: dataForm.about,
                 value: dataForm.value,
-                details: dataForm.details,
                 userId: user?.id,
-                city: 'Pradópolis',
-                state: 'São Paulo',
-                fuel: dataForm.fuel,
+                city: infoPlate.veiculo.municipio,
+                state: infoPlate.veiculo.uf,
+                fuel:
+                    infoPlate.veiculo.combustivel.search('/') !== -1
+                        ? 'Flex'
+                        : infoPlate.veiculo.combustivel,
+                amountPeaple: infoPlate.veiculo.quantidade_passageiro,
+                rolling: infoPlate.veiculo.cilindradas,
+                highlight: highlight,
             },
             {
                 headers: {
@@ -138,6 +161,31 @@ const CreateAdverts = () => {
             )
         } else {
             toast.success('Anúncio criado')
+            navigate('/dashboard/adverts')
+        }
+    }
+
+    const getInfoPlate = async (dataForm: IDataForm) => {
+        setLoading(true)
+        try {
+            const { data } = await api.get(
+                `https://placas.fipeapi.com.br/placas/${dataForm.plate.replace('-', '')}?key=${
+                    process.env.REACT_APP_WIPSITES
+                }`,
+                {
+                    transformRequest: (_, headers) => {
+                        delete headers['Authorization']
+                    },
+                }
+            )
+
+            if (data) {
+                setInfoPlate(data.data)
+                setLoading(false)
+            }
+        } catch (err: any) {
+            toast.error(err.response.data.message)
+            setLoading(false)
         }
     }
 
@@ -153,52 +201,7 @@ const CreateAdverts = () => {
         }
     }
 
-    const Select = React.forwardRef(({ title, placeholder, options, name }: ISelect, ref: any) => {
-        const [open, setOpen] = React.useState(false)
-        const labelRef = React.useRef<HTMLSpanElement | null>(null)
-
-        return (
-            <div className='rounded-xl bg-white' ref={ref}>
-                <div className='border-b border-gray-700 px-5 py-4'>
-                    <p className='text-gray-400'>{title}</p>
-                </div>
-                <div onClick={() => setOpen(!open)}>
-                    <div
-                        className={`flex items-center justify-between px-5 py-4 ${
-                            open ? 'border-b border-gray-900' : ''
-                        }`}
-                        role='button'
-                    >
-                        <span className='font-medium text-gray-400' ref={labelRef}>
-                            {placeholder}
-                        </span>
-                        <IoChevronDownOutline className={`${open ? 'rotate-180' : ''}`} />
-                    </div>
-                    {open ? (
-                        <div className='flex w-full flex-col rounded-xl bg-white'>
-                            {options.map((item) => (
-                                <button
-                                    type='button'
-                                    key={item.label}
-                                    className='border-b border-gray-900 py-4 px-5 text-left font-medium text-gray-400 last:border-none'
-                                    onClick={() => {
-                                        if (labelRef.current) {
-                                            labelRef.current.innerText = item.label
-                                        }
-                                        setValue(name, item.value)
-                                    }}
-                                >
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
-                    ) : null}
-                </div>
-            </div>
-        )
-    })
-
-    const itemsInfoVehicle = [
+    const itemsHighlightVehicle = [
         'Airbag',
         'Alarme',
         'Ar Concidionado',
@@ -207,10 +210,8 @@ const CreateAdverts = () => {
         'Controle de Tração',
         'Desembaçador traseiro',
         'Banco com regulagem de altura',
-        'Computador de Bordo',
-        'Controle de Tração',
         'Freio ABS',
-        ' Controle automático de velocidade',
+        'Controle automático de velocidade',
     ]
 
     return (
@@ -221,10 +222,16 @@ const CreateAdverts = () => {
             </section>
             <section className='mt-14'>
                 <div className='grid grid-cols-[350px_auto] gap-x-[100px]'>
-                    <form className='flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
+                    <form
+                        className='flex flex-col gap-5'
+                        onSubmit={infoPlate ? handleSubmit(onSubmit) : handleSubmit(getInfoPlate)}
+                    >
                         <Input
+                            mask='aaa-****'
+                            maskChar=''
                             title='Placa do Veículo'
                             placeholder='Ex: ABC-1234'
+                            autoFocus={true}
                             {...register('plate')}
                         />
                         <div className='rounded-xl border border-dashed border-gray-700 bg-white py-8 px-5'>
@@ -244,242 +251,106 @@ const CreateAdverts = () => {
                                     type='file'
                                     className='hidden'
                                     accept='image/png, image/jpeg'
+                                    {...register('images')}
                                 />
                             </label>
                         </div>
-                        <Select
-                            title='Marcas'
-                            placeholder='Selecione a Marca'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('brand')}
-                            name='brand'
-                        />
-                        <Select
-                            title='Modelo'
-                            placeholder='Selecione o modelo'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('model')}
-                            name='model'
-                        />
-                        <Select
-                            title='Ano do modelo'
-                            placeholder='Selecione o ano do modelo'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('modelYear')}
-                            name='modelYear'
-                        />
-                        <Select
-                            title='Ano da Fabricação'
-                            placeholder='Selecione o ano da fabricação'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('manufactureYear')}
-                            name='manufactureYear'
-                        />
-                        <Select
-                            title='Versão'
-                            placeholder='Selecione a versão'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('version')}
-                            name='version'
-                        />
-                        <Select
-                            title='Cor'
-                            placeholder='Selecione a cor'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('color')}
-                            name='color'
-                        />
-                        <Select
-                            title='Combustível'
-                            placeholder='Selecione o combustível'
-                            options={[
-                                {
-                                    label: 'Gasolina',
-                                    value: 'gasolina',
-                                },
-                                {
-                                    label: 'Etanol',
-                                    value: 'etanol',
-                                },
-                                {
-                                    label: 'Gasolina/Etanol',
-                                    value: 'flex',
-                                },
-                            ]}
-                            {...register('fuel')}
-                            name='fuel'
-                        />
-                        <Select
-                            title='Número de Portas'
-                            placeholder='Selecione o número de portas'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('amountDoors')}
-                            name='amountDoors'
-                        />
-                        <Select
-                            title='Câmbio'
-                            placeholder='Selecione o câmbio'
-                            options={[
-                                {
-                                    label: 'Chevrolet',
-                                    value: 'chevrolet',
-                                },
-                                {
-                                    label: 'Fiat',
-                                    value: 'fiat',
-                                },
-                            ]}
-                            {...register('exchange')}
-                            name='exchange'
-                        />
-                        <div className='flex items-center'>
-                            <Checkbox {...register('armored')} />
-                            <span className='font-medium text-gray-400'>Blindado</span>
-                        </div>
-
-                        <div className='mt-16'>
-                            <p className='text-3xl font-light'>Mais Informações do Veículo</p>
-                            <p className='mt-4 text-sm'>Vamos completar seu anúncio</p>
-                        </div>
-                        <Input
-                            title='Quanto seu veículo já rodou?'
-                            placeholder='0 km'
-                            {...register('kilometer')}
-                        />
-                        <TextArea
-                            title='Diferenciais do seu veículo'
-                            maxLength={500}
-                            {...register('differential')}
-                        />
-                        <Input title='Valor' placeholder='R$' {...register('value')} />
-
-                        <div className='mt-16'>
-                            <p className='text-3xl font-light'>Detalhes do Veículo</p>
-                            <p className='mt-4 text-sm'>
-                                Informe os itens que necessitam reparos ou outras informações
-                                importantes sobre seu veículo
-                            </p>
-                        </div>
-                        <TextArea
-                            title='Detalhes do Veículo'
-                            maxLength={500}
-                            {...register('details')}
-                        />
-
-                        <div className='mt-16'>
-                            <p className='text-3xl font-light'>Detalhes do Veículo</p>
-                            <p className='mt-4 text-sm'>
-                                Informe os itens que necessitam reparos ou outras informações
-                                importantes sobre seu veículo
-                            </p>
-                        </div>
-                        <div className='flex flex-wrap items-center gap-4'>
-                            {itemsInfoVehicle.map((item, index) => (
-                                <button
-                                    key={index}
-                                    type='button'
-                                    className={`rounded-full  px-7 py-2 font-semibold text-gray-200 ${
-                                        itemsDetails.find((itemFind) => itemFind === item)
-                                            ? 'bg-primary'
-                                            : 'bg-white'
-                                    }`}
-                                    onClick={() =>
-                                        handleSelectItem(itemsDetails, setItemsDetails, item)
+                        {infoPlate ? (
+                            <>
+                                <Box
+                                    title='Marca'
+                                    value={infoPlate.veiculo.marca_modelo.split('/')[0]}
+                                />
+                                <Box
+                                    title='Modelo'
+                                    value={infoPlate.veiculo.marca_modelo.split('/')[1]}
+                                />
+                                <Box
+                                    title='Ano do modelo'
+                                    value={infoPlate.veiculo.ano.split('/')[0]}
+                                />
+                                <Box
+                                    title='Ano da Fabricação'
+                                    value={infoPlate.veiculo.ano.split('/')[1]}
+                                />
+                                <Box title='Versão' value={infoPlate.fipes[0].marca_modelo} />
+                                <Box title='Cor' value={infoPlate.veiculo.cor} />
+                                <Box
+                                    title='Combustível'
+                                    value={
+                                        infoPlate.veiculo.combustivel.search('/') !== -1
+                                            ? 'Flex'
+                                            : infoPlate.veiculo.combustivel
                                     }
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
+                                />
+                                <Box
+                                    title='Quantidade de pessoas'
+                                    value={infoPlate.veiculo.quantidade_passageiro}
+                                />
+                                <Box title='Cilindradas' value={infoPlate.veiculo.cilindradas} />
+                                <div className='mt-16'>
+                                    <p className='text-3xl font-light'>
+                                        Mais Informações do Veículo
+                                    </p>
+                                    <p className='mt-4 text-sm'>Vamos completar seu anúncio</p>
+                                </div>
+                                <Input
+                                    mask='9999999'
+                                    maskChar=''
+                                    title='Quanto seu veículo já rodou?'
+                                    placeholder='0 km'
+                                    {...register('kilometer')}
+                                />
+                                <TextArea
+                                    title='Sobre o veículo'
+                                    maxLength={500}
+                                    {...register('about')}
+                                />
+                                <Input
+                                    mask='99999999999'
+                                    maskChar=''
+                                    title='Valor'
+                                    placeholder='R$'
+                                    {...register('value')}
+                                />
 
-                        <div className='mt-16'>
-                            <p className='text-3xl font-light'>Destaque seu Veículo</p>
-                            <p className='mt-4 text-sm'>Estamos acabando</p>
-                        </div>
-                        <div className='flex flex-wrap items-center gap-4'>
-                            {itemsInfoVehicle.map((item, index) => (
-                                <button
-                                    key={index}
-                                    type='button'
-                                    className={`rounded-full  px-7 py-2 font-semibold text-gray-200 ${
-                                        highlight.find((itemFind) => itemFind === item)
-                                            ? 'bg-primary'
-                                            : 'bg-white'
-                                    }`}
-                                    onClick={() => handleSelectItem(highlight, setHighlight, item)}
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
+                                <div className='mt-16'>
+                                    <p className='text-3xl font-light'>Destaque seu Veículo</p>
+                                    <p className='mt-4 text-sm'>Estamos acabando</p>
+                                </div>
+                                <div className='flex flex-wrap items-center gap-4'>
+                                    {itemsHighlightVehicle.map((item, index) => (
+                                        <button
+                                            key={index}
+                                            type='button'
+                                            className={`rounded-full  px-7 py-2 font-semibold text-gray-200 ${
+                                                highlight.find((itemFind) => itemFind === item)
+                                                    ? 'bg-primary !text-white'
+                                                    : 'bg-white'
+                                            }`}
+                                            onClick={() =>
+                                                handleSelectItem(highlight, setHighlight, item)
+                                            }
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                </div>
+                            </>
+                        ) : null}
                         <Button
-                            className='mt-20 flex !w-max items-center gap-2 bg-primary'
+                            className='mt-20 flex !w-max items-center gap-2 bg-primary text-white'
+                            loading={loading}
                             type='submit'
                         >
-                            <IoCheckmarkOutline className='text-2xl' /> Pronto, publicar meu anúncio
+                            {infoPlate ? (
+                                <>
+                                    <IoCheckmarkOutline className='text-2xl' /> Pronto, publicar meu
+                                    anúncio
+                                </>
+                            ) : (
+                                'Buscar veiculo'
+                            )}
                         </Button>
                     </form>
                     <div className='relative h-full w-[240px]'>
@@ -487,12 +358,24 @@ const CreateAdverts = () => {
                             <p className='mb-5 text-sm font-medium'>Pré-visualização do anúncio</p>
                             <Card
                                 data={{
-                                    title: 'Honda Civic',
-                                    description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-                                    price: '119.500',
-                                    year: '2016/2017',
-                                    distance: '72000',
-                                    location: 'Catanduva - SP',
+                                    title: infoPlate
+                                        ? `${infoPlate.veiculo.marca_modelo.split('/')[0]} ${
+                                              infoPlate.veiculo.marca_modelo
+                                                  .split('/')[1]
+                                                  .split(' ')[0]
+                                          }`
+                                        : '----',
+                                    description: infoPlate
+                                        ? infoPlate.fipes[0].marca_modelo
+                                        : '--------',
+                                    price: String(watch('value') ? watch('value') : '0'),
+                                    year: infoPlate ? infoPlate.veiculo.ano : '----',
+                                    distance: String(
+                                        watch('kilometer') ? watch('kilometer') : '----'
+                                    ),
+                                    location: infoPlate
+                                        ? `${infoPlate.veiculo.municipio} - ${infoPlate.veiculo.uf}`
+                                        : '----',
                                 }}
                                 inverseColors={true}
                             />

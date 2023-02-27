@@ -53,7 +53,12 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                                 ))}
                             </div>
                         </div>
-                        <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>{data.price}</p>
+                        <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>
+                            {Number(data.price).toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL',
+                            })}
+                        </p>
                     </div>
                     <div className='flex items-center justify-between rounded-xl bg-gray-900 px-5 py-3'>
                         <div className='flex items-center gap-5'>
@@ -103,7 +108,11 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                             <IoHeartOutline className='text-lg text-gray-500' />
                         </button>
                     </div>
-                    <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>{data.price}</p>
+                    <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>
+                        {Number(data.price)
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                    </p>
                     <div
                         className={`flex flex-col gap-3 rounded-xl  ${
                             inverseColors ? 'bg-gray-900' : 'bg-white'
