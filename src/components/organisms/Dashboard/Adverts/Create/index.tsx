@@ -1,8 +1,8 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/display-name */
 import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
-import InputMask, { ReactInputMask, Props } from 'react-input-mask'
 import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
 import { IoCheckmarkOutline } from 'react-icons/io5'
@@ -10,17 +10,11 @@ import { useForm } from 'react-hook-form'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
-
-interface IInput extends Props {
-    title: string
-}
-
-interface ITextArea extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-    title: string
-}
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import styled from 'styled-components'
 
 interface IDataForm {
+    title: string
     images: FileList
     plate: string
     kilometer: number
@@ -29,104 +23,94 @@ interface IDataForm {
     userId: string
 }
 
-interface IBox {
+interface IAdvert {
+    id: string
     title: string
-    value: string
+    plate: string
+    images: null
+    brand: string
+    model: string
+    fuel: string
+    amountPeaple: number
+    rolling: number
+    modelYear: string
+    manufactureYear: string
+    version: string
+    color: string
+    kilometer: number
+    value: number
+    about: string
+    views: number
+    active: true
+    city: string
+    state: string
+    highlight: string[]
 }
 
-type RefInput = ReactInputMask
-type RefTextarea = HTMLTextAreaElement
+const DivCustom = styled.div`
+    .field {
+        width: 100%;
+        background: transparent;
+        padding: 20px 16px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #484854;
+        outline: none;
 
-const Box = ({ title, value }: IBox) => (
-    <div className='rounded-xl bg-white'>
-        <div className='border-b border-gray-700 px-5 py-4'>
-            <p className='text-gray-400'>{title}</p>
-        </div>
-        <p className='w-full bg-transparent px-5 py-4 text-smd font-medium text-gray-400 outline-none'>
-            {value}
-        </p>
-    </div>
-)
+        ::placeholder {
+            color: #48485471;
+        }
+    }
+`
 
-const Input = React.forwardRef<RefInput, IInput>(({ title, ...props }, ref) => {
+const DefaultBox = ({ title, children }: { title: string; children: React.ReactNode }) => {
     return (
         <div className='rounded-xl bg-white'>
             <div className='border-b border-gray-700 px-5 py-4'>
                 <p className='text-gray-400'>{title}</p>
             </div>
-            <InputMask
-                className='w-full bg-transparent px-5 py-4 text-smd font-medium text-gray-400 outline-none'
-                ref={ref}
-                {...props}
-            />
+            <DivCustom>{children}</DivCustom>
         </div>
     )
-})
-
-const TextArea = React.forwardRef<RefTextarea, ITextArea>(({ title, maxLength, ...props }, ref) => {
-    const lenghtRef = React.useRef<HTMLSpanElement | null>(null)
-
-    return (
-        <div className='rounded-xl bg-white'>
-            <div className='flex items-center justify-between border-b border-gray-700 px-5 py-4'>
-                <p className='text-gray-400'>{title}</p>
-                <span className='text-sm' ref={lenghtRef}>
-                    0/{maxLength}
-                </span>
-            </div>
-            <textarea
-                className='w-full bg-transparent px-5 py-4 text-smd font-medium text-gray-400 outline-none'
-                rows={10}
-                maxLength={maxLength}
-                onChange={(e) => {
-                    if (lenghtRef.current) {
-                        lenghtRef.current.innerText = `${e.target.value.length}/${maxLength}`
-                    }
-                }}
-                ref={ref}
-                {...props}
-            />
-        </div>
-    )
-})
+}
 
 const CreateAdverts = () => {
     const [highlight, setHighlight] = React.useState<Array<string>>([])
     const [infoPlate, setInfoPlate] = React.useState<any>(null)
     const [loading, setLoading] = React.useState(false)
+    const [advert, setAdvert] = React.useState<IAdvert | null>(null)
 
     const { register, handleSubmit, watch } = useForm<IDataForm>()
     const { user } = useAuth()
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
 
     const onSubmit = async (dataForm: IDataForm) => {
         setLoading(true)
-        // console.log({
-        //     plate: infoPlate.veiculo.placa,
-        //     brand: infoPlate.veiculo.marca_modelo.split('/')[0],
-        //     model: infoPlate.veiculo.marca_modelo.split('/')[1],
-        //     modelYear: infoPlate.veiculo.ano.split('/')[0],
-        //     manufactureYear: infoPlate.veiculo.ano.split('/')[1],
-        //     version: infoPlate.fipes[0].marca_modelo,
-        //     color: infoPlate.veiculo.cor,
-        //     kilometer: dataForm.kilometer,
-        //     about: dataForm.about,
-        //     value: dataForm.value,
-        //     userId: user?.id,
-        //     city: infoPlate.veiculo.municipio,
-        //     state: infoPlate.veiculo.uf,
-        //     fuel:
-        //         infoPlate.veiculo.combustivel.search('/') !== -1
-        //             ? 'Flex'
-        //             : infoPlate.veiculo.combustivel,
-        //     amountPeaple: infoPlate.veiculo.quantidade_passageiro,
-        //     rolling: infoPlate.veiculo.cilindradas,
-        //     highlight: highlight,
-        // })
 
-        const { data } = await api.post(
-            '/api/v1/adverts',
-            {
+        if (advert) {
+            const { data } = await api.patch(`/api/v1/adverts/${advert.id}`, {
+                title: dataForm.title,
+                kilometer: dataForm.kilometer,
+                about: dataForm.about,
+                value: dataForm.value,
+                highlight: highlight,
+            })
+
+            if (data) {
+                console.log(data)
+                if (data && data.error) {
+                    toast.error(
+                        'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
+                    )
+                } else {
+                    toast.success('Anúncio atualizado')
+                    navigate('/dashboard/adverts')
+                }
+            }
+        } else {
+            const { data } = await api.post('/api/v1/adverts', {
+                title: dataForm.title,
                 plate: infoPlate.veiculo.placa,
                 brand: infoPlate.veiculo.marca_modelo.split('/')[0],
                 model: infoPlate.veiculo.marca_modelo.split('/')[1],
@@ -147,25 +131,20 @@ const CreateAdverts = () => {
                 amountPeaple: infoPlate.veiculo.quantidade_passageiro,
                 rolling: infoPlate.veiculo.cilindradas,
                 highlight: highlight,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${user?.token}`,
-                },
-            }
-        )
+            })
 
-        if (data && data.error) {
-            toast.error(
-                'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
-            )
-        } else {
-            toast.success('Anúncio criado')
-            navigate('/dashboard/adverts')
+            if (data && data.error) {
+                toast.error(
+                    'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
+                )
+            } else {
+                toast.success('Anúncio criado')
+                navigate('/dashboard/adverts')
+            }
         }
     }
 
-    const getInfoPlate = async (dataForm: IDataForm) => {
+    const getInfoPlate = async (dataForm: any) => {
         setLoading(true)
         try {
             const { data } = await api.get(
@@ -214,6 +193,23 @@ const CreateAdverts = () => {
         'Controle automático de velocidade',
     ]
 
+    React.useEffect(() => {
+        const getAdvertById = async () => {
+            const id = searchParams.get('id')
+            if (id) {
+                const { data } = await api.get(`/api/v1/adverts/${id}`)
+
+                if (data) {
+                    setAdvert(data)
+                    setHighlight(data.highlight)
+                    await getInfoPlate({ plate: data.plate })
+                }
+            }
+        }
+
+        getAdvertById()
+    }, [])
+
     return (
         <div>
             <section>
@@ -226,14 +222,16 @@ const CreateAdverts = () => {
                         className='flex flex-col gap-5'
                         onSubmit={infoPlate ? handleSubmit(onSubmit) : handleSubmit(getInfoPlate)}
                     >
-                        <Input
-                            mask='aaa-****'
-                            maskChar=''
-                            title='Placa do Veículo'
-                            placeholder='Ex: ABC-1234'
-                            autoFocus={true}
-                            {...register('plate')}
-                        />
+                        <DefaultBox title='Placa do Veículo'>
+                            <input
+                                placeholder='Ex: ABC-1234'
+                                autoFocus={true}
+                                className='field'
+                                defaultValue={advert?.plate}
+                                readOnly={!!advert?.plate}
+                                {...register('plate')}
+                            />
+                        </DefaultBox>
                         <div className='rounded-xl border border-dashed border-gray-700 bg-white py-8 px-5'>
                             <BiImageAlt className='text-3xl text-primary' />
                             <div className='mt-3 mb-5'>
@@ -257,62 +255,83 @@ const CreateAdverts = () => {
                         </div>
                         {infoPlate ? (
                             <>
-                                <Box
-                                    title='Marca'
-                                    value={infoPlate.veiculo.marca_modelo.split('/')[0]}
-                                />
-                                <Box
-                                    title='Modelo'
-                                    value={infoPlate.veiculo.marca_modelo.split('/')[1]}
-                                />
-                                <Box
-                                    title='Ano do modelo'
-                                    value={infoPlate.veiculo.ano.split('/')[0]}
-                                />
-                                <Box
-                                    title='Ano da Fabricação'
-                                    value={infoPlate.veiculo.ano.split('/')[1]}
-                                />
-                                <Box title='Versão' value={infoPlate.fipes[0].marca_modelo} />
-                                <Box title='Cor' value={infoPlate.veiculo.cor} />
-                                <Box
-                                    title='Combustível'
-                                    value={
-                                        infoPlate.veiculo.combustivel.search('/') !== -1
+                                <DefaultBox title='Título'>
+                                    <input
+                                        className='field'
+                                        placeholder='Ex: Honda Civic 4 portas 2020'
+                                        defaultValue={advert?.title}
+                                        {...register('title')}
+                                    />
+                                </DefaultBox>
+                                <DefaultBox title='Marca'>
+                                    <p className='field'>
+                                        {infoPlate.veiculo.marca_modelo.split('/')[0]}
+                                    </p>
+                                </DefaultBox>
+                                <DefaultBox title='Modelo'>
+                                    <p className='field'>
+                                        {infoPlate.veiculo.marca_modelo.split('/')[1]}
+                                    </p>
+                                </DefaultBox>
+                                <DefaultBox title='Ano do modelo'>
+                                    <p className='field'>{infoPlate.veiculo.ano.split('/')[0]}</p>
+                                </DefaultBox>
+                                <DefaultBox title='Ano da Fabricação'>
+                                    <p className='field'>{infoPlate.veiculo.ano.split('/')[1]}</p>
+                                </DefaultBox>
+                                <DefaultBox title='Versão'>
+                                    <p className='field'>{infoPlate.fipes[0].marca_modelo}</p>
+                                </DefaultBox>
+                                <DefaultBox title='Cor'>
+                                    <p className='field'>{infoPlate.veiculo.cor}</p>
+                                </DefaultBox>
+                                <DefaultBox title='Combustível'>
+                                    <p className='field'>
+                                        {infoPlate.veiculo.combustivel.search('/') !== -1
                                             ? 'Flex'
-                                            : infoPlate.veiculo.combustivel
-                                    }
-                                />
-                                <Box
-                                    title='Quantidade de pessoas'
-                                    value={infoPlate.veiculo.quantidade_passageiro}
-                                />
-                                <Box title='Cilindradas' value={infoPlate.veiculo.cilindradas} />
+                                            : infoPlate.veiculo.combustivel}
+                                    </p>
+                                </DefaultBox>
+                                <DefaultBox title='Quantidade de pessoas'>
+                                    <p className='field'>
+                                        {infoPlate.veiculo.quantidade_passageiro}
+                                    </p>
+                                </DefaultBox>
+                                <DefaultBox title='Cilindradas'>
+                                    <p className='field'>{infoPlate.veiculo.cilindradas}</p>
+                                </DefaultBox>
                                 <div className='mt-16'>
                                     <p className='text-3xl font-light'>
                                         Mais Informações do Veículo
                                     </p>
                                     <p className='mt-4 text-sm'>Vamos completar seu anúncio</p>
                                 </div>
-                                <Input
-                                    mask='9999999'
-                                    maskChar=''
-                                    title='Quanto seu veículo já rodou?'
-                                    placeholder='0 km'
-                                    {...register('kilometer')}
-                                />
-                                <TextArea
-                                    title='Sobre o veículo'
-                                    maxLength={500}
-                                    {...register('about')}
-                                />
-                                <Input
-                                    mask='99999999999'
-                                    maskChar=''
-                                    title='Valor'
-                                    placeholder='R$'
-                                    {...register('value')}
-                                />
+                                <DefaultBox title='Quanto seu veículo já rodou?'>
+                                    <input
+                                        placeholder='0 km'
+                                        className='field'
+                                        type='number'
+                                        defaultValue={advert?.kilometer}
+                                        {...register('kilometer')}
+                                    />
+                                </DefaultBox>
+                                <DefaultBox title='Sobre o veículo'>
+                                    <textarea
+                                        maxLength={500}
+                                        defaultValue={advert?.about}
+                                        rows={8}
+                                        className='field'
+                                        {...register('about')}
+                                    />
+                                </DefaultBox>
+                                <DefaultBox title='Valor'>
+                                    <input
+                                        placeholder='R$'
+                                        className='field'
+                                        defaultValue={advert?.value}
+                                        {...register('value')}
+                                    />
+                                </DefaultBox>
 
                                 <div className='mt-16'>
                                     <p className='text-3xl font-light'>Destaque seu Veículo</p>
@@ -345,8 +364,10 @@ const CreateAdverts = () => {
                         >
                             {infoPlate ? (
                                 <>
-                                    <IoCheckmarkOutline className='text-2xl' /> Pronto, publicar meu
-                                    anúncio
+                                    <IoCheckmarkOutline className='text-2xl' />{' '}
+                                    {advert
+                                        ? 'Atualizar meu anúncio'
+                                        : 'Pronto, publicar meu anúncio'}
                                 </>
                             ) : (
                                 'Buscar veiculo'
@@ -358,17 +379,11 @@ const CreateAdverts = () => {
                             <p className='mb-5 text-sm font-medium'>Pré-visualização do anúncio</p>
                             <Card
                                 data={{
-                                    title: infoPlate
-                                        ? `${infoPlate.veiculo.marca_modelo.split('/')[0]} ${
-                                              infoPlate.veiculo.marca_modelo
-                                                  .split('/')[1]
-                                                  .split(' ')[0]
-                                          }`
-                                        : '----',
+                                    title: String(watch('title') ? watch('title') : '-----'),
                                     description: infoPlate
                                         ? infoPlate.fipes[0].marca_modelo
                                         : '--------',
-                                    price: String(watch('value') ? watch('value') : '0'),
+                                    price: Number(watch('value') ? watch('value') : 0),
                                     year: infoPlate ? infoPlate.veiculo.ano : '----',
                                     distance: String(
                                         watch('kilometer') ? watch('kilometer') : '----'

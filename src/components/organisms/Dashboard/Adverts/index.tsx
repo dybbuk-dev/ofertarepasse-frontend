@@ -6,63 +6,103 @@ import InputSimple from 'components/atoms/Input/Simple'
 import { IoDocumentOutline, IoPencil, IoTrashOutline } from 'react-icons/io5'
 import Target from 'assets/icon/Target'
 import Eye from 'assets/icon/Eye'
+import api from 'services/api'
+import formatMoney from 'utils/formatMoney'
+import Modal from 'components/atoms/Modal'
+import Button from 'components/atoms/Button'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+
+interface Advert {
+    id: string
+    title: string
+    plate: string
+    images: null
+    brand: string
+    model: string
+    fuel: string
+    amountPeaple: number
+    rolling: number
+    modelYear: string
+    manufactureYear: string
+    version: string
+    color: string
+    kilometer: number
+    value: number
+    about: string
+    views: number
+    active: true
+    city: string
+    state: string
+    highlight: Array<string>
+}
 
 const Adverts = () => {
     const [filter, setFilter] = React.useState({
         action: '',
     })
+    const [adverts, setAdverts] = React.useState<Array<Advert>>([])
+    const [showModal, setShowModal] = React.useState({
+        show: false,
+        id: '',
+    })
 
-    const titlesTable = [
-        'Veículo',
-        'Proposta',
-        'Vizualizações',
-        'Valor',
-        'Status',
-        'ID',
-        'Gerenciar',
-    ]
+    const titlesTable = ['Veículo', 'Proposta', 'Vizualizações', 'Valor', 'Status', 'Gerenciar']
+    const navigate = useNavigate()
 
-    const items = [
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            proposals: 868,
-            views: 12.569,
-            value: 89.9,
-            active: true,
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            proposals: 868,
-            views: 12.569,
-            value: 89.9,
-            active: false,
-            id: 12345,
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            proposals: 868,
-            views: 12.569,
-            value: 89.9,
-            active: true,
-            id: 12345,
-        },
-    ]
+    const getAdverts = async () => {
+        const { data } = await api.get('/api/v1/adverts')
+
+        if (data) {
+            setAdverts(data)
+        }
+    }
+
+    const removeAdvert = async () => {
+        const { data } = await api.delete(`/api/v1/adverts/${showModal.id}`)
+
+        if (data && !data.error) {
+            toast.success('Anúncio removido')
+            setShowModal({
+                show: false,
+                id: '',
+            })
+            getAdverts()
+        } else {
+            toast.error('Erro ao remover o anúncio')
+        }
+    }
+
+    React.useEffect(() => {
+        getAdverts()
+    }, [])
 
     return (
         <div>
+            {showModal.show ? (
+                <Modal
+                    title='Excluir anúncio'
+                    onClose={() => setShowModal({ ...showModal, show: false })}
+                >
+                    <div className='w-[400px]'>
+                        <p>Deseja realmente excluir esse anúncio? Essa ação não é reversível.</p>
+                        <div className='mt-10 flex items-center justify-end gap-3'>
+                            <Button
+                                className='w-[150px] bg-gray-600'
+                                onClick={() => setShowModal({ id: '', show: false })}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                className='w-[150px] bg-primary text-white'
+                                onClick={() => removeAdvert()}
+                            >
+                                Excluir
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+            ) : null}
             <div className='flex items-center justify-between'>
                 <div>
                     <span className='text-3xl font-light text-gray-200'>Meus Anúncios</span>
@@ -92,15 +132,11 @@ const Adverts = () => {
                     </div>
                 </div>
             </div>
-            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-3'>
+            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto] gap-3'>
                 <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
                     placeholder='Faça uma busca por nome, local, telefone, e-mail'
-                />
-                <Select
-                    label='100 registros'
-                    onChange={(e) => setFilter({ ...filter, action: e })}
                 />
                 <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
                     <MdOutlineCloudDownload className='text-xl' />
@@ -122,7 +158,7 @@ const Adverts = () => {
                             </th>
                         ))}
                     </tr>
-                    {items.map((item, index) => (
+                    {adverts.map((item, index) => (
                         <tr
                             key={index}
                             className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
@@ -130,15 +166,13 @@ const Adverts = () => {
                             <td className='py-6 pl-6'>
                                 <div className='flex items-center gap-2'>
                                     <img
-                                        src={item.vehicle.image}
+                                        src='https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
                                         className='h-[40px] w-[60px] rounded-lg object-cover'
                                     />
                                     <div>
-                                        <p className='text-smd text-gray-400'>
-                                            {item.vehicle.title}
-                                        </p>
+                                        <p className='text-smd text-gray-400'>{item.title}</p>
                                         <p className='text-xs text-gray-500 line-clamp-1'>
-                                            {item.vehicle.description}
+                                            {item.version}
                                         </p>
                                     </div>
                                 </div>
@@ -146,7 +180,7 @@ const Adverts = () => {
                             <td>
                                 <div className='flex items-center gap-1'>
                                     <Target />
-                                    <span>{item.proposals}</span>
+                                    <span>0</span>
                                 </div>
                             </td>
                             <td>
@@ -157,7 +191,7 @@ const Adverts = () => {
                             </td>
                             <td>
                                 <span className='font-bold text-gray-400'>
-                                    R${item.value.toFixed(3)}
+                                    {formatMoney(item.value)}
                                 </span>
                             </td>
                             <td>
@@ -181,19 +215,18 @@ const Adverts = () => {
                                 </div>
                             </td>
                             <td>
-                                <span>
-                                    <strong>ID</strong> {item.id}
-                                </span>
-                            </td>
-                            <td>
                                 <div className='flex items-center gap-2'>
                                     <IoTrashOutline
                                         role='button'
                                         className='text-xl hover:text-primary'
+                                        onClick={() => setShowModal({ id: item.id, show: true })}
                                     />
                                     <IoPencil
                                         role='button'
                                         className='text-xl hover:text-primary'
+                                        onClick={() =>
+                                            navigate(`/dashboard/adverts/create?id=${item.id}`)
+                                        }
                                     />
                                 </div>
                             </td>

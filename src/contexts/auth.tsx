@@ -82,7 +82,7 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
                     }
                 }
             } catch (err) {
-                console.log(err)
+                localStorage.removeItem('ofertarepasse@user')
             }
         }
 
