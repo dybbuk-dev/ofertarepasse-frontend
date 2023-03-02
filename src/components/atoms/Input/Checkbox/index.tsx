@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/display-name */
 import CheckboxMui, { CheckboxProps } from '@mui/material/Checkbox'
+import * as React from 'react'
 import { IoEllipseOutline, IoCheckmarkCircle } from 'react-icons/io5'
 
-const Checkbox = ({ ...props }: CheckboxProps) => {
+const Checkbox = React.forwardRef(({ ...props }: CheckboxProps, ref: any) => {
     return (
         <CheckboxMui
             sx={{
@@ -12,9 +15,10 @@ const Checkbox = ({ ...props }: CheckboxProps) => {
             }}
             icon={<IoEllipseOutline className='text-2xl' />}
             checkedIcon={<IoCheckmarkCircle className='text-2xl' />}
+            ref={ref}
             {...props}
         />
     )
-}
+})
 
 export default Checkbox

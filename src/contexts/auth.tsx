@@ -1,4 +1,4 @@
-import axios from 'axios'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import api from 'services/api'
 
@@ -48,7 +48,10 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
                 message: data.message,
             }
         } else {
-            localStorage.setItem('ofertarepasse@user', data)
+            localStorage.setItem(
+                'ofertarepasse@user',
+                JSON.stringify({ token: data.token, id: data.id })
+            )
             setUser(data)
             setIsAuthenticated(true)
 
@@ -63,6 +66,28 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
         setUser(null)
         setIsAuthenticated(false)
     }
+
+    React.useEffect(() => {
+        const checkToken = async () => {
+            try {
+                let user: any = localStorage.getItem('ofertarepasse@user')
+
+                if (user) {
+                    user = JSON.parse(user)
+                    const { data } = await api.get(`/api/v1/users/${user.id}`)
+
+                    if (data && !data.error) {
+                        setUser(data.user)
+                        setIsAuthenticated(true)
+                    }
+                }
+            } catch (err) {
+                localStorage.removeItem('ofertarepasse@user')
+            }
+        }
+
+        checkToken()
+    }, [])
 
     return (
         <AuthContext.Provider

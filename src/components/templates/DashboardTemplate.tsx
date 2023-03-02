@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import Button from 'components/atoms/Button'
 import MenuDasboard from 'components/molecules/Menu/MenuDashboard'
 import {
@@ -12,12 +13,16 @@ import Money from 'assets/icon/Money'
 import Grid from 'assets/icon/Grid'
 import PieChart from 'assets/icon/PieChart'
 import GridSmall from 'assets/icon/GridSmall'
+import { Link } from 'react-router-dom'
+import { useAuth } from 'hooks/auth'
 
 interface IDashboardTemplate {
     children: React.ReactNode
 }
 
 const DashboardTemplate = ({ children }: IDashboardTemplate) => {
+    const { user } = useAuth()
+
     const buttonsMenu = [
         {
             icon: <Grid />,
@@ -48,21 +53,26 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
             </div>
             <div />
             <main className='container mx-auto min-h-screen'>
-                <div className='flex h-[100px] items-center rounded-b-2xl bg-white px-10'>
+                <div className='menuSearch flex h-[100px] items-center rounded-b-2xl bg-white px-10'>
                     <InputSimple placeholder='Pesquise por usuários, anúncios, clientes, negociações...' />
                     <div className='flex items-center justify-end'>
-                        <Button className='flex w-max items-center justify-center whitespace-nowrap !bg-primary-opacity-100 text-sm font-medium text-primary'>
-                            <IoAddOutline className='text-2xl' />
-                            Criar anúncio
-                        </Button>
+                        <Link to='/dashboard/adverts/create'>
+                            <Button className='flex w-max items-center justify-center whitespace-nowrap !bg-primary-opacity-100 text-sm font-medium text-primary'>
+                                <IoAddOutline className='text-2xl' />
+                                Criar anúncio
+                            </Button>
+                        </Link>
                         <div className='mx-7 flex items-center gap-3 text-xl'>
                             <IoChatboxOutline />
                             <IoHeartOutline />
                             <IoNotificationsOutline />
                         </div>
                         <img
-                            src={MenInCar}
-                            alt='Image profile'
+                            src={
+                                user
+                                    ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4rsSzLimlQyniEtUV4-1raljzFhS45QBeAw&usqp=CAU'
+                                    : MenInCar
+                            }
                             className='h-[50px] w-[50px] rounded-full object-cover'
                         />
                     </div>
