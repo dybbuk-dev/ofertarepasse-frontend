@@ -67,7 +67,9 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                         </button>
                     </Link>
                     <button className='text-left text-sm text-gray-100'>Suporte</button>
-                    <button className='text-left text-sm text-gray-100'>Sair</button>
+                    <Link to='/'>
+                        <button className='text-left text-sm text-gray-100'>Sair</button>
+                    </Link>
                 </div>
             </div>
         </nav>
