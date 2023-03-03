@@ -91,7 +91,7 @@ const Home = () => {
                 </div>
             </section>
             <section className='container mx-auto'>
-                <section className='mt-24'>
+                <section className={`mt-24 ${adverts.length === 0 ? 'hidden' : ''}`}>
                     <div className='mb-10 flex items-center justify-between font-medium'>
                         <p>Anúncios em Destaque</p>
                         <Link to='/'>
