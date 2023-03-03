@@ -385,7 +385,7 @@ const CreateAdverts = () => {
                                         : '--------',
                                     price: Number(watch('value') ? watch('value') : 0),
                                     year: infoPlate ? infoPlate.veiculo.ano : '----',
-                                    distance: String(
+                                    distance: Number(
                                         watch('kilometer') ? watch('kilometer') : '----'
                                     ),
                                     location: infoPlate

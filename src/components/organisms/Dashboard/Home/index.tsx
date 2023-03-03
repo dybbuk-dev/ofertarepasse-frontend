@@ -3,8 +3,36 @@ import CountUp from 'react-countup'
 import MenInCar from 'assets/images/men_in_car.png'
 import Target from 'assets/icon/Target'
 import Eye from 'assets/icon/Eye'
+import * as React from 'react'
+import api from 'services/api'
+import { IAdvert } from '../Adverts'
+import { useAuth } from 'hooks/auth'
+
+interface IAdvertsData {
+    count: number
+    items: Array<IAdvert>
+}
 
 const HomeDashboard = () => {
+    const [adverts, setAdverts] = React.useState<IAdvertsData | null>(null)
+
+    const { user } = useAuth()
+
+    React.useEffect(() => {
+        const getAdverts = async () => {
+            const { data } = await api.get('/api/v1/adverts')
+
+            if (data) {
+                setAdverts({
+                    count: data.meta.itemCount,
+                    items: data.items,
+                })
+            }
+        }
+
+        getAdverts()
+    }, [])
+
     const titlesTableNegotiations = [
         'Veículo',
         'Proposta',
@@ -153,11 +181,13 @@ const HomeDashboard = () => {
         <div>
             <section className='text-gray-200'>
                 <span className='mr-4 text-3xl font-light'>Dashboard</span>
-                <span className='text-lg font-light'>Seja bem-vindo, Ibisem!</span>
+                <span className='text-lg font-light'>
+                    Seja bem-vindo, {user?.name.split(' ')[0]}!
+                </span>
                 <div className='mt-10 grid grid-cols-3 rounded-2xl bg-white py-10 px-16'>
                     <div>
                         <div className='flex items-center gap-1'>
-                            <CountUp start={0} end={968} duration={1}>
+                            <CountUp start={0} end={adverts?.count ?? 0} duration={1}>
                                 {({ countUpRef }) => (
                                     <span className='text-6xl font-medium' ref={countUpRef} />
                                 )}
@@ -167,7 +197,7 @@ const HomeDashboard = () => {
                                 28%
                             </div>
                         </div>
-                        <p className='mt-4 text-sm font-medium'>novos anúncios este mês</p>
+                        <p className='mt-4 text-sm font-medium'>anúncios ativos</p>
                     </div>
                     <div className='justify-self-center'>
                         <div className='flex items-center gap-1'>
@@ -181,7 +211,7 @@ const HomeDashboard = () => {
                                 15%
                             </div>
                         </div>
-                        <p className='mt-4 text-sm font-medium'>novos usuários este mês</p>
+                        <p className='mt-4 text-sm font-medium'>visualizações em anúncios</p>
                     </div>
                     <div className='justify-self-end'>
                         <div className='flex items-center gap-1'>

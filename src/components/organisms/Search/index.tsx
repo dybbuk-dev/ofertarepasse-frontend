@@ -41,7 +41,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -50,7 +50,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -59,7 +59,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -68,7 +68,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -77,7 +77,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -86,7 +86,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -95,7 +95,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
         {
@@ -104,7 +104,7 @@ const Search = () => {
             description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
             price: 119000,
             year: '2016/2017',
-            distance: '72000 km',
+            distance: 72000,
             location: 'Catanduva - SP',
         },
     ]

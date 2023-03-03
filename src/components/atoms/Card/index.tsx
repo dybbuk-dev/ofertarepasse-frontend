@@ -10,7 +10,7 @@ interface ICard extends React.HTMLAttributes<HTMLDivElement> {
         description: string
         price: number
         year: string
-        distance: string
+        distance: number
         location: string
     }
     inline?: boolean

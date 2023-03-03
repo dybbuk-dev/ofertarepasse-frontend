@@ -13,7 +13,7 @@ import Button from 'components/atoms/Button'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
-interface Advert {
+export interface IAdvert {
     id: string
     title: string
     plate: string
@@ -35,13 +35,15 @@ interface Advert {
     city: string
     state: string
     highlight: Array<string>
+    createdAt: Date
+    updatedAt: Date
 }
 
 const Adverts = () => {
     const [filter, setFilter] = React.useState({
         action: '',
     })
-    const [adverts, setAdverts] = React.useState<Array<Advert>>([])
+    const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [showModal, setShowModal] = React.useState({
         show: false,
         id: '',
