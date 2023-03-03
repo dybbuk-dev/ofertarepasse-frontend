@@ -30,11 +30,13 @@ export interface IAdvert {
     kilometer: number
     value: number
     about: string
+    alert: string
     views: number
     active: true
     city: string
     state: string
     highlight: Array<string>
+    fipeValue: number
     createdAt: Date
     updatedAt: Date
 }
@@ -56,7 +58,7 @@ const Adverts = () => {
         const { data } = await api.get('/api/v1/adverts')
 
         if (data) {
-            setAdverts(data)
+            setAdverts(data.items)
         }
     }
 

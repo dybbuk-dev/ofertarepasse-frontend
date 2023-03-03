@@ -12,6 +12,7 @@ import { useAuth } from 'hooks/auth'
 import { toast } from 'react-toastify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
+import formatMoney from 'utils/formatMoney'
 
 interface IDataForm {
     title: string
@@ -21,6 +22,7 @@ interface IDataForm {
     about: string
     value: number
     userId: string
+    alert: string
 }
 
 interface IAdvert {
@@ -40,6 +42,7 @@ interface IAdvert {
     kilometer: number
     value: number
     about: string
+    alert: string
     views: number
     active: true
     city: string
@@ -93,6 +96,7 @@ const CreateAdverts = () => {
                 title: dataForm.title,
                 kilometer: dataForm.kilometer,
                 about: dataForm.about,
+                alert: dataForm.alert,
                 value: dataForm.value,
                 highlight: highlight,
             })
@@ -120,6 +124,7 @@ const CreateAdverts = () => {
                 color: infoPlate.veiculo.cor,
                 kilometer: dataForm.kilometer,
                 about: dataForm.about,
+                alert: dataForm.alert,
                 value: dataForm.value,
                 userId: user?.id,
                 city: infoPlate.veiculo.municipio,
@@ -131,6 +136,7 @@ const CreateAdverts = () => {
                 amountPeaple: infoPlate.veiculo.quantidade_passageiro,
                 rolling: infoPlate.veiculo.cilindradas,
                 highlight: highlight,
+                fipeValue: infoPlate.fipes[0].valor,
             })
 
             if (data && data.error) {
@@ -324,6 +330,16 @@ const CreateAdverts = () => {
                                         {...register('about')}
                                     />
                                 </DefaultBox>
+                                <DefaultBox title='Alerta'>
+                                    <textarea
+                                        maxLength={500}
+                                        defaultValue={advert?.alert}
+                                        rows={8}
+                                        className='field'
+                                        placeholder='Pneus Velhos, leve amassado na porta esquerda, parachoque levemente danificado.'
+                                        {...register('alert')}
+                                    />
+                                </DefaultBox>
                                 <DefaultBox title='Valor'>
                                     <input
                                         placeholder='R$'
@@ -332,6 +348,29 @@ const CreateAdverts = () => {
                                         {...register('value')}
                                     />
                                 </DefaultBox>
+                                <div className='grid grid-cols-2 rounded-2xl bg-white px-3 py-5'>
+                                    <div>
+                                        <p className='text-sm font-bold'>fipe</p>
+                                        <p className='mt-2 mb-1 text-xl'>
+                                            {formatMoney(infoPlate.fipes[0].valor)}
+                                        </p>
+                                        <p className='max-w-[150px] text-xs'>
+                                            Valor deste veículo na Tabela Fipe
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className='text-sm font-bold'>web</p>
+                                        <p className='mt-2 mb-1 text-xl'>
+                                            {formatMoney(
+                                                infoPlate.fipes[0].valor +
+                                                    infoPlate.fipes[0].valor * 0.2
+                                            )}
+                                        </p>
+                                        <p className='max-w-[150px] text-xs'>
+                                            Valor médio de venda em toda internet
+                                        </p>
+                                    </div>
+                                </div>
 
                                 <div className='mt-16'>
                                     <p className='text-3xl font-light'>Destaque seu Veículo</p>
