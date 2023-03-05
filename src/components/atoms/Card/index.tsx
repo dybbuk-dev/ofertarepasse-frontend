@@ -10,7 +10,7 @@ interface ICard extends React.HTMLAttributes<HTMLDivElement> {
         description: string
         price: number
         year: string
-        distance: string
+        distance: number
         location: string
     }
     inline?: boolean
@@ -122,7 +122,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                         <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                             <BarChart />
                             <span className='text-sm font-medium text-gray-400'>
-                                {data.distance}
+                                {data.distance ? `${data.distance} km` : '----'}
                             </span>
                         </div>
                         <div className='grid grid-cols-[20px_1fr] items-center gap-2'>

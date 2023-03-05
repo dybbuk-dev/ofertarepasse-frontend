@@ -13,9 +13,24 @@ import Nissan from 'assets/images/nissan.png'
 import Volks from 'assets/images/volks.png'
 import Toyota from 'assets/images/toyota.png'
 import MenWithWoman from 'assets/images/men_with_woman.png'
+import api from 'services/api'
+import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 
 const Home = () => {
     const [optionBuy, setOptionBuy] = React.useState('carro')
+    const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
+
+    React.useEffect(() => {
+        const getAdverts = async () => {
+            const { data } = await api.get('/api/v1/adverts?limit=5')
+
+            if (data) {
+                setAdverts(data.items)
+            }
+        }
+
+        getAdverts()
+    }, [])
 
     const itemsBuy = [
         {
@@ -29,54 +44,6 @@ const Home = () => {
         {
             label: 'Quero anunciar',
             value: 'anunciar',
-        },
-    ]
-
-    const items = [
-        {
-            id: 'pasjbdpasjbdpasjd',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119500,
-            year: '2016/2017',
-            distance: '72000 km',
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijsdbfpaijsbdfasdf',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119500,
-            year: '2016/2017',
-            distance: '72000 km',
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijsdbfiajbdsfpiasjdf',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119500,
-            year: '2016/2017',
-            distance: '72000 km',
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijbdfijbasdif',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119500,
-            year: '2016/2017',
-            distance: '72000 km',
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijpbsdfpijabsdp',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119500,
-            year: '2016/2017',
-            distance: '72000 km',
-            location: 'Catanduva - SP',
         },
     ]
 
@@ -124,7 +91,7 @@ const Home = () => {
                 </div>
             </section>
             <section className='container mx-auto'>
-                <section className='mt-24'>
+                <section className={`mt-24 ${adverts.length === 0 ? 'hidden' : ''}`}>
                     <div className='mb-10 flex items-center justify-between font-medium'>
                         <p>Anúncios em Destaque</p>
                         <Link to='/'>
@@ -132,9 +99,18 @@ const Home = () => {
                         </Link>
                     </div>
                     <div className='grid grid-cols-5 gap-5'>
-                        {items.map((item) => (
+                        {adverts.map((item) => (
                             <Link to={`/info/${item.id}`} key={item.id}>
-                                <Card data={item} />
+                                <Card
+                                    data={{
+                                        title: item.title,
+                                        description: item.about,
+                                        distance: item.kilometer,
+                                        location: `${item.city} - ${item.state}`,
+                                        price: item.value,
+                                        year: item.modelYear,
+                                    }}
+                                />
                             </Link>
                         ))}
                     </div>
