@@ -37,8 +37,9 @@ const HomeDashboard = () => {
             }
         }
         const getViews = async () => {
-            const { data } = await api.get(`/api/v1/adverts/views?id=${user?.id}`)
+            const { data } = await api.post(`/api/v1/adverts/views?id=${user?.id}`)
 
+            console.log(data)
             if (data && !data.error) {
                 setTotalView(data.count)
             }
