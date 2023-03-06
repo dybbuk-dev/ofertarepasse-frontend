@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Filter from 'assets/icon/Filter'
 import Card from 'components/atoms/Card'
 import Input from 'components/atoms/Input'
@@ -9,11 +10,48 @@ import {
     IoCloseOutline,
     IoLocationOutline,
 } from 'react-icons/io5'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import api from 'services/api'
+import { IAdvert } from '../Dashboard/Adverts'
 
 const Search = () => {
     const [amountColums, setAmountColums] = React.useState(5)
     const [visibleFilter, setVisibleFilter] = React.useState(true)
+    const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
+    const [total, setTotal] = React.useState<number>(0)
+    const [location, setLocation] = React.useState<string | null>(null)
+
+    const [searchParams] = useSearchParams()
+
+    const getLocation = async () => {
+        navigator.geolocation.getCurrentPosition(async (position: any) => {
+            fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
+            )
+                .then(async (res: any) => {
+                    const data = await res.json()
+
+                    setLocation(`${data.address.town}/${data.address.state}`)
+                })
+                .catch(() => {
+                    toast.error('Erro ao pegar a localização')
+                })
+        })
+    }
+
+    React.useEffect(() => {
+        const getAdverts = async () => {
+            const { data } = await api.get('/api/v1/adverts')
+
+            if (data) {
+                setAdverts(data.items)
+                setTotal(data.meta.itemCount)
+            }
+        }
+
+        getAdverts()
+    }, [])
 
     const checkboxFields = {
         marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
@@ -34,92 +72,21 @@ const Search = () => {
         caracteristicas: ['Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
     }
 
-    const items = [
-        {
-            id: 'pasjbdpasjbdpasjd',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijsdbfpaijsbdfasdf',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijsdbfiajbdsfpiasjdf',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijbdfijbasdif',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijpbsdfpijabsdp',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'asdsdfgdfghfrjyuktyik',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: '5sad14f65asd1f965',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: '87xcv19a819sd81fsd',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 119000,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-    ]
-
     return (
         <div className='bg-gray-900'>
             <section className='container mx-auto mt-[150px] grid grid-cols-[300px_1fr] items-center border-y border-gray-700 py-10'>
-                <button className='flex items-center gap-2 text-gray-400'>
+                <button className='flex items-center gap-2 text-gray-400' onClick={getLocation}>
                     <IoLocationOutline className='text-lg' />
-                    <span className='underline underline-offset-2'>Escolha uma Localização</span>
+                    <span className='underline underline-offset-2'>
+                        {location ? location.split('/')[0] : 'Escolha uma Localização'}
+                    </span>
                 </button>
                 <div className='flex items-center justify-between'>
                     <div className='text-gray-200'>
-                        <p className='text-xl'>Carros Volkswagen em Londrina/PR</p>
-                        <p className='text-sm'>48 carros encontrados</p>
+                        <p className='text-xl'>
+                            Carros Volkswagen {location ? `em ${location}` : ''}
+                        </p>
+                        <p className='text-sm'>{total} carros encontrados</p>
                     </div>
                     <div className='flex items-center gap-6'>
                         <button
@@ -353,10 +320,17 @@ const Search = () => {
                             !visibleFilter ? 'max-w-[1200px]' : ''
                         }`}
                     >
-                        {items.map((item) => (
+                        {adverts.map((item) => (
                             <Link to={`/info/${item.id}`} key={item.id} className='h-max'>
                                 <Card
-                                    data={item}
+                                    data={{
+                                        title: item.title,
+                                        price: item.value,
+                                        description: item.about,
+                                        distance: item.kilometer,
+                                        location: `${item.city} - ${item.state}`,
+                                        year: item.modelYear,
+                                    }}
                                     inline={amountColums === 1}
                                     inverseColors={true}
                                 />

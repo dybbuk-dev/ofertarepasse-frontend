@@ -90,7 +90,6 @@ const CreateAdverts = () => {
 
     const onSubmit = async (dataForm: IDataForm) => {
         setLoading(true)
-
         if (advert) {
             const { data } = await api.patch(`/api/v1/adverts/${advert.id}`, {
                 title: dataForm.title,
@@ -102,7 +101,6 @@ const CreateAdverts = () => {
             })
 
             if (data) {
-                console.log(data)
                 if (data && data.error) {
                     toast.error(
                         'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
@@ -165,6 +163,10 @@ const CreateAdverts = () => {
             )
 
             if (data) {
+                if (data.data.fipes.length === 0) {
+                    setLoading(false)
+                    return toast.error('Veiculo não identificado')
+                }
                 setInfoPlate(data.data)
                 setLoading(false)
             }
