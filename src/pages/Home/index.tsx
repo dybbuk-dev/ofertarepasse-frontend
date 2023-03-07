@@ -84,7 +84,7 @@ const Home = () => {
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
-                                <Link to={`/search?search=${search}`}>
+                                <Link to={`/search?title=${search}`}>
                                     <Button className='absolute right-5 top-6 !w-max !bg-primary !px-10 font-semibold text-white'>
                                         Buscar Veículos
                                     </Button>

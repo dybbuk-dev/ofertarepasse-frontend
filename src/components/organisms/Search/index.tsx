@@ -4,13 +4,14 @@ import Card from 'components/atoms/Card'
 import Input from 'components/atoms/Input'
 import Checkbox from 'components/atoms/Input/Checkbox'
 import React from 'react'
+import { useForm } from 'react-hook-form'
 import {
     IoChevronForwardOutline,
     IoChevronUpOutline,
     IoCloseOutline,
     IoLocationOutline,
 } from 'react-icons/io5'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import api from 'services/api'
 import { IAdvert } from '../Dashboard/Adverts'
@@ -20,9 +21,12 @@ const Search = () => {
     const [visibleFilter, setVisibleFilter] = React.useState(true)
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [total, setTotal] = React.useState<number>(0)
-    const [location, setLocation] = React.useState<string | null>(null)
+    const [currentLocation, setCurrentLocation] = React.useState<string | null>(null)
+    const [timer, setTimer] = React.useState<any>(null)
 
-    const [searchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
+    const location = useLocation()
+    const { register, getValues } = useForm()
 
     const getLocation = async () => {
         navigator.geolocation.getCurrentPosition(async (position: any) => {
@@ -32,7 +36,7 @@ const Search = () => {
                 .then(async (res: any) => {
                     const data = await res.json()
 
-                    setLocation(`${data.address.town}/${data.address.state}`)
+                    setCurrentLocation(`${data.address.town}/${data.address.state}`)
                 })
                 .catch(() => {
                     toast.error('Erro ao pegar a localização')
@@ -40,18 +44,57 @@ const Search = () => {
         })
     }
 
+    const getParamsFormated = () => {
+        let urlParam = '?'
+        for (const params of searchParams.entries()) {
+            const [param, value] = params
+
+            urlParam = urlParam + `&${param}=${value}`
+        }
+
+        return urlParam
+    }
+
+    const getFormValues = () => {
+        clearTimeout(timer)
+
+        const newTimer = setTimeout(() => {
+            console.log('Chamar api')
+            let newUrlParams = `?title=${searchParams.get('title')}`
+            Object.entries(getValues()).map((item) => {
+                newUrlParams = newUrlParams + `&${item[0]}=${item[1]}`
+            })
+
+            setSearchParams(newUrlParams)
+        }, 1000)
+
+        setTimer(newTimer)
+    }
+
     React.useEffect(() => {
         const getAdverts = async () => {
-            const { data } = await api.get('/api/v1/adverts')
+            const { data } = await api.get(`/api/v1/adverts?title=${searchParams.get('title')}`)
 
             if (data) {
                 setAdverts(data.items)
-                setTotal(data.meta.itemCount)
+                setTotal(data.meta.totalItems)
             }
         }
 
         getAdverts()
     }, [])
+
+    React.useEffect(() => {
+        const getAdverts = async () => {
+            const { data } = await api.get(`/api/v1/adverts${getParamsFormated()}`)
+            if (data) {
+                setAdverts(data.items)
+                setTotal(data.meta.totalItems)
+            }
+        }
+
+        getAdverts()
+    }, [location])
 
     const checkboxFields = {
         marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
@@ -78,15 +121,20 @@ const Search = () => {
                 <button className='flex items-center gap-2 text-gray-400' onClick={getLocation}>
                     <IoLocationOutline className='text-lg' />
                     <span className='underline underline-offset-2'>
-                        {location ? location.split('/')[0] : 'Escolha uma Localização'}
+                        {currentLocation
+                            ? currentLocation.split('/')[0]
+                            : 'Escolha uma Localização'}
                     </span>
                 </button>
                 <div className='flex items-center justify-between'>
                     <div className='text-gray-200'>
                         <p className='text-xl'>
-                            Carros Volkswagen {location ? `em ${location}` : ''}
+                            {searchParams.get('title')
+                                ? searchParams.get('title')
+                                : 'Acho que você vai gostar'}{' '}
+                            {currentLocation ? `em ${currentLocation}` : ''}
                         </p>
-                        <p className='text-sm'>{total} carros encontrados</p>
+                        <p className='text-sm'>{total} veículos encontrados</p>
                     </div>
                     <div className='flex items-center gap-6'>
                         <button
@@ -152,7 +200,10 @@ const Search = () => {
                     visibleFilter ? 'grid-cols-[325px_1fr]' : 'grid-cols-1'
                 }`}
             >
-                <div className={visibleFilter ? 'block bg-white py-10 px-3' : 'hidden'}>
+                <form
+                    className={visibleFilter ? 'block bg-white py-10 px-3' : 'hidden'}
+                    onChange={getFormValues}
+                >
                     <div className='border-b border-gray-700 pb-10'>
                         <p className='text-sm font-medium text-gray-200'>Marcas</p>
                         <div className='my-3 flex flex-col'>
@@ -180,6 +231,7 @@ const Search = () => {
                                     placeholder='de'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
+                                    {...register('minYear')}
                                 />
                                 <span className='text-xs text-gray-500'>ex: 2012</span>
                             </label>
@@ -188,6 +240,7 @@ const Search = () => {
                                     placeholder='até'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
+                                    {...register('maxYear')}
                                 />
                                 <span className='text-xs text-gray-500'>ex: 2022</span>
                             </label>
@@ -201,6 +254,7 @@ const Search = () => {
                                     placeholder='de'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
+                                    {...register('minPrice')}
                                 />
                                 <span className='text-xs text-gray-500'>ex: 15.000</span>
                             </label>
@@ -209,6 +263,7 @@ const Search = () => {
                                     placeholder='até'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
+                                    {...register('maxPrice')}
                                 />
                                 <span className='text-xs text-gray-500'>ex: 50.000</span>
                             </label>
@@ -222,6 +277,7 @@ const Search = () => {
                                     placeholder='de'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
+                                    {...register('minKilometer')}
                                 />
                                 <span className='text-xs text-gray-500'>ex: 10.000</span>
                             </label>
@@ -230,6 +286,7 @@ const Search = () => {
                                     placeholder='até'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
+                                    {...register('maxKilometer')}
                                 />
                                 <span className='text-xs text-gray-500'>ex: 50.000</span>
                             </label>
@@ -311,8 +368,8 @@ const Search = () => {
                         Limpar filtros
                         <IoCloseOutline />
                     </button>
-                </div>
-                <div className={`${!visibleFilter ? 'flex justify-center' : ''}`}>
+                </form>
+                <div className={`${!visibleFilter ? 'flex justify-center' : ''} mb-20`}>
                     <div
                         className={`${
                             'grid-cols-' + amountColums

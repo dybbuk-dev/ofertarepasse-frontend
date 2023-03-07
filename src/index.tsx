@@ -7,10 +7,8 @@ import App from 'app'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-    <React.StrictMode>
-        <AuthProvider>
-            <ToastContainer theme='colored' />
-            <App />
-        </AuthProvider>
-    </React.StrictMode>
+    <AuthProvider>
+        <ToastContainer theme='colored' />
+        <App />
+    </AuthProvider>
 )

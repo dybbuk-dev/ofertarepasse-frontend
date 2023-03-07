@@ -91,7 +91,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                     <div className='grid grid-cols-[1fr_auto] items-start'>
                         <div>
                             <p className='text-lg font-semibold text-gray-100'>{data.title}</p>
-                            <p className='text-xs font-medium text-gray-500 line-clamp-2'>
+                            <p className='text-xs font-medium text-gray-500 line-clamp-1'>
                                 {data.description}
                             </p>
                         </div>
