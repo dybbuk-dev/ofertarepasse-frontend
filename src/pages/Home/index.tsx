@@ -19,6 +19,7 @@ import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 const Home = () => {
     const [optionBuy, setOptionBuy] = React.useState('carro')
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
+    const [search, setSearch] = React.useState('')
 
     React.useEffect(() => {
         const getAdverts = async () => {
@@ -78,8 +79,12 @@ const Home = () => {
                                 ))}
                             </div>
                             <div className='relative pt-10'>
-                                <SearchInput placeholder='Digite marca ou modelo do carro' />
-                                <Link to='/search'>
+                                <SearchInput
+                                    placeholder='Digite marca ou modelo do carro'
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <Link to={`/search?title=${search}`}>
                                     <Button className='absolute right-5 top-6 !w-max !bg-primary !px-10 font-semibold text-white'>
                                         Buscar Veículos
                                     </Button>

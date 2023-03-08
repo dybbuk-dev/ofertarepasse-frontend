@@ -41,7 +41,9 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                     </div>
                     <div className='flex items-center justify-between'>
                         <div>
-                            <p className='text-xs font-medium text-gray-500'>{data.description}</p>
+                            <p className='text-xs font-medium text-gray-500 line-clamp-2'>
+                                {data.description}
+                            </p>
                             <div className='my-6 flex flex-wrap items-center gap-4'>
                                 {[
                                     'Aceita Troca',
@@ -83,22 +85,15 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                             <IoCheckmarkOutline /> Concessionária
                         </p>
                     </div>
-                    <div className='flex flex-col items-end'>
-                        <button>
-                            <IoHeartOutline className='text-lg text-gray-500' />
-                        </button>
-                        <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>{data.price}</p>
-                        <p className='flex items-center gap-2 text-xs'>
-                            <IoCheckmarkOutline /> Concessionária
-                        </p>
-                    </div>
                 </div>
             ) : (
                 <div className='py-3 px-4'>
                     <div className='grid grid-cols-[1fr_auto] items-start'>
                         <div>
                             <p className='text-lg font-semibold text-gray-100'>{data.title}</p>
-                            <p className='text-xs font-medium text-gray-500'>{data.description}</p>
+                            <p className='text-xs font-medium text-gray-500 line-clamp-1'>
+                                {data.description}
+                            </p>
                         </div>
                         <button>
                             <IoHeartOutline className='text-lg text-gray-500' />
