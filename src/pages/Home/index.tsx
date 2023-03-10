@@ -108,6 +108,7 @@ const Home = () => {
                             <Link to={`/info/${item.id}`} key={item.id}>
                                 <Card
                                     data={{
+                                        id: item.id,
                                         title: item.title,
                                         description: item.about,
                                         distance: item.kilometer,

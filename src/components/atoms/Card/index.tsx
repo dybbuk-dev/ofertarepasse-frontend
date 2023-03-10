@@ -1,11 +1,13 @@
-import { IoCheckmarkOutline, IoHeartOutline } from 'react-icons/io5'
+import { IoCheckmarkOutline, IoHeart, IoHeartOutline } from 'react-icons/io5'
 import Calendar from 'assets/icon/Calendar'
 import BarChart from 'assets/icon/BarChart'
 import Compass from 'assets/icon/Compass'
 import formatMoney from 'utils/formatMoney'
+import { useFavorite } from 'hooks/favorites'
 
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
+        id: string
         title: string
         description: string
         price: number
@@ -18,6 +20,8 @@ interface ICard extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
+    const { addFavorite, removeFavorite, favorites, isFavorited } = useFavorite()
+
     return (
         <div
             className={`h-max ${inline ? 'grid grid-cols-[225px_1fr]' : 'block'} ${
@@ -95,8 +99,20 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                                 {data.description}
                             </p>
                         </div>
-                        <button>
-                            <IoHeartOutline className='text-lg text-gray-500' />
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault()
+
+                                !isFavorited(data.id)
+                                    ? addFavorite(data.id)
+                                    : removeFavorite((isFavorited(data.id) as { id: string }).id)
+                            }}
+                        >
+                            {favorites.find((item) => item.advert.id === data.id) ? (
+                                <IoHeart className='text-lg text-primary' />
+                            ) : (
+                                <IoHeartOutline className='text-lg text-gray-500' />
+                            )}
                         </button>
                     </div>
                     <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>

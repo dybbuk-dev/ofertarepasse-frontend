@@ -1,5 +1,5 @@
 import Button from 'components/atoms/Button'
-import { IoCheckmark, IoHeartOutline, IoLogoWhatsapp } from 'react-icons/io5'
+import { IoCheckmark, IoHeart, IoHeartOutline, IoLogoWhatsapp } from 'react-icons/io5'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { useParams, useNavigate } from 'react-router-dom'
 import api from 'services/api'
@@ -8,12 +8,14 @@ import * as React from 'react'
 import { IAdvert } from '../Dashboard/Adverts'
 import formatMoney from 'utils/formatMoney'
 import CardValueFipe from 'components/atoms/CardValueFipe'
+import { useFavorite } from 'hooks/favorites'
 
 const Info = () => {
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
 
     const { id } = useParams()
     const navigate = useNavigate()
+    const { favorites, addFavorite, removeFavorite, isFavorited } = useFavorite()
 
     React.useEffect(() => {
         const getAdvert = async () => {
@@ -52,8 +54,20 @@ const Info = () => {
                                         {advert.model}
                                     </h2>
                                 </div>
-                                <button>
-                                    <IoHeartOutline className='text-3xl text-gray-500' />
+                                <button
+                                    onClick={() =>
+                                        !isFavorited(advert.id)
+                                            ? addFavorite(advert.id)
+                                            : removeFavorite(
+                                                  (isFavorited(advert.id) as { id: string }).id
+                                              )
+                                    }
+                                >
+                                    {favorites.find((item) => item.advert.id === advert.id) ? (
+                                        <IoHeart className='text-3xl text-primary' />
+                                    ) : (
+                                        <IoHeartOutline className='text-3xl text-gray-500' />
+                                    )}
                                 </button>
                             </div>
                             <div className='my-8 flex justify-between '>

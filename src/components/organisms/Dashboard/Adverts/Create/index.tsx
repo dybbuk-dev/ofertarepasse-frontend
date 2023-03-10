@@ -420,6 +420,7 @@ const CreateAdverts = () => {
                             <p className='mb-5 text-sm font-medium'>Pré-visualização do anúncio</p>
                             <Card
                                 data={{
+                                    id: '',
                                     title: String(watch('title') ? watch('title') : '-----'),
                                     description: infoPlate
                                         ? infoPlate.fipes[0].marca_modelo

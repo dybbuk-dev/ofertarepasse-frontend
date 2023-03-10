@@ -381,6 +381,7 @@ const Search = () => {
                             <Link to={`/info/${item.id}`} key={item.id} className='h-max'>
                                 <Card
                                     data={{
+                                        id: item.id,
                                         title: item.title,
                                         price: item.value,
                                         description: item.about,
