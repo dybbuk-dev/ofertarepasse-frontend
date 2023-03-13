@@ -5,7 +5,7 @@ import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
 import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
-import { IoCheckmarkOutline } from 'react-icons/io5'
+import { IoCheckmarkOutline, IoCloseCircle, IoTrashOutline } from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
@@ -16,7 +16,7 @@ import formatMoney from 'utils/formatMoney'
 
 interface IDataForm {
     title: string
-    images: FileList
+    images: FileList | File[]
     plate: string
     kilometer: number
     about: string
@@ -29,7 +29,7 @@ interface IAdvert {
     id: string
     title: string
     plate: string
-    images: null
+    images: FileList | null
     brand: string
     model: string
     fuel: string
@@ -83,10 +83,23 @@ const CreateAdverts = () => {
     const [loading, setLoading] = React.useState(false)
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
 
-    const { register, handleSubmit, watch } = useForm<IDataForm>()
+    const { register, handleSubmit, watch, setValue } = useForm<IDataForm>()
     const { user } = useAuth()
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
+
+    const uploadImage = async (images: FileList | File[], id: string) => {
+        const formData = new FormData()
+        Array.from(images).forEach((file) => {
+            formData.append('files', file)
+        })
+
+        const { status } = await api.post(`/api/v1/adverts/${id}/upload-file`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+
+        return status
+    }
 
     const onSubmit = async (dataForm: IDataForm) => {
         setLoading(true)
@@ -102,7 +115,8 @@ const CreateAdverts = () => {
 
             if (data) {
                 if (data && data.error) {
-                    toast.error(
+                    setLoading(false)
+                    return toast.error(
                         'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                     )
                 } else {
@@ -138,10 +152,19 @@ const CreateAdverts = () => {
             })
 
             if (data && data.error) {
-                toast.error(
+                setLoading(false)
+                return toast.error(
                     'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                 )
             } else {
+                if (dataForm.images.length > 0) {
+                    const status = await uploadImage(dataForm.images, data.id)
+
+                    if (status !== 201) {
+                        toast.error('Erro ao enviar as imagens do seu anúncio')
+                    }
+                }
+
                 toast.success('Anúncio criado')
                 navigate('/dashboard/adverts')
             }
@@ -244,7 +267,8 @@ const CreateAdverts = () => {
                             <BiImageAlt className='text-3xl text-primary' />
                             <div className='mt-3 mb-5'>
                                 <p className='text-smd font-medium text-gray-400'>
-                                    Clique ou arraste aqui para enviar imagens do seu veículo.
+                                    Clique em &quot;Procurar&quot; logo a baixo para enviar imagens
+                                    do seu veículo.
                                 </p>
                                 <p className='text-sm text-gray-400'>Tamanho máximo 2MB cada</p>
                             </div>
@@ -256,10 +280,41 @@ const CreateAdverts = () => {
                                 <input
                                     type='file'
                                     className='hidden'
+                                    multiple={true}
                                     accept='image/png, image/jpeg'
                                     {...register('images')}
                                 />
                             </label>
+                            {watch('images') && watch('images').length > 0 ? (
+                                <div className='mt-8 grid grid-cols-3 gap-2'>
+                                    {Array.from(watch('images')).map((item) => (
+                                        <div
+                                            key={item.name}
+                                            className='relative overflow-hidden rounded'
+                                        >
+                                            <button
+                                                type='button'
+                                                className='absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center bg-[#00000099] text-white opacity-0 hover:opacity-100'
+                                                onClick={() => {
+                                                    setValue(
+                                                        'images',
+                                                        Array.from(watch('images')).filter(
+                                                            (itemFilter) => itemFilter !== item
+                                                        )
+                                                    )
+                                                }}
+                                            >
+                                                <IoTrashOutline className='text-xl' />
+                                                <p>Excluir</p>
+                                            </button>
+                                            <img
+                                                src={URL.createObjectURL(item)}
+                                                className='h-full w-full object-cover'
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : null}
                         </div>
                         {infoPlate ? (
                             <>
@@ -421,6 +476,10 @@ const CreateAdverts = () => {
                             <Card
                                 data={{
                                     id: '',
+                                    image:
+                                        watch('images') && watch('images').length > 0
+                                            ? URL.createObjectURL(watch('images')[0])
+                                            : null,
                                     title: String(watch('title') ? watch('title') : '-----'),
                                     description: infoPlate
                                         ? infoPlate.fipes[0].marca_modelo

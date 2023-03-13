@@ -8,6 +8,7 @@ import { useFavorite } from 'hooks/favorites'
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
         id: string
+        image?: string | null
         title: string
         description: string
         price: number
@@ -30,7 +31,10 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
             {...props}
         >
             <img
-                src='https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
+                src={
+                    data.image ??
+                    'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
+                }
                 className={`${inline ? 'h-full' : 'h-[165px]'} w-full  object-cover ${
                     inline ? 'rounded-l-xl' : 'rounded-t-xl'
                 }`}

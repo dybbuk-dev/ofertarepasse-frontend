@@ -31,7 +31,7 @@ const HomeDashboard = () => {
 
             if (data) {
                 setAdverts({
-                    count: data.meta.itemCount,
+                    count: data.count,
                     items: data.items,
                 })
             }
@@ -39,7 +39,6 @@ const HomeDashboard = () => {
         const getViews = async () => {
             const { data } = await api.post(`/api/v1/adverts/views?id=${user?.id}`)
 
-            console.log(data)
             if (data && !data.error) {
                 setTotalView(data.count)
             }
