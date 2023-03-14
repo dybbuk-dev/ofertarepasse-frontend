@@ -4,6 +4,7 @@ import BarChart from 'assets/icon/BarChart'
 import Compass from 'assets/icon/Compass'
 import formatMoney from 'utils/formatMoney'
 import { useFavorite } from 'hooks/favorites'
+import WithoutImage from 'assets/images/withoutImage.png'
 
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
@@ -31,10 +32,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
             {...props}
         >
             <img
-                src={
-                    data.image ??
-                    'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
-                }
+                src={data.image ?? WithoutImage}
                 className={`${inline ? 'h-full' : 'h-[165px]'} w-full  object-cover ${
                     inline ? 'rounded-l-xl' : 'rounded-t-xl'
                 }`}

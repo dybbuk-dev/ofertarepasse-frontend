@@ -15,6 +15,7 @@ import Toyota from 'assets/images/toyota.png'
 import MenWithWoman from 'assets/images/men_with_woman.png'
 import api from 'services/api'
 import { IAdvert } from 'components/organisms/Dashboard/Adverts'
+import getUrlAws from 'utils/getUrlAws'
 
 const Home = () => {
     const [optionBuy, setOptionBuy] = React.useState('carro')
@@ -109,6 +110,10 @@ const Home = () => {
                                 <Card
                                     data={{
                                         id: item.id,
+                                        image:
+                                            item.images && item.images.length > 0
+                                                ? getUrlAws(item.images[0])
+                                                : null,
                                         title: item.title,
                                         description: item.about,
                                         distance: item.kilometer,

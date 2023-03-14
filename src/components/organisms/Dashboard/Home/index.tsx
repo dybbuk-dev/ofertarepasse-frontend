@@ -9,6 +9,8 @@ import { IAdvert } from '../Adverts'
 import { useAuth } from 'hooks/auth'
 import formatMoney from 'utils/formatMoney'
 import { Link } from 'react-router-dom'
+import WithoutImage from 'assets/images/withoutImage.png'
+import getUrlAws from 'utils/getUrlAws'
 
 interface IAdvertsData {
     count: number
@@ -242,7 +244,9 @@ const HomeDashboard = () => {
                                         <div className='flex items-center gap-2'>
                                             <img
                                                 src={
-                                                    'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
+                                                    item.images
+                                                        ? getUrlAws(item.images[0])
+                                                        : WithoutImage
                                                 }
                                                 className='h-[40px] w-[60px] rounded-lg object-cover'
                                             />

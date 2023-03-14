@@ -1,11 +1,10 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/display-name */
 import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
 import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
-import { IoCheckmarkOutline, IoCloseCircle, IoTrashOutline } from 'react-icons/io5'
+import { IoCheckmarkOutline, IoTrashOutline } from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
@@ -13,6 +12,7 @@ import { toast } from 'react-toastify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import formatMoney from 'utils/formatMoney'
+import getUrlAws from 'utils/getUrlAws'
 
 interface IDataForm {
     title: string
@@ -29,7 +29,7 @@ interface IAdvert {
     id: string
     title: string
     plate: string
-    images: FileList | null
+    images: FileList | null | string[]
     brand: string
     model: string
     fuel: string
@@ -79,18 +79,20 @@ const DefaultBox = ({ title, children }: { title: string; children: React.ReactN
 
 const CreateAdverts = () => {
     const [highlight, setHighlight] = React.useState<Array<string>>([])
+    const [imagesUploaded, setImagesUploaded] = React.useState<Array<string>>([])
+    const [images, setImages] = React.useState<Array<File>>([])
     const [infoPlate, setInfoPlate] = React.useState<any>(null)
     const [loading, setLoading] = React.useState(false)
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
 
-    const { register, handleSubmit, watch, setValue } = useForm<IDataForm>()
+    const { register, handleSubmit, watch } = useForm<IDataForm>()
     const { user } = useAuth()
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
 
-    const uploadImage = async (images: FileList | File[], id: string) => {
+    const uploadImage = async (images: File[], id: string) => {
         const formData = new FormData()
-        Array.from(images).forEach((file) => {
+        images.forEach((file) => {
             formData.append('files', file)
         })
 
@@ -120,6 +122,23 @@ const CreateAdverts = () => {
                         'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                     )
                 } else {
+                    if (images && images.length > 0) {
+                        const status = await uploadImage(images as Array<File>, data.id)
+
+                        if (status !== 201) {
+                            toast.error('Erro ao enviar as imagens do seu anúncio')
+                        } else {
+                            if (imagesUploaded && imagesUploaded.length > 0) {
+                                try {
+                                    await api.post('/api/v1/adverts/delete-file', {
+                                        files: imagesUploaded,
+                                    })
+                                } catch (err) {
+                                    toast.error('Erro ao excluir imagens antigas do anúncio')
+                                }
+                            }
+                        }
+                    }
                     toast.success('Anúncio atualizado')
                     navigate('/dashboard/adverts')
                 }
@@ -157,8 +176,8 @@ const CreateAdverts = () => {
                     'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                 )
             } else {
-                if (dataForm.images.length > 0) {
-                    const status = await uploadImage(dataForm.images, data.id)
+                if (images.length > 0) {
+                    const status = await uploadImage(images as Array<File>, data.id)
 
                     if (status !== 201) {
                         toast.error('Erro ao enviar as imagens do seu anúncio')
@@ -232,6 +251,7 @@ const CreateAdverts = () => {
 
                 if (data) {
                     setAdvert(data)
+                    setImagesUploaded(data.images)
                     setHighlight(data.highlight)
                     await getInfoPlate({ plate: data.plate })
                 }
@@ -244,8 +264,14 @@ const CreateAdverts = () => {
     return (
         <div>
             <section>
-                <p className='text-3xl font-light'>Criar Novo Anúncio</p>
-                <p className='mt-4 text-sm'>Vamos começar seu anúncio?</p>
+                <p className='text-3xl font-light'>
+                    {searchParams.get('id') ? 'Atualizar anúncio' : 'Criar Novo Anúncio'}
+                </p>
+                <p className='mt-4 text-sm'>
+                    {searchParams.get('id')
+                        ? 'Vamos atualizar seu anúncio?'
+                        : 'Vamos começar seu anúncio?'}
+                </p>
             </section>
             <section className='mt-14'>
                 <div className='grid grid-cols-[350px_auto] gap-x-[100px]'>
@@ -282,23 +308,41 @@ const CreateAdverts = () => {
                                     className='hidden'
                                     multiple={true}
                                     accept='image/png, image/jpeg'
-                                    {...register('images')}
+                                    onChange={(e) =>
+                                        e.target.files ? setImages(Array.from(e.target.files)) : []
+                                    }
                                 />
                             </label>
-                            {watch('images') && watch('images').length > 0 ? (
+                            {imagesUploaded && imagesUploaded.length > 0 ? (
                                 <div className='mt-8 grid grid-cols-3 gap-2'>
-                                    {Array.from(watch('images')).map((item) => (
+                                    <p className='col-span-3 text-sm text-gray-400'>
+                                        Imagens atuais do anúncio:
+                                    </p>
+                                    {imagesUploaded.map((item, index) => (
+                                        <img
+                                            key={index}
+                                            src={getUrlAws(item as string)}
+                                            className='h-full w-full rounded object-cover'
+                                        />
+                                    ))}
+                                </div>
+                            ) : null}
+                            {images && images.length > 0 ? (
+                                <div className='mt-8 grid grid-cols-3 gap-2'>
+                                    <p className='col-span-3 text-sm text-gray-400'>
+                                        Novas imagens do anúncio:
+                                    </p>
+                                    {images.map((item, index) => (
                                         <div
-                                            key={item.name}
+                                            key={index}
                                             className='relative overflow-hidden rounded'
                                         >
                                             <button
                                                 type='button'
                                                 className='absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center bg-[#00000099] text-white opacity-0 hover:opacity-100'
                                                 onClick={() => {
-                                                    setValue(
-                                                        'images',
-                                                        Array.from(watch('images')).filter(
+                                                    setImages(
+                                                        images.filter(
                                                             (itemFilter) => itemFilter !== item
                                                         )
                                                     )
@@ -477,17 +521,31 @@ const CreateAdverts = () => {
                                 data={{
                                     id: '',
                                     image:
-                                        watch('images') && watch('images').length > 0
-                                            ? URL.createObjectURL(watch('images')[0])
+                                        images && images.length > 0
+                                            ? URL.createObjectURL(images[0])
+                                            : imagesUploaded && imagesUploaded.length > 0
+                                            ? getUrlAws(imagesUploaded[0])
                                             : null,
-                                    title: String(watch('title') ? watch('title') : '-----'),
+                                    title: String(
+                                        watch('title')
+                                            ? watch('title')
+                                            : advert
+                                            ? advert.title
+                                            : '-----'
+                                    ),
                                     description: infoPlate
                                         ? infoPlate.fipes[0].marca_modelo
                                         : '--------',
-                                    price: Number(watch('value') ? watch('value') : 0),
+                                    price: Number(
+                                        watch('value') ? watch('value') : advert ? advert.value : 0
+                                    ),
                                     year: infoPlate ? infoPlate.veiculo.ano : '----',
                                     distance: Number(
-                                        watch('kilometer') ? watch('kilometer') : '----'
+                                        watch('kilometer')
+                                            ? watch('kilometer')
+                                            : advert
+                                            ? advert.kilometer
+                                            : '----'
                                     ),
                                     location: infoPlate
                                         ? `${infoPlate.veiculo.municipio} - ${infoPlate.veiculo.uf}`
