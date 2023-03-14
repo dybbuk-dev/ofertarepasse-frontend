@@ -1,11 +1,10 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/display-name */
 import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
 import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
-import { IoCheckmarkOutline } from 'react-icons/io5'
+import { IoCheckmarkOutline, IoTrashOutline } from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
@@ -13,10 +12,11 @@ import { toast } from 'react-toastify'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import formatMoney from 'utils/formatMoney'
+import getUrlAws from 'utils/getUrlAws'
 
 interface IDataForm {
     title: string
-    images: FileList
+    images: FileList | File[]
     plate: string
     kilometer: number
     about: string
@@ -29,7 +29,7 @@ interface IAdvert {
     id: string
     title: string
     plate: string
-    images: null
+    images: FileList | null | string[]
     brand: string
     model: string
     fuel: string
@@ -79,6 +79,8 @@ const DefaultBox = ({ title, children }: { title: string; children: React.ReactN
 
 const CreateAdverts = () => {
     const [highlight, setHighlight] = React.useState<Array<string>>([])
+    const [imagesUploaded, setImagesUploaded] = React.useState<Array<string>>([])
+    const [images, setImages] = React.useState<Array<File>>([])
     const [infoPlate, setInfoPlate] = React.useState<any>(null)
     const [loading, setLoading] = React.useState(false)
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
@@ -87,6 +89,19 @@ const CreateAdverts = () => {
     const { user } = useAuth()
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
+
+    const uploadImage = async (images: File[], id: string) => {
+        const formData = new FormData()
+        images.forEach((file) => {
+            formData.append('files', file)
+        })
+
+        const { status } = await api.post(`/api/v1/adverts/${id}/upload-file`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+
+        return status
+    }
 
     const onSubmit = async (dataForm: IDataForm) => {
         setLoading(true)
@@ -102,10 +117,28 @@ const CreateAdverts = () => {
 
             if (data) {
                 if (data && data.error) {
-                    toast.error(
+                    setLoading(false)
+                    return toast.error(
                         'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                     )
                 } else {
+                    if (images && images.length > 0) {
+                        const status = await uploadImage(images as Array<File>, data.id)
+
+                        if (status !== 201) {
+                            toast.error('Erro ao enviar as imagens do seu anúncio')
+                        } else {
+                            if (imagesUploaded && imagesUploaded.length > 0) {
+                                try {
+                                    await api.post('/api/v1/adverts/delete-file', {
+                                        files: imagesUploaded,
+                                    })
+                                } catch (err) {
+                                    toast.error('Erro ao excluir imagens antigas do anúncio')
+                                }
+                            }
+                        }
+                    }
                     toast.success('Anúncio atualizado')
                     navigate('/dashboard/adverts')
                 }
@@ -138,10 +171,19 @@ const CreateAdverts = () => {
             })
 
             if (data && data.error) {
-                toast.error(
+                setLoading(false)
+                return toast.error(
                     'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                 )
             } else {
+                if (images.length > 0) {
+                    const status = await uploadImage(images as Array<File>, data.id)
+
+                    if (status !== 201) {
+                        toast.error('Erro ao enviar as imagens do seu anúncio')
+                    }
+                }
+
                 toast.success('Anúncio criado')
                 navigate('/dashboard/adverts')
             }
@@ -209,6 +251,7 @@ const CreateAdverts = () => {
 
                 if (data) {
                     setAdvert(data)
+                    setImagesUploaded(data.images)
                     setHighlight(data.highlight)
                     await getInfoPlate({ plate: data.plate })
                 }
@@ -221,8 +264,14 @@ const CreateAdverts = () => {
     return (
         <div>
             <section>
-                <p className='text-3xl font-light'>Criar Novo Anúncio</p>
-                <p className='mt-4 text-sm'>Vamos começar seu anúncio?</p>
+                <p className='text-3xl font-light'>
+                    {searchParams.get('id') ? 'Atualizar anúncio' : 'Criar Novo Anúncio'}
+                </p>
+                <p className='mt-4 text-sm'>
+                    {searchParams.get('id')
+                        ? 'Vamos atualizar seu anúncio?'
+                        : 'Vamos começar seu anúncio?'}
+                </p>
             </section>
             <section className='mt-14'>
                 <div className='grid grid-cols-[350px_auto] gap-x-[100px]'>
@@ -244,7 +293,8 @@ const CreateAdverts = () => {
                             <BiImageAlt className='text-3xl text-primary' />
                             <div className='mt-3 mb-5'>
                                 <p className='text-smd font-medium text-gray-400'>
-                                    Clique ou arraste aqui para enviar imagens do seu veículo.
+                                    Clique em &quot;Procurar&quot; logo a baixo para enviar imagens
+                                    do seu veículo.
                                 </p>
                                 <p className='text-sm text-gray-400'>Tamanho máximo 2MB cada</p>
                             </div>
@@ -256,10 +306,59 @@ const CreateAdverts = () => {
                                 <input
                                     type='file'
                                     className='hidden'
+                                    multiple={true}
                                     accept='image/png, image/jpeg'
-                                    {...register('images')}
+                                    onChange={(e) =>
+                                        e.target.files ? setImages(Array.from(e.target.files)) : []
+                                    }
                                 />
                             </label>
+                            {imagesUploaded && imagesUploaded.length > 0 ? (
+                                <div className='mt-8 grid grid-cols-3 gap-2'>
+                                    <p className='col-span-3 text-sm text-gray-400'>
+                                        Imagens atuais do anúncio:
+                                    </p>
+                                    {imagesUploaded.map((item, index) => (
+                                        <img
+                                            key={index}
+                                            src={getUrlAws(item as string)}
+                                            className='h-full w-full rounded object-cover'
+                                        />
+                                    ))}
+                                </div>
+                            ) : null}
+                            {images && images.length > 0 ? (
+                                <div className='mt-8 grid grid-cols-3 gap-2'>
+                                    <p className='col-span-3 text-sm text-gray-400'>
+                                        Novas imagens do anúncio:
+                                    </p>
+                                    {images.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className='relative overflow-hidden rounded'
+                                        >
+                                            <button
+                                                type='button'
+                                                className='absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center bg-[#00000099] text-white opacity-0 hover:opacity-100'
+                                                onClick={() => {
+                                                    setImages(
+                                                        images.filter(
+                                                            (itemFilter) => itemFilter !== item
+                                                        )
+                                                    )
+                                                }}
+                                            >
+                                                <IoTrashOutline className='text-xl' />
+                                                <p>Excluir</p>
+                                            </button>
+                                            <img
+                                                src={URL.createObjectURL(item)}
+                                                className='h-full w-full object-cover'
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : null}
                         </div>
                         {infoPlate ? (
                             <>
@@ -421,14 +520,32 @@ const CreateAdverts = () => {
                             <Card
                                 data={{
                                     id: '',
-                                    title: String(watch('title') ? watch('title') : '-----'),
+                                    image:
+                                        images && images.length > 0
+                                            ? URL.createObjectURL(images[0])
+                                            : imagesUploaded && imagesUploaded.length > 0
+                                            ? getUrlAws(imagesUploaded[0])
+                                            : null,
+                                    title: String(
+                                        watch('title')
+                                            ? watch('title')
+                                            : advert
+                                            ? advert.title
+                                            : '-----'
+                                    ),
                                     description: infoPlate
                                         ? infoPlate.fipes[0].marca_modelo
                                         : '--------',
-                                    price: Number(watch('value') ? watch('value') : 0),
+                                    price: Number(
+                                        watch('value') ? watch('value') : advert ? advert.value : 0
+                                    ),
                                     year: infoPlate ? infoPlate.veiculo.ano : '----',
                                     distance: Number(
-                                        watch('kilometer') ? watch('kilometer') : '----'
+                                        watch('kilometer')
+                                            ? watch('kilometer')
+                                            : advert
+                                            ? advert.kilometer
+                                            : '----'
                                     ),
                                     location: infoPlate
                                         ? `${infoPlate.veiculo.municipio} - ${infoPlate.veiculo.uf}`
