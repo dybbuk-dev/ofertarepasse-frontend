@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import Logo from 'assets/images/logo.png'
 import Person from 'assets/icon/Person'
 import { useAuth } from 'hooks/auth'
+import DefaultProfile from 'assets/images/defaultProfile.png'
+import getUrlAws from 'utils/getUrlAws'
 
 const Menu = () => {
     const { user } = useAuth()
@@ -55,7 +57,7 @@ const Menu = () => {
                                 <p className='text-sm font-medium text-gray-400'>{user.name}</p>
                                 <Link to='/dashboard'>
                                     <img
-                                        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4rsSzLimlQyniEtUV4-1raljzFhS45QBeAw&usqp=CAU'
+                                        src={user.image ? getUrlAws(user.image) : DefaultProfile}
                                         className='h-[50px] w-[50px] rounded-full object-cover'
                                     />
                                 </Link>

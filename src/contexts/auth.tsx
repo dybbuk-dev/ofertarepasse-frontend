@@ -5,9 +5,13 @@ import api from 'services/api'
 interface IUser {
     id: string
     name: string
+    image: string | null
     email: string
     phone: string | null
     type: string
+    cpf: string | null
+    cnpj: string | null
+    cep: string | null
     roles: string
     status: string
     dateOfBirth: Date | null
