@@ -8,7 +8,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from 'components/atoms/Input/Radio'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import api from 'services/api'
 
@@ -20,7 +20,7 @@ interface IDataForm {
 }
 
 const SignUp = () => {
-    const { register, handleSubmit } = useForm<IDataForm>()
+    const { register, handleSubmit, control } = useForm<IDataForm>()
     const navigate = useNavigate()
 
     const onSubmit = async (dataForm: IDataForm) => {
@@ -68,19 +68,25 @@ const SignUp = () => {
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <Input placeholder='Nome completo' {...register('name')} />
-                            <RadioGroup row={true} className='my-4' {...register('type')}>
-                                <FormControlLabel
-                                    value='physical'
-                                    control={<Radio />}
-                                    label='Pessoa Física'
-                                />
-                                <FormControlLabel
-                                    value='legal'
-                                    control={<Radio />}
-                                    label='Pessoa Jurídica'
-                                    className='text-sm'
-                                />
-                            </RadioGroup>
+                            <Controller
+                                control={control}
+                                name='type'
+                                render={({ field }) => (
+                                    <RadioGroup row={true} className='my-4' {...field}>
+                                        <FormControlLabel
+                                            value='physical'
+                                            control={<Radio />}
+                                            label='Pessoa Física'
+                                        />
+                                        <FormControlLabel
+                                            value='legal'
+                                            control={<Radio />}
+                                            label='Pessoa Jurídica'
+                                            className='text-sm'
+                                        />
+                                    </RadioGroup>
+                                )}
+                            />
                             <Input
                                 placeholder='example@example.com'
                                 className='mb-3'
