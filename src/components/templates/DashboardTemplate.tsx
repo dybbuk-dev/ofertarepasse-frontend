@@ -7,7 +7,7 @@ import {
     IoHeartOutline,
     IoNotificationsOutline,
 } from 'react-icons/io5'
-import MenInCar from 'assets/images/men_in_car.png'
+import DefaultProfile from 'assets/images/defaultProfile.png'
 import InputSimple from 'components/atoms/Input/Simple'
 import Money from 'assets/icon/Money'
 import Grid from 'assets/icon/Grid'
@@ -15,6 +15,7 @@ import PieChart from 'assets/icon/PieChart'
 import GridSmall from 'assets/icon/GridSmall'
 import { Link } from 'react-router-dom'
 import { useAuth } from 'hooks/auth'
+import getUrlAws from 'utils/getUrlAws'
 
 interface IDashboardTemplate {
     children: React.ReactNode
@@ -68,11 +69,7 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
                             <IoNotificationsOutline />
                         </div>
                         <img
-                            src={
-                                user
-                                    ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4rsSzLimlQyniEtUV4-1raljzFhS45QBeAw&usqp=CAU'
-                                    : MenInCar
-                            }
+                            src={user && user.image ? getUrlAws(user.image) : DefaultProfile}
                             className='h-[50px] w-[50px] rounded-full object-cover'
                         />
                     </div>

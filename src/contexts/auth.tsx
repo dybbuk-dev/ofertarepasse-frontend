@@ -2,7 +2,7 @@
 import * as React from 'react'
 import api from 'services/api'
 
-interface IUser {
+export interface IUser {
     id: string
     name: string
     image: string | null
@@ -80,10 +80,8 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
                     user = JSON.parse(user)
                     const { data } = await api.get(`/api/v1/users/${user.id}`)
 
-                    if (data && !data.error) {
-                        setUser(data.user)
-                        setIsAuthenticated(true)
-                    }
+                    setUser(data)
+                    setIsAuthenticated(true)
                 }
             } catch (err) {
                 localStorage.removeItem('ofertarepasse@user')

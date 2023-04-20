@@ -1,7 +1,7 @@
 import Button from 'components/atoms/Button'
 import { IoCheckmark, IoHeart, IoHeartOutline, IoLogoWhatsapp } from 'react-icons/io5'
 import { RiErrorWarningLine } from 'react-icons/ri'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import api from 'services/api'
 import { toast } from 'react-toastify'
 import * as React from 'react'
@@ -9,6 +9,7 @@ import { IAdvert } from '../Dashboard/Adverts'
 import formatMoney from 'utils/formatMoney'
 import CardValueFipe from 'components/atoms/CardValueFipe'
 import { useFavorite } from 'hooks/favorites'
+import { useAuth } from 'hooks/auth'
 
 const Info = () => {
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
@@ -16,6 +17,7 @@ const Info = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const { favorites, addFavorite, removeFavorite, isFavorited } = useFavorite()
+    const { user } = useAuth()
 
     React.useEffect(() => {
         const getAdvert = async () => {
@@ -218,16 +220,40 @@ const Info = () => {
                             </div>
                             <CardValueFipe fipe={advert.fipeValue} />
                             <div className='flex flex-col gap-3 py-5 px-4 text-white'>
-                                <Button className='!bg-primary !py-4 font-semibold'>
-                                    Comprar Veículo
-                                </Button>
-                                <Button className='!bg-gray-100 !py-4 font-semibold'>
-                                    Tenho Interesse
-                                </Button>
-                                <Button className='flex items-center justify-center gap-2 !bg-[#25D366] !py-4 font-semibold'>
-                                    <IoLogoWhatsapp className='text-xl' />
-                                    Conversar pelo WhatsApp
-                                </Button>
+                                {user ? (
+                                    <>
+                                        <Link
+                                            target='_blank'
+                                            to={encodeURI(
+                                                `https://wa.me/5516996174146?text=Olá meu nome é ${user?.name}(${user?.id}), fiquei muito interesado sobre este anúncio(${advert.title} - ${advert.id}) e queria fazer uma negociação.`
+                                            )}
+                                        >
+                                            <Button className='!bg-primary !py-4 font-semibold'>
+                                                Comprar Veículo
+                                            </Button>
+                                        </Link>
+                                        <Button className='!bg-gray-100 !py-4 font-semibold'>
+                                            Tenho Interesse
+                                        </Button>
+                                        <Button className='flex items-center justify-center gap-2 !bg-[#25D366] !py-4 font-semibold'>
+                                            <IoLogoWhatsapp className='text-xl' />
+                                            Conversar pelo WhatsApp
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link to='/signin'>
+                                            <Button className='!bg-primary !py-4 font-semibold'>
+                                                Entrar
+                                            </Button>
+                                        </Link>
+                                        <Link to='/signup'>
+                                            <Button className='!bg-gray-100 !py-4 font-semibold'>
+                                                Cadastrar
+                                            </Button>
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

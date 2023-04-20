@@ -157,7 +157,7 @@ const CreateAdverts = () => {
                 about: dataForm.about,
                 alert: dataForm.alert,
                 value: dataForm.value,
-                userId: user?.id,
+                user: user?.id,
                 city: infoPlate.veiculo.municipio,
                 state: infoPlate.veiculo.uf,
                 fuel:

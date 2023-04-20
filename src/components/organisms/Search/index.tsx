@@ -59,7 +59,6 @@ const Search = () => {
         clearTimeout(timer)
 
         const newTimer = setTimeout(() => {
-            console.log('Chamar api')
             let newUrlParams = `?title=${searchParams.get('title')}`
             Object.entries(getValues()).map((item) => {
                 newUrlParams = newUrlParams + `&${item[0]}=${item[1]}`
