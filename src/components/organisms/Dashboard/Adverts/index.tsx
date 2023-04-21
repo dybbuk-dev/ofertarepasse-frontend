@@ -43,11 +43,20 @@ export interface IAdvert {
     updatedAt: Date
 }
 
+export interface IAdvertResponse {
+    items: Array<IAdvert>
+    count: number
+}
+
 const Adverts = () => {
     const [filter, setFilter] = React.useState({
         action: '',
+        date: {
+            min: null,
+            max: null,
+        },
     })
-    const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
+    const [adverts, setAdverts] = React.useState<IAdvertResponse | null>(null)
     const [showModal, setShowModal] = React.useState({
         show: false,
         id: '',
@@ -60,7 +69,7 @@ const Adverts = () => {
         const { data } = await api.get('/api/v1/adverts')
 
         if (data) {
-            setAdverts(data.items)
+            setAdverts(data)
         }
     }
 
@@ -113,9 +122,15 @@ const Adverts = () => {
                 <div>
                     <span className='text-3xl font-light text-gray-200'>Meus Anúncios</span>
                     <p className='mt-3 text-sm text-gray-200'>
-                        Total de <span className='font-semibold'>156</span> registros entre{' '}
-                        <span className='font-semibold'>05/12/2022</span> e{' '}
-                        <span className='font-semibold'>04/01/2023</span>
+                        Total de <span className='font-semibold'>{adverts?.count ?? 0}</span>{' '}
+                        registros
+                        {!!filter.date.min || !!filter.date.max ? (
+                            <>
+                                {' '}
+                                entre <span className='font-semibold'>05/12/2022</span> e{' '}
+                                <span className='font-semibold'>04/01/2023</span>
+                            </>
+                        ) : null}
                     </p>
                 </div>
                 <div>
@@ -142,7 +157,7 @@ const Adverts = () => {
                 <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
-                    placeholder='Faça uma busca por nome, local, telefone, e-mail'
+                    placeholder='Faça uma busca pelo título do anúncio'
                 />
                 <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
                     <MdOutlineCloudDownload className='text-xl' />
@@ -167,94 +182,100 @@ const Adverts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {adverts.map((item, index) => (
-                            <tr
-                                key={index}
-                                className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
-                            >
-                                <td className='py-6 pl-6'>
-                                    <div className='flex items-center gap-2'>
-                                        <img
-                                            src={
-                                                item.images && item.images.length > 0
-                                                    ? getUrlAws(item.images[0])
-                                                    : WithoutImage
-                                            }
-                                            className='h-[40px] w-[60px] rounded-lg object-cover'
-                                        />
-                                        <div>
-                                            <p className='text-smd text-gray-400'>{item.title}</p>
-                                            <p className='text-xs text-gray-500 line-clamp-1'>
-                                                {item.version}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-1'>
-                                        <Target />
-                                        <span>0</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-1'>
-                                        <Eye />
-                                        <span>{item.views}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className='font-bold text-gray-400'>
-                                        {formatMoney(item.value)}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div
-                                        className={`flex w-max items-center gap-2 rounded-full ${
-                                            item.active ? 'bg-green-100' : 'bg-gray-900'
-                                        } px-4 py-1`}
-                                    >
-                                        <div
-                                            className={`h-[8px] w-[8px] rounded-full ${
-                                                item.active ? 'bg-green' : 'bg-gray-600'
-                                            }`}
-                                        />
-                                        <span
-                                            className={` ${
-                                                item.active ? 'text-green' : 'text-gray-600'
-                                            }`}
-                                        >
-                                            {item.active ? 'Ativo' : 'Inativo'}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-2'>
-                                        <IoTrashOutline
-                                            role='button'
-                                            className='text-xl hover:text-primary'
-                                            onClick={() =>
-                                                setShowModal({ id: item.id, show: true })
-                                            }
-                                        />
-                                        <IoPencil
-                                            role='button'
-                                            className='text-xl hover:text-primary'
-                                            onClick={() =>
-                                                navigate(`/dashboard/adverts/create?id=${item.id}`)
-                                            }
-                                        />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-2'>
-                                        <IoDocumentOutline
-                                            role='button'
-                                            className='text-xl hover:text-primary'
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                        {adverts && adverts.items.length > 0
+                            ? adverts.items.map((item, index) => (
+                                  <tr
+                                      key={index}
+                                      className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
+                                  >
+                                      <td className='py-6 pl-6'>
+                                          <div className='flex items-center gap-2'>
+                                              <img
+                                                  src={
+                                                      item.images && item.images.length > 0
+                                                          ? getUrlAws(item.images[0])
+                                                          : WithoutImage
+                                                  }
+                                                  className='h-[40px] w-[60px] rounded-lg object-cover'
+                                              />
+                                              <div>
+                                                  <p className='text-smd text-gray-400'>
+                                                      {item.title}
+                                                  </p>
+                                                  <p className='text-xs text-gray-500 line-clamp-1'>
+                                                      {item.version}
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div className='flex items-center gap-1'>
+                                              <Target />
+                                              <span>0</span>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div className='flex items-center gap-1'>
+                                              <Eye />
+                                              <span>{item.views}</span>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <span className='font-bold text-gray-400'>
+                                              {formatMoney(item.value)}
+                                          </span>
+                                      </td>
+                                      <td>
+                                          <div
+                                              className={`flex w-max items-center gap-2 rounded-full ${
+                                                  item.active ? 'bg-green-100' : 'bg-gray-900'
+                                              } px-4 py-1`}
+                                          >
+                                              <div
+                                                  className={`h-[8px] w-[8px] rounded-full ${
+                                                      item.active ? 'bg-green' : 'bg-gray-600'
+                                                  }`}
+                                              />
+                                              <span
+                                                  className={` ${
+                                                      item.active ? 'text-green' : 'text-gray-600'
+                                                  }`}
+                                              >
+                                                  {item.active ? 'Ativo' : 'Inativo'}
+                                              </span>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div className='flex items-center gap-2'>
+                                              <IoTrashOutline
+                                                  role='button'
+                                                  className='text-xl hover:text-primary'
+                                                  onClick={() =>
+                                                      setShowModal({ id: item.id, show: true })
+                                                  }
+                                              />
+                                              <IoPencil
+                                                  role='button'
+                                                  className='text-xl hover:text-primary'
+                                                  onClick={() =>
+                                                      navigate(
+                                                          `/dashboard/adverts/create?id=${item.id}`
+                                                      )
+                                                  }
+                                              />
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div className='flex items-center gap-2'>
+                                              <IoDocumentOutline
+                                                  role='button'
+                                                  className='text-xl hover:text-primary'
+                                              />
+                                          </div>
+                                      </td>
+                                  </tr>
+                              ))
+                            : null}
                     </tbody>
                 </table>
             </div>

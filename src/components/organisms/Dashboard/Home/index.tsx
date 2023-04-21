@@ -55,7 +55,7 @@ const HomeDashboard = () => {
             const { data } = await api.get(`/api/v1/negociations?limit=5&userId=${user?.id}`)
 
             if (data) {
-                setNegotiations(data)
+                setNegotiations(data.items)
             }
         }
 
@@ -309,7 +309,7 @@ const HomeDashboard = () => {
                                                         src={
                                                             item.advert.images
                                                                 ? getUrlAws(item.advert.images[0])
-                                                                : ''
+                                                                : WithoutImage
                                                         }
                                                         className='h-[40px] w-[60px] rounded-lg object-cover'
                                                     />
@@ -325,7 +325,7 @@ const HomeDashboard = () => {
                                             </td>
                                             <td>
                                                 <span className='font-bold text-gray-400'>
-                                                    R${item.value.toFixed(3)}
+                                                    {formatMoney(item.value)}
                                                 </span>
                                             </td>
                                             <td className='flex w-max items-center justify-between py-6'>

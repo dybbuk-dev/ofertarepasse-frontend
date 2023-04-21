@@ -12,7 +12,7 @@ const Modal = ({ title, children, onClose, ...props }: IModal) => (
         {...props}
     >
         <div className='rounded bg-white'>
-            <div className='flex items-center justify-between rounded-t py-3 px-8 shadow-[4px_0px_10px_#00000033]'>
+            <div className='flex items-center justify-between rounded-t py-3 px-8 shadow-[2px_0px_4px_#00000033]'>
                 <p className='font-inter font-semibold text-gray-800'>{title}</p>
                 <IoClose onClick={onClose} className='text-2xl text-gray-800' role='button' />
             </div>

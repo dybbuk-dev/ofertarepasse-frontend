@@ -3,187 +3,46 @@ import * as React from 'react'
 import InputMask from 'react-input-mask'
 import { MdOutlineCloudDownload } from 'react-icons/md'
 import InputSimple from 'components/atoms/Input/Simple'
-import MenInCar from 'assets/images/men_in_car.png'
+import WithoutImage from 'assets/images/withoutImage.png'
 import Checkbox from 'components/atoms/Input/Checkbox'
-import {
-    IoCloseCircleOutline,
-    IoCreateOutline,
-    IoDocumentOutline,
-    IoPencil,
-    IoTrashOutline,
-} from 'react-icons/io5'
+import { IoPencil } from 'react-icons/io5'
+import { INegociations } from '../Sold'
+import api from 'services/api'
+import { useAuth } from 'hooks/auth'
+import getUrlAws from 'utils/getUrlAws'
+import DefaultProfile from 'assets/images/defaultProfile.png'
+import formatMoney from 'utils/formatMoney'
+
+interface ISales {
+    items: Array<INegociations>
+    count: number
+}
 
 const Adverts = () => {
     const [filter, setFilter] = React.useState({
         action: '',
+        date: {
+            min: null,
+            max: null,
+        },
     })
+    const [sales, setSales] = React.useState<ISales | null>(null)
 
     const titlesTable = ['', 'Veículo', 'Valor', 'Status', 'Cliente', 'Criado em']
 
-    const items = [
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Processando',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Sinal Pago',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Finalizada',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Cancelada',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Em Análise',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Finalizada',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Finalizada',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Cancelada',
-            createdAt: new Date(),
-        },
-        {
-            vehicle: {
-                image: 'https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg',
-                title: 'Honda Civic',
-                description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            },
-            value: 89.9,
-            advertiser: {
-                image: MenInCar,
-                name: 'Italo Eduardo',
-            },
-            customer: {
-                image: MenInCar,
-                name: 'Ibisem Alves',
-            },
-            status: 'Em Análise',
-            createdAt: new Date(),
-        },
-    ]
+    const { user } = useAuth()
+
+    React.useEffect(() => {
+        const getSales = async () => {
+            const { data } = await api.get(`/api/v1/negociations?userId=${user?.id}`)
+
+            if (data) {
+                setSales(data)
+            }
+        }
+
+        getSales()
+    }, [])
 
     return (
         <div>
@@ -191,9 +50,15 @@ const Adverts = () => {
                 <div>
                     <span className='text-3xl font-light text-gray-200'>Minhas Vendas</span>
                     <p className='mt-3 text-sm text-gray-200'>
-                        Total de <span className='font-semibold'>13</span> registros entre{' '}
-                        <span className='font-semibold'>05/12/2022</span> e{' '}
-                        <span className='font-semibold'>04/01/2023</span>
+                        Total de <span className='font-semibold'>{sales?.count ?? 0}</span>{' '}
+                        registros
+                        {!!filter.date.min || !!filter.date.max ? (
+                            <>
+                                {' '}
+                                entre <span className='font-semibold'>05/12/2022</span> e{' '}
+                                <span className='font-semibold'>04/01/2023</span>
+                            </>
+                        ) : null}
                     </p>
                 </div>
                 <div>
@@ -216,15 +81,11 @@ const Adverts = () => {
                     </div>
                 </div>
             </div>
-            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-3'>
+            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto] gap-3'>
                 <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
-                    placeholder='Faça uma busca por nome, local, telefone, e-mail'
-                />
-                <Select
-                    label='100 registros'
-                    onChange={(e) => setFilter({ ...filter, action: e })}
+                    placeholder='Faça uma busca pelo nome da venda'
                 />
                 <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
                     <MdOutlineCloudDownload className='text-xl' />
@@ -246,119 +107,111 @@ const Adverts = () => {
                             </th>
                         ))}
                     </tr>
-                    {items.map((item, index) => {
-                        const statusColor = {
-                            text: '#484854',
-                            background: '#F9F9F9',
-                        }
+                    {sales && sales.items.length > 0
+                        ? sales.items.map((item, index) => {
+                              const statusColor = {
+                                  text: '#484854',
+                                  background: '#F9F9F9',
+                              }
 
-                        switch (item.status.toLowerCase()) {
-                            case 'finalizada':
-                                statusColor.text = '#83BF6E'
-                                statusColor.background = '#ECF5E9'
-                                break
-                            case 'em análise':
-                                statusColor.text = '#F3BB2C'
-                                statusColor.background = '#FEF9EE'
-                                break
-                            case 'cancelada':
-                                statusColor.text = '#FF6A55'
-                                statusColor.background = '#FEF8F4'
-                                break
-                            case 'sinal pago':
-                                statusColor.text = '#6E8ABF'
-                                statusColor.background = '#ECF2FF'
-                                break
+                              switch (item.status.toLowerCase()) {
+                                  case 'finalized':
+                                      statusColor.text = '#83BF6E'
+                                      statusColor.background = '#ECF5E9'
+                                      break
+                                  case 'in progress':
+                                      statusColor.text = '#F3BB2C'
+                                      statusColor.background = '#FEF9EE'
+                                      break
+                                  case 'canceled':
+                                      statusColor.text = '#FF6A55'
+                                      statusColor.background = '#FEF8F4'
+                                      break
 
-                            default:
-                                break
-                        }
+                                  default:
+                                      break
+                              }
 
-                        return (
-                            <tr
-                                key={index}
-                                className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
-                            >
-                                <td className='pl-2'>
-                                    <Checkbox />
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-2'>
-                                        <img
-                                            src={item.vehicle.image}
-                                            className='h-[40px] w-[60px] rounded-lg object-cover'
-                                        />
-                                        <div>
-                                            <p className='text-smd text-gray-400'>
-                                                {item.vehicle.title}
-                                            </p>
-                                            <p className='text-xs text-gray-500 line-clamp-1'>
-                                                {item.vehicle.description}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className='font-bold text-gray-400'>
-                                        R${item.value.toFixed(3)}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div
-                                        className='flex w-max items-center gap-2 rounded-full px-4 py-1 text-sm'
-                                        style={{
-                                            background: statusColor.background,
-                                            color: statusColor.text,
-                                        }}
-                                    >
-                                        <div
-                                            className={'h-[8px] w-[8px] rounded-full'}
-                                            style={{
-                                                background: statusColor.text,
-                                            }}
-                                        />
-                                        <span>{item.status}</span>
-                                        <IoPencil />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-2 py-6'>
-                                        <img
-                                            src={item.customer.image}
-                                            alt={`Foto de ${item.customer}`}
-                                            className='h-[35px] w-[35px] rounded-full object-cover'
-                                        />
-                                        <p className='text-black'>{item.customer.name}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span>{item.createdAt.toLocaleDateString()}</span>
-                                </td>
-                                <td>
-                                    <div className='flex gap-3 text-lg '>
-                                        <IoCloseCircleOutline
-                                            role='button'
-                                            className='hover:text-primary'
-                                        />
-                                        <IoTrashOutline
-                                            role='button'
-                                            className='hover:text-primary'
-                                        />
-                                        <IoCreateOutline
-                                            role='button'
-                                            className='hover:text-primary'
-                                        />
-                                    </div>
-                                </td>
-                                <td>
-                                    <IoDocumentOutline
-                                        role='button'
-                                        className='text-xl hover:text-primary'
-                                    />
-                                </td>
-                            </tr>
-                        )
-                    })}
+                              return (
+                                  <tr
+                                      key={index}
+                                      className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
+                                  >
+                                      <td className='pl-2'>
+                                          <Checkbox />
+                                      </td>
+                                      <td>
+                                          <div className='flex items-center gap-2'>
+                                              <img
+                                                  src={
+                                                      item.advert.images
+                                                          ? getUrlAws(item.advert.images[0])
+                                                          : WithoutImage
+                                                  }
+                                                  className='h-[40px] w-[60px] rounded-lg object-cover'
+                                              />
+                                              <div>
+                                                  <p className='text-smd text-gray-400'>
+                                                      {item.advert.title}
+                                                  </p>
+                                                  <p className='text-xs text-gray-500 line-clamp-1'>
+                                                      {item.advert.about}
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <span className='font-bold text-gray-400'>
+                                              {formatMoney(item.value)}
+                                          </span>
+                                      </td>
+                                      <td>
+                                          <div
+                                              className='flex w-max items-center gap-2 rounded-full px-4 py-1 text-sm'
+                                              style={{
+                                                  background: statusColor.background,
+                                                  color: statusColor.text,
+                                              }}
+                                          >
+                                              <div
+                                                  className={'h-[8px] w-[8px] rounded-full'}
+                                                  style={{
+                                                      background: statusColor.text,
+                                                  }}
+                                              />
+                                              <span>
+                                                  {item.status === 'finalized'
+                                                      ? 'Finalizado'
+                                                      : item.status === 'in progress'
+                                                      ? 'Em Progresso'
+                                                      : 'Cancelado'}
+                                              </span>
+                                              <IoPencil />
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div className='flex items-center gap-2 py-6'>
+                                              <img
+                                                  src={
+                                                      item.user.image
+                                                          ? getUrlAws(item.user.image)
+                                                          : DefaultProfile
+                                                  }
+                                                  alt={`Foto de ${item.user.name}`}
+                                                  className='h-[35px] w-[35px] rounded-full object-cover'
+                                              />
+                                              <p className='text-black'>{item.user.name}</p>
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <span>
+                                              {new Date(item.createdAt).toLocaleDateString()}
+                                          </span>
+                                      </td>
+                                  </tr>
+                              )
+                          })
+                        : null}
                 </table>
             </div>
         </div>
