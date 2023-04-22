@@ -2,8 +2,18 @@ import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
 import { Link } from 'react-router-dom'
 import MenWithPhone from 'assets/images/men_with_phone.png'
+import React from 'react'
+import { IAdvert } from 'components/organisms/Dashboard/Adverts'
+import api from 'services/api'
+import { useAuth } from 'hooks/auth'
+import { toast } from 'react-toastify'
+import getUrlAws from 'utils/getUrlAws'
 
 const Footer = () => {
+    const [recommendations, setRecommendations] = React.useState<Array<IAdvert> | null>(null)
+
+    const { user } = useAuth()
+
     const items = [
         {
             title: 'Comprar',
@@ -89,24 +99,54 @@ const Footer = () => {
         },
     ]
 
+    React.useEffect(() => {
+        const getRecommendations = async () => {
+            try {
+                const { data } = await api.post('/api/v1/adverts/recommendation')
+
+                setRecommendations(data)
+            } catch (err) {
+                toast.error('Erro ao trazer anúncios recomendados')
+            }
+        }
+
+        getRecommendations()
+    }, [])
+
     return (
         <footer>
             <section className='container mx-auto'>
-                <section className='mt-24'>
-                    <div className='mb-10 flex items-center justify-between font-medium'>
-                        <p>Recomendados para você</p>
-                        <Link to='/'>
-                            <span className='text-primary'>Ver todos veículos disponíveis</span>
-                        </Link>
-                    </div>
-                    <div className='grid grid-cols-5 gap-5'>
-                        {forYou.map((item) => (
-                            <Link to={`/info/${item.id}`} key={item.id}>
-                                <Card data={item} />
+                {recommendations && recommendations.length > 0 ? (
+                    <section className='mt-24'>
+                        <div className='mb-10 flex items-center justify-between font-medium'>
+                            <p>Recomendados para você</p>
+                            <Link to='/'>
+                                <span className='text-primary'>Ver todos veículos disponíveis</span>
                             </Link>
-                        ))}
-                    </div>
-                </section>
+                        </div>
+                        <div className='grid grid-cols-5 gap-5'>
+                            {recommendations.map((item) => (
+                                <Link to={`/info/${item.id}`} key={item.id}>
+                                    <Card
+                                        data={{
+                                            id: item.id,
+                                            image:
+                                                item.images && item.images.length > 0
+                                                    ? getUrlAws(item.images[0])
+                                                    : null,
+                                            title: item.title,
+                                            description: item.about,
+                                            distance: item.kilometer,
+                                            location: `${item.city} - ${item.state}`,
+                                            price: item.value,
+                                            year: item.modelYear,
+                                        }}
+                                    />
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                ) : null}
                 <section className='mt-24 mb-[200px] flex items-center justify-center'>
                     <div className='grid h-[330px] w-full grid-cols-2 items-center justify-items-center rounded-2xl bg-gray-900'>
                         <p className='text-4xl font-semibold text-gray-200'>
