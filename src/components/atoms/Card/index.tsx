@@ -63,7 +63,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                             </div>
                         </div>
                         <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>
-                            R$ {formatMoney(data.price)}
+                            {formatMoney(data.price)}
                         </p>
                     </div>
                     <div className='flex items-center justify-between rounded-xl bg-gray-900 px-5 py-3'>

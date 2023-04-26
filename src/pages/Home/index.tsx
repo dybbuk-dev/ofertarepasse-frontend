@@ -18,7 +18,7 @@ import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 import getUrlAws from 'utils/getUrlAws'
 
 const Home = () => {
-    const [optionBuy, setOptionBuy] = React.useState('carro')
+    const [optionBuy, setOptionBuy] = React.useState('car')
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [search, setSearch] = React.useState('')
 
@@ -37,7 +37,7 @@ const Home = () => {
     const itemsBuy = [
         {
             label: 'Comprar carro',
-            value: 'carro',
+            value: 'car',
         },
         {
             label: 'Comprar moto',

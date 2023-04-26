@@ -115,7 +115,13 @@ const Info = () => {
                                     {advert.id.split('-')[advert.id.split('-').length - 1]}
                                 </span>
                             </div>
-                            <div className='grid grid-cols-[1fr_20%] grid-rows-[425px] gap-3 2xl:grid-rows-[500px]'>
+                            <div
+                                className={`grid ${
+                                    advert.images && advert.images.length > 1
+                                        ? 'grid-cols-[1fr_20%]'
+                                        : 'grid-cols-1'
+                                }  grid-rows-[425px] gap-3 2xl:grid-rows-[500px]`}
+                            >
                                 <div className='relative h-full w-full'>
                                     {advert.images && advert.images.length > 1 ? (
                                         <div className='absolute top-0 left-0 flex h-full w-full items-center justify-between'>

@@ -51,7 +51,7 @@ const Footer = () => {
     React.useEffect(() => {
         const getRecommendations = async () => {
             try {
-                const { data } = await api.post('/api/v1/adverts/recommendation')
+                const { data } = await api.post('/api/v1/adverts/recommendation?limit=5')
 
                 setRecommendations(data)
             } catch (err) {
