@@ -5,14 +5,11 @@ import MenWithPhone from 'assets/images/men_with_phone.png'
 import React from 'react'
 import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 import api from 'services/api'
-import { useAuth } from 'hooks/auth'
 import { toast } from 'react-toastify'
 import getUrlAws from 'utils/getUrlAws'
 
 const Footer = () => {
     const [recommendations, setRecommendations] = React.useState<Array<IAdvert> | null>(null)
-
-    const { user } = useAuth()
 
     const items = [
         {
@@ -48,54 +45,6 @@ const Footer = () => {
         {
             title: 'Vender',
             items: ['Carros Usados', 'Motos Usadas'],
-        },
-    ]
-
-    const forYou = [
-        {
-            id: 'pasjbdpasjbdpasjd',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 86500,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijsdbfpaijsbdfasdf',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 86500,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijsdbfiajbdsfpiasjdf',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 86500,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijbdfijbasdif',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 86500,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
-        },
-        {
-            id: 'ijpbsdfpijabsdp',
-            title: 'Honda Civic',
-            description: '1.5 16V TURBO GASOLINA TOURING 4P CVT',
-            price: 86500,
-            year: '2016/2017',
-            distance: 72000,
-            location: 'Catanduva - SP',
         },
     ]
 
