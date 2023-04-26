@@ -1,5 +1,12 @@
 import Button from 'components/atoms/Button'
-import { IoCheckmark, IoHeart, IoHeartOutline, IoLogoWhatsapp } from 'react-icons/io5'
+import {
+    IoCheckmark,
+    IoHeart,
+    IoHeartOutline,
+    IoLogoWhatsapp,
+    IoChevronBack,
+    IoChevronForward,
+} from 'react-icons/io5'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import api from 'services/api'
@@ -10,9 +17,12 @@ import formatMoney from 'utils/formatMoney'
 import CardValueFipe from 'components/atoms/CardValueFipe'
 import { useFavorite } from 'hooks/favorites'
 import { useAuth } from 'hooks/auth'
+import getUrlAws from 'utils/getUrlAws'
+import WithoutImage from 'assets/images/withoutImage.png'
 
 const Info = () => {
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
+    const [indexImage, setIndexImage] = React.useState(0)
 
     const { id } = useParams()
     const navigate = useNavigate()
@@ -38,6 +48,23 @@ const Info = () => {
             navigate(-1)
         }
     }, [id])
+
+    React.useEffect(() => {
+        const updateViews = async () => {
+            const user = localStorage.getItem('ofertarepasse@user')
+
+            if (user && advert) {
+                try {
+                    console.log(advert.views + 1)
+                    await api.patch(`/api/v1/adverts/${advert.id}`, { views: advert.views + 1 })
+                } catch (err) {
+                    toast
+                }
+            }
+        }
+
+        updateViews()
+    }, [advert])
 
     if (!advert) return <></>
 
@@ -84,28 +111,68 @@ const Info = () => {
                                     ))}
                                 </div>
                                 <span className='text-gray-600'>
-                                    <span className='font-bold'>ID</span> {advert.id.split('-')[0]}
+                                    <span className='font-bold'>ID</span>{' '}
+                                    {advert.id.split('-')[advert.id.split('-').length - 1]}
                                 </span>
                             </div>
-                            <div className='grid grid-cols-[1fr_20%] gap-3'>
-                                <img
-                                    src='https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
-                                    className='max-h-[425px] w-full rounded-xl object-cover 2xl:max-h-[500px]'
-                                />
-                                <div className='flex w-full flex-col gap-1'>
+                            <div className='grid grid-cols-[1fr_20%] grid-rows-[425px] gap-3 2xl:grid-rows-[500px]'>
+                                <div className='relative h-full w-full'>
+                                    {advert.images && advert.images.length > 1 ? (
+                                        <div className='absolute top-0 left-0 flex h-full w-full items-center justify-between'>
+                                            <button
+                                                className='flex h-full w-[50px] items-center justify-center text-3xl text-primary drop-shadow-md'
+                                                onClick={() => {
+                                                    if (indexImage > 0) {
+                                                        setIndexImage(indexImage - 1)
+                                                    }
+                                                }}
+                                            >
+                                                <IoChevronBack />
+                                            </button>
+                                            <button
+                                                className='flex h-full w-[50px] items-center justify-center text-3xl text-primary drop-shadow-md'
+                                                onClick={() => {
+                                                    if (
+                                                        (advert.images?.length as number) - 1 >
+                                                        indexImage
+                                                    ) {
+                                                        setIndexImage(indexImage + 1)
+                                                    }
+                                                }}
+                                            >
+                                                <IoChevronForward />
+                                            </button>
+                                        </div>
+                                    ) : null}
                                     <img
-                                        src='https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
-                                        className='w-full rounded-xl object-cover'
-                                    />
-                                    <img
-                                        src='https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
-                                        className='w-full rounded-xl object-cover'
-                                    />
-                                    <img
-                                        src='https://www.autoo.com.br/fotos/2022/2/960_720/kia1_11022022_70604_960_720.jpg'
-                                        className='w-full rounded-xl object-cover'
+                                        src={
+                                            advert.images
+                                                ? getUrlAws(advert.images[indexImage])
+                                                : WithoutImage
+                                        }
+                                        className='h-full w-full rounded-xl object-cover'
                                     />
                                 </div>
+                                {advert.images && advert.images.length > 1 ? (
+                                    <div className='flex w-full flex-col gap-1 overflow-auto pr-1'>
+                                        {advert.images.map((item, index) => (
+                                            <button
+                                                key={index}
+                                                className='h-full w-full'
+                                                onClick={() => setIndexImage(index)}
+                                            >
+                                                <img
+                                                    src={getUrlAws(item)}
+                                                    className={`h-[140px] w-full rounded-xl object-cover ${
+                                                        indexImage === index
+                                                            ? 'border-2 border-primary'
+                                                            : 'brightness-75'
+                                                    }`}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : null}
                             </div>
                         </div>
                         <div className='mt-5 grid grid-cols-3 rounded-xl bg-gray-100 py-12 px-8'>
