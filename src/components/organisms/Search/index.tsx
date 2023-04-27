@@ -2,11 +2,11 @@
 import Filter from 'assets/icon/Filter'
 import Card from 'components/atoms/Card'
 import Input from 'components/atoms/Input'
-import Checkbox from 'components/atoms/Input/Checkbox'
+// import Checkbox from 'components/atoms/Input/Checkbox'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import {
-    IoChevronForwardOutline,
+    // IoChevronForwardOutline,
     IoChevronUpOutline,
     IoCloseOutline,
     IoLocationOutline,
@@ -95,24 +95,24 @@ const Search = () => {
         getAdverts()
     }, [location])
 
-    const checkboxFields = {
-        marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
-        vendedor: ['Concessionária', 'Loja', 'Pessoa Física'],
-        opcionais: ['Airbag', 'Alarme', 'Ar Condicionado', 'Ar Quente'],
-        cambio: [
-            'Automática',
-            'Automática Sequencial',
-            'Automatizada',
-            'Automatizada dct',
-            'Manual',
-        ],
-        combustivel: ['Álcool', 'Álcool e gás natural', 'Diesel', 'Gás Natural'],
-        finalPlaca: ['1 e 2', '3 e 4', '5 e 6', '7 e 8', '9 e 0'],
-        blindagem: ['Sim', 'Não'],
-        cores: ['Amarelo', 'Azul', 'Bege', 'Branco'],
-        carroceria: ['Sedã', 'Utilitário Esportivo', 'Cupê'],
-        caracteristicas: ['Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
-    }
+    // const checkboxFields = {
+    //     marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
+    //     vendedor: ['Concessionária', 'Loja', 'Pessoa Física'],
+    //     opcionais: ['Airbag', 'Alarme', 'Ar Condicionado', 'Ar Quente'],
+    //     cambio: [
+    //         'Automática',
+    //         'Automática Sequencial',
+    //         'Automatizada',
+    //         'Automatizada dct',
+    //         'Manual',
+    //     ],
+    //     combustivel: ['Álcool', 'Álcool e gás natural', 'Diesel', 'Gás Natural'],
+    //     finalPlaca: ['1 e 2', '3 e 4', '5 e 6', '7 e 8', '9 e 0'],
+    //     blindagem: ['Sim', 'Não'],
+    //     cores: ['Amarelo', 'Azul', 'Bege', 'Branco'],
+    //     carroceria: ['Sedã', 'Utilitário Esportivo', 'Cupê'],
+    //     caracteristicas: ['Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
+    // }
 
     return (
         <div className='bg-gray-900'>
@@ -203,7 +203,7 @@ const Search = () => {
                     className={visibleFilter ? 'block bg-white py-10 px-3' : 'hidden'}
                     onChange={getFormValues}
                 >
-                    <div className='border-b border-gray-700 pb-10'>
+                    {/* <div className='border-b border-gray-700 pb-10'>
                         <p className='text-sm font-medium text-gray-200'>Marcas</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.marcas.map((item) => (
@@ -221,7 +221,7 @@ const Search = () => {
                             Ver todas as marcas
                             <IoChevronForwardOutline />
                         </button>
-                    </div>
+                    </div> */}
                     <div className='border-b border-gray-700 py-10'>
                         <p className='mb-3 text-sm font-medium text-gray-200'>Ano</p>
                         <div className='grid grid-cols-2 gap-4'>
@@ -291,7 +291,7 @@ const Search = () => {
                             </label>
                         </div>
                     </div>
-                    <div className='border-b border-gray-700 py-10'>
+                    {/* <div className='border-b border-gray-700 py-10'>
                         <p className='text-sm font-medium text-gray-200'>Câmbio</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.cambio.map((item) => (
@@ -362,7 +362,7 @@ const Search = () => {
                             Ver todas as características
                             <IoChevronForwardOutline />
                         </button>
-                    </div>
+                    </div> */}
                     <button className='mt-8 flex items-center gap-2 text-gray-400'>
                         Limpar filtros
                         <IoCloseOutline />
