@@ -520,12 +520,12 @@ const CreateAdverts = () => {
                             <Card
                                 data={{
                                     id: '',
-                                    image:
-                                        images && images.length > 0
-                                            ? URL.createObjectURL(images[0])
-                                            : imagesUploaded && imagesUploaded.length > 0
-                                            ? getUrlAws(imagesUploaded[0])
-                                            : null,
+                                    // image:
+                                    //     images && images.length > 0
+                                    //         ? URL.createObjectURL(images[0])
+                                    //         : imagesUploaded && imagesUploaded.length > 0
+                                    //         ? getUrlAws(imagesUploaded[0])
+                                    //         : null,
                                     title: String(
                                         watch('title')
                                             ? watch('title')

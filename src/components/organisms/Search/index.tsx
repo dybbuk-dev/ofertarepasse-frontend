@@ -15,7 +15,6 @@ import { Link, useSearchParams, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import api from 'services/api'
 import { IAdvert } from '../Dashboard/Adverts'
-import getUrlAws from 'utils/getUrlAws'
 
 const Search = () => {
     const [amountColums, setAmountColums] = React.useState(5)
@@ -382,7 +381,7 @@ const Search = () => {
                                 <Card
                                     data={{
                                         id: item.id,
-                                        image: item.images ? getUrlAws(item.images[0]) : undefined,
+                                        images: item.images,
                                         title: item.title,
                                         price: item.value,
                                         description: item.about,

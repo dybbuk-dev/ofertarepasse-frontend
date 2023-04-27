@@ -1,15 +1,24 @@
-import { IoCheckmarkOutline, IoHeart, IoHeartOutline } from 'react-icons/io5'
+/* eslint-disable tailwindcss/no-custom-classname */
+import {
+    IoCheckmarkOutline,
+    IoChevronBack,
+    IoChevronForward,
+    IoHeart,
+    IoHeartOutline,
+} from 'react-icons/io5'
 import Calendar from 'assets/icon/Calendar'
 import BarChart from 'assets/icon/BarChart'
 import Compass from 'assets/icon/Compass'
 import formatMoney from 'utils/formatMoney'
 import { useFavorite } from 'hooks/favorites'
 import WithoutImage from 'assets/images/withoutImage.png'
+import getUrlAws from 'utils/getUrlAws'
+import React from 'react'
 
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
         id: string
-        image?: string | null
+        images?: Array<string> | null
         title: string
         description: string
         price: number
@@ -22,6 +31,8 @@ interface ICard extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
+    const [indexImageSlide, setIndexImageSlide] = React.useState(0)
+
     const { addFavorite, removeFavorite, favorites, isFavorited } = useFavorite()
 
     return (
@@ -31,12 +42,59 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
             } rounded-xl`}
             {...props}
         >
-            <img
-                src={data.image ?? WithoutImage}
-                className={`${inline ? 'h-full' : 'h-[165px]'} w-full  object-cover ${
-                    inline ? 'rounded-l-xl' : 'rounded-t-xl'
-                }`}
-            />
+            {data.images && data.images.length > 1 ? (
+                <div className='relative w-full'>
+                    <img
+                        src={getUrlAws(data.images[indexImageSlide])}
+                        className={`${inline ? 'h-full' : 'h-[165px]'} min-w-full object-cover ${
+                            inline ? 'rounded-l-xl' : 'rounded-t-xl'
+                        }`}
+                    />
+                    <div className='absolute top-0 left-0 flex h-full w-full justify-center'>
+                        <div className='group flex h-full w-full justify-between hover:opacity-100'>
+                            <button
+                                className='options flex h-full items-center bg-gradient-to-r from-[#00000077] px-3 opacity-0 duration-200 ease-in-out group-hover:opacity-100'
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    if (indexImageSlide > 0) {
+                                        setIndexImageSlide(indexImageSlide - 1)
+                                    }
+                                }}
+                            >
+                                <IoChevronBack className='text-3xl text-white' />
+                            </button>
+                            <button
+                                className='options flex h-full items-center bg-gradient-to-l from-[#00000077] px-3 opacity-0 duration-200 ease-in-out group-hover:opacity-100'
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    if ((data.images?.length as number) - 1 > indexImageSlide) {
+                                        setIndexImageSlide(indexImageSlide + 1)
+                                    }
+                                }}
+                            >
+                                <IoChevronForward className='text-3xl text-white' />
+                            </button>
+                        </div>
+                        <div className='absolute bottom-3 flex gap-[2px]'>
+                            {data.images.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`h-[3px] w-[15px] shadow ${
+                                        indexImageSlide === index ? 'bg-primary' : 'bg-white'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <img
+                    src={data.images ? getUrlAws(data.images[0]) : WithoutImage}
+                    className={`${inline ? 'h-full' : 'h-[165px]'} w-full  object-cover ${
+                        inline ? 'rounded-l-xl' : 'rounded-t-xl'
+                    }`}
+                />
+            )}
             {inline ? (
                 <div className='px-8 py-3'>
                     <div className='flex items-center justify-between'>
