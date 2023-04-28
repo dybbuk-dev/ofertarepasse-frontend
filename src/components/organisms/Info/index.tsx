@@ -61,7 +61,6 @@ const Info = () => {
 
             if (user && advert) {
                 try {
-                    console.log(advert.views + 1)
                     await api.patch(`/api/v1/adverts/${advert.id}`, { views: advert.views + 1 })
                 } catch (err) {
                     toast
