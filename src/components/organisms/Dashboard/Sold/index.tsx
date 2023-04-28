@@ -12,6 +12,8 @@ import getUrlAws from 'utils/getUrlAws'
 import DefaultProfile from 'assets/images/defaultProfile.png'
 import formatMoney from 'utils/formatMoney'
 import WithoutImage from 'assets/images/withoutImage.png'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { toast } from 'react-toastify'
 
 interface IAdvertNegociation extends IAdvert {
     user: IUser
@@ -39,24 +41,62 @@ const Sold = () => {
             min: null,
             max: null,
         },
+        search: '',
     })
     const [negociations, setNegotiations] = React.useState<INegociationsResponse | null>(null)
+    const [page, setPage] = React.useState(2)
 
     const titlesTable = ['', 'Veículo', 'Valor', 'Anunciante', 'Cliente', 'Status', 'ID']
 
     const { user } = useAuth()
 
-    React.useEffect(() => {
-        const getNegociations = async () => {
-            const { data } = await api.get(`/api/v1/negociations?limit=5&userId=${user?.id}`)
+    const getNegociations = async () => {
+        const { data } = await api.get(`/api/v1/negociations?limit=10&userId=${user?.id}`)
+
+        if (data) {
+            setNegotiations(data)
+        }
+    }
+
+    const handleMore = async () => {
+        if (negociations) {
+            const { data } = await api.get(
+                `/api/v1/negociations?page=${page}&limit=10&userId=${user?.id}`
+            )
 
             if (data) {
+                setNegotiations({ ...negociations, items: [...negociations.items, ...data.items] })
+                setPage((prev) => prev + 1)
+            }
+        }
+    }
+
+    React.useEffect(() => {
+        const getAdvertsSearch = async () => {
+            try {
+                const { data } = await api.get(
+                    `/api/v1/negociations?search=${filter.search}&limit=30`
+                )
+
                 setNegotiations(data)
+            } catch (_) {
+                toast.error('Erro ao trazer os anúncios pesquisados')
             }
         }
 
+        if (filter.search !== '') {
+            getAdvertsSearch()
+        } else {
+            setPage(2)
+            getNegociations()
+        }
+    }, [filter.search])
+
+    React.useEffect(() => {
         getNegociations()
     }, [])
+
+    if (!negociations) return null
 
     return (
         <div>
@@ -100,154 +140,164 @@ const Sold = () => {
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
                     placeholder='Faça uma busca por nome, local, telefone, e-mail'
+                    value={filter.search}
+                    onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                 />
                 <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
                     <MdOutlineCloudDownload className='text-xl' />
                     Exportar
                 </button>
-                <Select label='Ordenar por' onChange={(e) => setFilter({ ...filter, action: e })} />
             </div>
             <div className='mb-10 rounded-xl bg-white'>
-                <table className='w-full'>
-                    <thead>
-                        <tr className='border-b border-gray-900'>
-                            {titlesTable.map((item, index) => (
-                                <th
-                                    key={item}
-                                    className={`py-6 text-left text-sm font-medium capitalize text-black ${
-                                        index === 0 ? 'w-[60px]' : 'w-max'
-                                    }`}
-                                >
-                                    {item}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    {negociations && negociations.items.length > 0
-                        ? negociations.items.map((item, index) => {
-                              const statusColor = {
-                                  text: '#484854',
-                                  background: '#F9F9F9',
-                              }
+                <InfiniteScroll
+                    dataLength={negociations.items.length}
+                    next={handleMore}
+                    hasMore={true}
+                    loader={null}
+                >
+                    <table className='w-full'>
+                        <thead>
+                            <tr className='border-b border-gray-900'>
+                                {titlesTable.map((item, index) => (
+                                    <th
+                                        key={item}
+                                        className={`py-6 text-left text-sm font-medium capitalize text-black ${
+                                            index === 0 ? 'w-[60px]' : 'w-max'
+                                        }`}
+                                    >
+                                        {item}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        {negociations && negociations.items.length > 0
+                            ? negociations.items.map((item, index) => {
+                                  const statusColor = {
+                                      text: '#484854',
+                                      background: '#F9F9F9',
+                                  }
 
-                              switch (item.status.toLowerCase()) {
-                                  case 'finalized':
-                                      statusColor.text = '#83BF6E'
-                                      statusColor.background = '#ECF5E9'
-                                      break
-                                  case 'in progress':
-                                      statusColor.text = '#F3BB2C'
-                                      statusColor.background = '#FEF9EE'
-                                      break
-                                  case 'canceled':
-                                      statusColor.text = '#FF6A55'
-                                      statusColor.background = '#FEF8F4'
-                                      break
+                                  switch (item.status.toLowerCase()) {
+                                      case 'finalized':
+                                          statusColor.text = '#83BF6E'
+                                          statusColor.background = '#ECF5E9'
+                                          break
+                                      case 'in progress':
+                                          statusColor.text = '#F3BB2C'
+                                          statusColor.background = '#FEF9EE'
+                                          break
+                                      case 'canceled':
+                                          statusColor.text = '#FF6A55'
+                                          statusColor.background = '#FEF8F4'
+                                          break
 
-                                  default:
-                                      break
-                              }
+                                      default:
+                                          break
+                                  }
 
-                              return (
-                                  <tbody key={index}>
-                                      <tr className='border-b border-gray-900 text-smd text-gray-500 last:border-none'>
-                                          <td className='pl-2'>
-                                              <Checkbox />
-                                          </td>
-                                          <td>
-                                              <div className='flex items-center gap-2'>
-                                                  <img
-                                                      src={
-                                                          item.advert.images
-                                                              ? getUrlAws(item.advert.images[0])
-                                                              : WithoutImage
-                                                      }
-                                                      className='h-[40px] w-[60px] rounded-lg object-cover'
-                                                  />
-                                                  <div>
-                                                      <p className='text-smd text-gray-400'>
-                                                          {item.advert.title}
-                                                      </p>
-                                                      <p className='text-xs text-gray-500 line-clamp-1'>
-                                                          {item.advert.about}
+                                  return (
+                                      <tbody key={index}>
+                                          <tr className='border-b border-gray-900 text-smd text-gray-500 last:border-none'>
+                                              <td className='pl-2'>
+                                                  <Checkbox />
+                                              </td>
+                                              <td>
+                                                  <div className='flex items-center gap-2'>
+                                                      <img
+                                                          src={
+                                                              item.advert.images
+                                                                  ? getUrlAws(item.advert.images[0])
+                                                                  : WithoutImage
+                                                          }
+                                                          className='h-[40px] w-[60px] rounded-lg object-cover'
+                                                      />
+                                                      <div>
+                                                          <p className='text-smd text-gray-400'>
+                                                              {item.advert.title}
+                                                          </p>
+                                                          <p className='text-xs text-gray-500 line-clamp-1'>
+                                                              {item.advert.about}
+                                                          </p>
+                                                      </div>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <span className='font-bold text-gray-400'>
+                                                      {formatMoney(item.value)}
+                                                  </span>
+                                              </td>
+                                              <td className='flex w-max items-center justify-between py-6'>
+                                                  <div className='flex w-max items-center gap-2'>
+                                                      <img
+                                                          src={
+                                                              item.advert.user.image
+                                                                  ? getUrlAws(
+                                                                        item.advert.user.image
+                                                                    )
+                                                                  : ''
+                                                          }
+                                                          alt={`Foto de ${item.advert.user.name}`}
+                                                          className='h-[35px] w-[35px] rounded-full object-cover'
+                                                      />
+                                                      <p className='text-black'>
+                                                          {item.advert.user.name}
                                                       </p>
                                                   </div>
-                                              </div>
-                                          </td>
-                                          <td>
-                                              <span className='font-bold text-gray-400'>
-                                                  {formatMoney(item.value)}
-                                              </span>
-                                          </td>
-                                          <td className='flex w-max items-center justify-between py-6'>
-                                              <div className='flex w-max items-center gap-2'>
-                                                  <img
-                                                      src={
-                                                          item.advert.user.image
-                                                              ? getUrlAws(item.advert.user.image)
-                                                              : ''
-                                                      }
-                                                      alt={`Foto de ${item.advert.user.name}`}
-                                                      className='h-[35px] w-[35px] rounded-full object-cover'
-                                                  />
-                                                  <p className='text-black'>
-                                                      {item.advert.user.name}
-                                                  </p>
-                                              </div>
-                                          </td>
-                                          <td>
-                                              <div className='flex items-center gap-2 py-6'>
-                                                  <img
-                                                      src={
-                                                          item.user.image
-                                                              ? getUrlAws(item.user.image)
-                                                              : DefaultProfile
-                                                      }
-                                                      alt={`Foto de ${item.user.name}`}
-                                                      className='h-[35px] w-[35px] rounded-full object-cover'
-                                                  />
-                                                  <p className='text-black'>{item.user.name}</p>
-                                              </div>
-                                          </td>
-                                          <td>
-                                              <div
-                                                  className='flex w-max items-center gap-2 rounded-full px-4 py-1 text-sm'
-                                                  style={{
-                                                      background: statusColor.background,
-                                                      color: statusColor.text,
-                                                  }}
-                                              >
+                                              </td>
+                                              <td>
+                                                  <div className='flex items-center gap-2 py-6'>
+                                                      <img
+                                                          src={
+                                                              item.user.image
+                                                                  ? getUrlAws(item.user.image)
+                                                                  : DefaultProfile
+                                                          }
+                                                          alt={`Foto de ${item.user.name}`}
+                                                          className='h-[35px] w-[35px] rounded-full object-cover'
+                                                      />
+                                                      <p className='text-black'>{item.user.name}</p>
+                                                  </div>
+                                              </td>
+                                              <td>
                                                   <div
-                                                      className={'h-[8px] w-[8px] rounded-full'}
+                                                      className='flex w-max items-center gap-2 rounded-full px-4 py-1 text-sm'
                                                       style={{
-                                                          background: statusColor.text,
+                                                          background: statusColor.background,
+                                                          color: statusColor.text,
                                                       }}
-                                                  />
+                                                  >
+                                                      <div
+                                                          className={'h-[8px] w-[8px] rounded-full'}
+                                                          style={{
+                                                              background: statusColor.text,
+                                                          }}
+                                                      />
+                                                      <span>
+                                                          {item.status === 'finalized'
+                                                              ? 'Finalizado'
+                                                              : item.status === 'in progress'
+                                                              ? 'Em Progresso'
+                                                              : 'Cancelado'}
+                                                      </span>
+                                                  </div>
+                                              </td>
+                                              <td>
                                                   <span>
-                                                      {item.status === 'finalized'
-                                                          ? 'Finalizado'
-                                                          : item.status === 'in progress'
-                                                          ? 'Em Progresso'
-                                                          : 'Cancelado'}
+                                                      <strong>ID</strong>{' '}
+                                                      {
+                                                          item.id.split('-')[
+                                                              item.id.split('-').length - 1
+                                                          ]
+                                                      }
                                                   </span>
-                                              </div>
-                                          </td>
-                                          <td>
-                                              <span>
-                                                  <strong>ID</strong>{' '}
-                                                  {
-                                                      item.id.split('-')[
-                                                          item.id.split('-').length - 1
-                                                      ]
-                                                  }
-                                              </span>
-                                          </td>
-                                      </tr>
-                                  </tbody>
-                              )
-                          })
-                        : null}
-                </table>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                  )
+                              })
+                            : null}
+                    </table>
+                </InfiniteScroll>
             </div>
         </div>
     )

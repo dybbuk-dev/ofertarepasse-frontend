@@ -17,7 +17,7 @@ import api from 'services/api'
 import { IAdvert } from '../Dashboard/Adverts'
 
 const Search = () => {
-    const [amountColums, setAmountColums] = React.useState(5)
+    const [amountColums, setAmountColums] = React.useState(4)
     const [visibleFilter, setVisibleFilter] = React.useState(true)
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [total, setTotal] = React.useState<number>(0)
@@ -76,7 +76,7 @@ const Search = () => {
 
             if (data) {
                 setAdverts(data.items)
-                setTotal(data.meta.totalItems)
+                setTotal(data.count)
             }
         }
 

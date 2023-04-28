@@ -76,15 +76,19 @@ const Configurations = () => {
             options: ['email', 'phone', 'navigator'],
         },
         {
-            label: 'Novos Clientes',
+            label: 'Novas Negociações Realizadas',
             options: ['email', 'phone', 'navigator'],
         },
         {
-            label: 'Novos Anunciantes',
+            label: 'Novos Anúncios',
             options: ['email', 'phone', 'navigator'],
         },
         {
-            label: 'Novos Clientes',
+            label: 'Mensagens de Suporte',
+            options: ['email', 'phone', 'navigator'],
+        },
+        {
+            label: 'Erros no sistema',
             options: ['email', 'phone', 'navigator'],
         },
     ]
@@ -271,7 +275,7 @@ const Configurations = () => {
                                 <td key={index}>{item.label}</td>
                                 {item.options.map((option, indexOption) => (
                                     <td key={indexOption}>
-                                        <Checkbox />
+                                        <Checkbox checked={true} />
                                     </td>
                                 ))}
                             </tr>

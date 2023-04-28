@@ -18,10 +18,12 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
     return (
         <nav className='flex min-h-screen w-full flex-col items-center'>
             <div className='flex h-[100px] w-full items-center px-5'>
-                <img
-                    src={location.pathname.search('/admin') !== -1 ? LogoAdm : LogoPro}
-                    alt='Oferta Repasse ADM'
-                />
+                <Link to='/'>
+                    <img
+                        src={location.pathname.search('/admin') !== -1 ? LogoAdm : LogoPro}
+                        alt='Oferta Repasse ADM'
+                    />
+                </Link>
             </div>
             <div className='flex min-h-[calc(100vh-100px)] w-full flex-col justify-between rounded-r-2xl bg-white py-7 px-5'>
                 <div>
