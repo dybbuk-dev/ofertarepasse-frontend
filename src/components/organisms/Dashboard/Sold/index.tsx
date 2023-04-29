@@ -1,9 +1,9 @@
 import Select from 'components/atoms/Select'
 import * as React from 'react'
-import InputMask from 'react-input-mask'
+// import InputMask from 'react-input-mask'
 import { MdOutlineCloudDownload } from 'react-icons/md'
 import InputSimple from 'components/atoms/Input/Simple'
-import Checkbox from 'components/atoms/Input/Checkbox'
+// import Checkbox from 'components/atoms/Input/Checkbox'
 import { useAuth } from 'hooks/auth'
 import api from 'services/api'
 import { IUser } from 'contexts/auth'
@@ -115,7 +115,7 @@ const Sold = () => {
                         ) : null}
                     </p>
                 </div>
-                <div>
+                {/* <div>
                     <span className='text-sm font-medium'>Período</span>
                     <div className='mt-2 flex gap-3'>
                         <div className='relative flex w-[125px] items-center overflow-hidden rounded border border-gray-100'>
@@ -133,7 +133,7 @@ const Sold = () => {
                             <p className='absolute left-2 text-sm text-gray-100'>até</p>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto] gap-3'>
                 <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
@@ -198,9 +198,7 @@ const Sold = () => {
                                   return (
                                       <tbody key={index}>
                                           <tr className='border-b border-gray-900 text-smd text-gray-500 last:border-none'>
-                                              <td className='pl-2'>
-                                                  <Checkbox />
-                                              </td>
+                                              <td className='pl-2'>{/* <Checkbox /> */}</td>
                                               <td>
                                                   <div className='flex items-center gap-2'>
                                                       <img

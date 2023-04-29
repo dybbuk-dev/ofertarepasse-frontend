@@ -1,9 +1,9 @@
 import * as React from 'react'
-import InputMask from 'react-input-mask'
+// import InputMask from 'react-input-mask'
 import { MdOutlineCloudDownload } from 'react-icons/md'
 import InputSimple from 'components/atoms/Input/Simple'
 import WithoutImage from 'assets/images/withoutImage.png'
-import Checkbox from 'components/atoms/Input/Checkbox'
+// import Checkbox from 'components/atoms/Input/Checkbox'
 import { IoPencil } from 'react-icons/io5'
 import { INegociations } from '../Sold'
 import api from 'services/api'
@@ -102,7 +102,7 @@ const Adverts = () => {
                         ) : null}
                     </p>
                 </div>
-                <div>
+                {/* <div>
                     <span className='text-sm font-medium'>Período</span>
                     <div className='mt-2 flex gap-3'>
                         <div className='relative flex w-[125px] items-center overflow-hidden rounded border border-gray-100'>
@@ -120,7 +120,7 @@ const Adverts = () => {
                             <p className='absolute left-2 text-sm text-gray-100'>até</p>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className='mt-8 mb-5 grid grid-cols-[1fr_auto] gap-3'>
                 <InputSimple
@@ -184,9 +184,7 @@ const Adverts = () => {
                                           key={index}
                                           className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
                                       >
-                                          <td className='pl-2'>
-                                              <Checkbox />
-                                          </td>
+                                          <td className='pl-2'>{/* <Checkbox /> */}</td>
                                           <td>
                                               <div className='flex items-center gap-2'>
                                                   <img

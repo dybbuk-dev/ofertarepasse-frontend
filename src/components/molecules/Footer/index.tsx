@@ -68,7 +68,7 @@ const Footer = () => {
                     <section className='mt-24'>
                         <div className='mb-10 flex items-center justify-between font-medium'>
                             <p>Recomendados para você</p>
-                            <Link to='/'>
+                            <Link to='/search'>
                                 <span className='text-primary'>Ver todos veículos disponíveis</span>
                             </Link>
                         </div>
