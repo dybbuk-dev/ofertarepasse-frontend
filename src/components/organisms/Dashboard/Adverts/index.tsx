@@ -40,6 +40,7 @@ export interface IAdvert {
     state: string
     highlight: Array<string>
     fipeValue: number
+    proposals: number
     createdAt: Date
     updatedAt: Date
 }
@@ -259,7 +260,7 @@ const Adverts = () => {
                                           <td>
                                               <div className='flex items-center gap-1'>
                                                   <Target />
-                                                  <span>0</span>
+                                                  <span>{item.proposals}</span>
                                               </div>
                                           </td>
                                           <td>

@@ -195,7 +195,7 @@ const HomeDashboard = () => {
                                         <td>
                                             <div className='flex items-center gap-1'>
                                                 <Target />
-                                                <span>0</span>
+                                                <span>{item.proposals}</span>
                                             </div>
                                         </td>
                                         <td>
