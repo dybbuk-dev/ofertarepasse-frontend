@@ -6,7 +6,6 @@ import React from 'react'
 import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 import api from 'services/api'
 import { toast } from 'react-toastify'
-import getUrlAws from 'utils/getUrlAws'
 
 const Footer = () => {
     const [recommendations, setRecommendations] = React.useState<Array<IAdvert> | null>(null)
@@ -51,7 +50,7 @@ const Footer = () => {
     React.useEffect(() => {
         const getRecommendations = async () => {
             try {
-                const { data } = await api.post('/api/v1/adverts/recommendation')
+                const { data } = await api.post('/api/v1/adverts/recommendation?limit=5')
 
                 setRecommendations(data)
             } catch (err) {
@@ -69,7 +68,7 @@ const Footer = () => {
                     <section className='mt-24'>
                         <div className='mb-10 flex items-center justify-between font-medium'>
                             <p>Recomendados para você</p>
-                            <Link to='/'>
+                            <Link to='/search'>
                                 <span className='text-primary'>Ver todos veículos disponíveis</span>
                             </Link>
                         </div>
@@ -79,10 +78,7 @@ const Footer = () => {
                                     <Card
                                         data={{
                                             id: item.id,
-                                            image:
-                                                item.images && item.images.length > 0
-                                                    ? getUrlAws(item.images[0])
-                                                    : null,
+                                            images: item.images,
                                             title: item.title,
                                             description: item.about,
                                             distance: item.kilometer,

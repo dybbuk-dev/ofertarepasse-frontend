@@ -15,12 +15,14 @@ import Toyota from 'assets/images/toyota.png'
 import MenWithWoman from 'assets/images/men_with_woman.png'
 import api from 'services/api'
 import { IAdvert } from 'components/organisms/Dashboard/Adverts'
-import getUrlAws from 'utils/getUrlAws'
+import { useAuth } from 'hooks/auth'
 
 const Home = () => {
-    const [optionBuy, setOptionBuy] = React.useState('carro')
+    const [optionBuy, setOptionBuy] = React.useState('car')
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [search, setSearch] = React.useState('')
+
+    const { isAuthenticated } = useAuth()
 
     React.useEffect(() => {
         const getAdverts = async () => {
@@ -33,21 +35,6 @@ const Home = () => {
 
         getAdverts()
     }, [])
-
-    const itemsBuy = [
-        {
-            label: 'Comprar carro',
-            value: 'carro',
-        },
-        {
-            label: 'Comprar moto',
-            value: 'moto',
-        },
-        {
-            label: 'Quero anunciar',
-            value: 'anunciar',
-        },
-    ]
 
     const brands: Array<string> = [Fiat, Bmw, Ford, Hyundai, Nissan, Volks, Toyota]
 
@@ -65,19 +52,25 @@ const Home = () => {
                     <div className='grid grid-cols-[1fr_auto] items-center gap-16'>
                         <div className='rounded-2xl bg-white py-8'>
                             <div className='mx-8 flex items-center gap-5 border-b border-gray-700 pb-4'>
-                                {itemsBuy.map((item, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setOptionBuy(item.value)}
-                                        className={`ease font-medium capitalize duration-200 ${
-                                            item.value === optionBuy
-                                                ? 'text-primary'
-                                                : 'text-gray-500'
-                                        }`}
+                                <button
+                                    onClick={() => setOptionBuy('car')}
+                                    className={`ease font-medium duration-200 ${
+                                        optionBuy === 'car' ? 'text-primary' : 'text-gray-500'
+                                    }`}
+                                >
+                                    Comprar Carro
+                                </button>
+                                <Link
+                                    to={isAuthenticated ? '/dashboard/adverts/create' : '/signin'}
+                                >
+                                    <p
+                                        className={
+                                            'ease cursor-pointer font-medium text-gray-500 duration-200'
+                                        }
                                     >
-                                        {item.label}
-                                    </button>
-                                ))}
+                                        Quero Anunciar
+                                    </p>
+                                </Link>
                             </div>
                             <div className='relative pt-10'>
                                 <SearchInput
@@ -100,7 +93,7 @@ const Home = () => {
                 <section className={`mt-24 ${adverts.length === 0 ? 'hidden' : ''}`}>
                     <div className='mb-10 flex items-center justify-between font-medium'>
                         <p>Anúncios em Destaque</p>
-                        <Link to='/'>
+                        <Link to='/search'>
                             <span className='text-primary'>Ver todos veículos disponíveis</span>
                         </Link>
                     </div>
@@ -110,10 +103,7 @@ const Home = () => {
                                 <Card
                                     data={{
                                         id: item.id,
-                                        image:
-                                            item.images && item.images.length > 0
-                                                ? getUrlAws(item.images[0])
-                                                : null,
+                                        images: item.images,
                                         title: item.title,
                                         description: item.about,
                                         distance: item.kilometer,

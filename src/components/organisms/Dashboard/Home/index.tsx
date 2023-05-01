@@ -1,4 +1,5 @@
-import { IoArrowDownOutline, IoArrowUpOutline, IoPencil, IoTrashOutline } from 'react-icons/io5'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { IoPencil, IoTrashOutline } from 'react-icons/io5'
 import CountUp from 'react-countup'
 import DefaultProfile from 'assets/images/defaultProfile.png'
 import Target from 'assets/icon/Target'
@@ -12,11 +13,7 @@ import { Link } from 'react-router-dom'
 import WithoutImage from 'assets/images/withoutImage.png'
 import getUrlAws from 'utils/getUrlAws'
 import { IUser } from 'contexts/auth'
-
-interface IAdvertsData {
-    count: number
-    items: Array<IAdvert>
-}
+import { toast } from 'react-toastify'
 
 interface IAdvertNegociation extends IAdvert {
     user: IUser
@@ -33,44 +30,49 @@ interface INegociations {
 }
 
 const HomeDashboard = () => {
-    const [adverts, setAdverts] = React.useState<IAdvertsData | null>(null)
-    const [totalView, setTotalView] = React.useState(0)
+    const [adverts, setAdverts] = React.useState<Array<IAdvert> | null>(null)
     const [negotiations, setNegotiations] = React.useState<Array<INegociations> | null>(null)
+    const [infoDash, setInfoDash] = React.useState({
+        adverts: 0,
+        views: 0,
+        negociations: 0,
+    })
 
     const { user } = useAuth()
 
     React.useEffect(() => {
-        const getAdverts = async () => {
-            const { data } = await api.get(`/api/v1/adverts?limit=5&userId=${user?.id}`)
+        const getAdverts = new Promise((resolve, reject) => {
+            api.get(`/api/v1/adverts?limit=5&userId=${user?.id}`)
+                .then((res) => resolve(res.data))
+                .catch((err) => reject(err))
+        })
 
-            if (data) {
-                setAdverts({
-                    count: data.count,
-                    items: data.items,
-                })
-            }
-        }
+        const getNegociations = new Promise((resolve, reject) => {
+            api.get(`/api/v1/negociations?limit=5&userId=${user?.id}`)
+                .then((res) => resolve(res.data))
+                .catch((err) => reject(err))
+        })
 
-        const getNegociations = async () => {
-            const { data } = await api.get(`/api/v1/negociations?limit=5&userId=${user?.id}`)
-
-            if (data) {
-                setNegotiations(data.items)
-            }
-        }
-
-        const getViews = async () => {
-            const { data } = await api.post(`/api/v1/adverts/views?id=${user?.id}`)
-
-            if (data && !data.error) {
-                setTotalView(data.count)
-            }
-        }
+        const getViews = new Promise((resolve, reject) => {
+            api.post(`/api/v1/adverts/views?id=${user?.id}`)
+                .then((res) => resolve(res.data))
+                .catch((err) => reject(err))
+        })
 
         if (user) {
-            getAdverts()
-            getNegociations()
-            getViews()
+            Promise.all([getAdverts, getNegociations, getViews])
+                .then((res: any) => {
+                    setAdverts(res[0].items)
+                    setNegotiations(res[1].items)
+                    setInfoDash({
+                        adverts: res[0].count,
+                        negociations: res[1].count,
+                        views: res[2].count,
+                    })
+                })
+                .catch(() =>
+                    toast.error('Erro ao trazer os dados para você, tente novamente mais tarde')
+                )
         }
     }, [user])
 
@@ -103,49 +105,49 @@ const HomeDashboard = () => {
                 <div className='mt-10 grid grid-cols-3 rounded-2xl bg-white py-10 px-16'>
                     <div>
                         <div className='flex items-center gap-1'>
-                            <CountUp start={0} end={adverts?.count ?? 0} duration={1}>
+                            <CountUp start={0} end={infoDash.adverts} duration={1}>
                                 {({ countUpRef }) => (
                                     <span className='text-6xl font-medium' ref={countUpRef} />
                                 )}
                             </CountUp>
-                            <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-green'>
+                            {/* <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-green'>
                                 <IoArrowUpOutline />
                                 28%
-                            </div>
+                            </div> */}
                         </div>
                         <p className='mt-4 text-sm font-medium'>anúncios ativos</p>
                     </div>
                     <div className='justify-self-center'>
                         <div className='flex items-center gap-1'>
-                            <CountUp start={0} end={totalView} duration={1}>
+                            <CountUp start={0} end={infoDash.views} duration={1}>
                                 {({ countUpRef }) => (
                                     <span className='text-6xl font-medium' ref={countUpRef} />
                                 )}
                             </CountUp>
-                            <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-green'>
+                            {/* <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-green'>
                                 <IoArrowUpOutline />
                                 15%
-                            </div>
+                            </div> */}
                         </div>
                         <p className='mt-4 text-sm font-medium'>visualizações em anúncios</p>
                     </div>
                     <div className='justify-self-end'>
                         <div className='flex items-center gap-1'>
-                            <CountUp start={0} end={0} duration={1}>
+                            <CountUp start={0} end={infoDash.negociations} duration={1}>
                                 {({ countUpRef }) => (
                                     <span className='text-6xl font-medium' ref={countUpRef} />
                                 )}
                             </CountUp>
-                            <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-red-500'>
+                            {/* <div className='flex w-max items-center rounded-full bg-gray-900 px-3 py-1 text-sm text-red-500'>
                                 <IoArrowDownOutline />
                                 10%
-                            </div>
+                            </div> */}
                         </div>
-                        <p className='mt-4 text-sm font-medium'>negociações este mês</p>
+                        <p className='mt-4 text-sm font-medium'>negociações</p>
                     </div>
                 </div>
             </section>
-            {adverts && adverts?.count > 0 ? (
+            {adverts ? (
                 <section className='mt-20'>
                     <span className='text-2xl font-light'>Meus Anúncios</span>
                     <div className='my-10 rounded-xl bg-white'>
@@ -165,7 +167,7 @@ const HomeDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {adverts?.items.map((item, index) => (
+                                {adverts.map((item, index) => (
                                     <tr
                                         key={index}
                                         className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
@@ -193,7 +195,7 @@ const HomeDashboard = () => {
                                         <td>
                                             <div className='flex items-center gap-1'>
                                                 <Target />
-                                                <span>0</span>
+                                                <span>{item.proposals}</span>
                                             </div>
                                         </td>
                                         <td>

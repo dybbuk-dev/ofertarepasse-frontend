@@ -29,6 +29,10 @@ const Info = () => {
     const { favorites, addFavorite, removeFavorite, isFavorited } = useFavorite()
     const { user } = useAuth()
 
+    React.useLayoutEffect(() => {
+        window.scrollTo({ top: 0 })
+    }, [])
+
     React.useEffect(() => {
         const getAdvert = async () => {
             const { data } = await api.get(`/api/v1/adverts/${id}`)
@@ -47,6 +51,8 @@ const Info = () => {
             toast.error('Não encontramos o anúncio selecionado.')
             navigate(-1)
         }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     }, [id])
 
     React.useEffect(() => {
@@ -55,7 +61,6 @@ const Info = () => {
 
             if (user && advert) {
                 try {
-                    console.log(advert.views + 1)
                     await api.patch(`/api/v1/adverts/${advert.id}`, { views: advert.views + 1 })
                 } catch (err) {
                     toast
@@ -83,39 +88,35 @@ const Info = () => {
                                         {advert.model}
                                     </h2>
                                 </div>
-                                <button
-                                    onClick={() =>
-                                        !isFavorited(advert.id)
-                                            ? addFavorite(advert.id)
-                                            : removeFavorite(
-                                                  (isFavorited(advert.id) as { id: string }).id
-                                              )
-                                    }
-                                >
-                                    {favorites.find((item) => item.advert.id === advert.id) ? (
-                                        <IoHeart className='text-3xl text-primary' />
-                                    ) : (
-                                        <IoHeartOutline className='text-3xl text-gray-500' />
-                                    )}
-                                </button>
-                            </div>
-                            <div className='my-8 flex justify-between '>
-                                <div className='flex flex-wrap gap-6'>
-                                    {advert.highlight.map((item, index) => (
-                                        <span
-                                            className='flex items-center gap-1 text-sm font-medium text-gray-200'
-                                            key={index}
-                                        >
-                                            <IoCheckmark className='text-primary' /> {item}
-                                        </span>
-                                    ))}
+                                <div className='flex flex-col items-end gap-2'>
+                                    <button
+                                        onClick={() =>
+                                            !isFavorited(advert.id)
+                                                ? addFavorite(advert.id)
+                                                : removeFavorite(
+                                                      (isFavorited(advert.id) as { id: string }).id
+                                                  )
+                                        }
+                                    >
+                                        {favorites.find((item) => item.advert.id === advert.id) ? (
+                                            <IoHeart className='text-3xl text-primary' />
+                                        ) : (
+                                            <IoHeartOutline className='text-3xl text-gray-500' />
+                                        )}
+                                    </button>
+                                    <span className='text-gray-600'>
+                                        <span className='font-bold'>ID</span>{' '}
+                                        {advert.id.split('-')[advert.id.split('-').length - 1]}
+                                    </span>
                                 </div>
-                                <span className='text-gray-600'>
-                                    <span className='font-bold'>ID</span>{' '}
-                                    {advert.id.split('-')[advert.id.split('-').length - 1]}
-                                </span>
                             </div>
-                            <div className='grid grid-cols-[1fr_20%] grid-rows-[425px] gap-3 2xl:grid-rows-[500px]'>
+                            <div
+                                className={`grid ${
+                                    advert.images && advert.images.length > 1
+                                        ? 'grid-cols-[1fr_20%]'
+                                        : 'grid-cols-1'
+                                }  mt-8 grid-rows-[425px] gap-3 2xl:grid-rows-[500px]`}
+                            >
                                 <div className='relative h-full w-full'>
                                     {advert.images && advert.images.length > 1 ? (
                                         <div className='absolute top-0 left-0 flex h-full w-full items-center justify-between'>

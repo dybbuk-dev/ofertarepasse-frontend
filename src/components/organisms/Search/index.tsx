@@ -2,11 +2,11 @@
 import Filter from 'assets/icon/Filter'
 import Card from 'components/atoms/Card'
 import Input from 'components/atoms/Input'
-import Checkbox from 'components/atoms/Input/Checkbox'
+// import Checkbox from 'components/atoms/Input/Checkbox'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import {
-    IoChevronForwardOutline,
+    // IoChevronForwardOutline,
     IoChevronUpOutline,
     IoCloseOutline,
     IoLocationOutline,
@@ -15,10 +15,10 @@ import { Link, useSearchParams, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import api from 'services/api'
 import { IAdvert } from '../Dashboard/Adverts'
-import getUrlAws from 'utils/getUrlAws'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const Search = () => {
-    const [amountColums, setAmountColums] = React.useState(5)
+    const [amountColums, setAmountColums] = React.useState(4)
     const [visibleFilter, setVisibleFilter] = React.useState(true)
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [total, setTotal] = React.useState<number>(0)
@@ -28,6 +28,7 @@ const Search = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const location = useLocation()
     const { register, getValues } = useForm()
+    const [page, setPage] = React.useState(2)
 
     const getLocation = async () => {
         navigator.geolocation.getCurrentPosition(async (position: any) => {
@@ -60,7 +61,7 @@ const Search = () => {
         clearTimeout(timer)
 
         const newTimer = setTimeout(() => {
-            let newUrlParams = `?title=${searchParams.get('title')}`
+            let newUrlParams = '?'
             Object.entries(getValues()).map((item) => {
                 newUrlParams = newUrlParams + `&${item[0]}=${item[1]}`
             })
@@ -71,54 +72,60 @@ const Search = () => {
         setTimer(newTimer)
     }
 
-    React.useEffect(() => {
-        const getAdverts = async () => {
-            const { data } = await api.get(`/api/v1/adverts?title=${searchParams.get('title')}`)
+    const handleMore = async () => {
+        if (adverts.length > 0) {
+            const { data } = await api.get(
+                `/api/v1/adverts${getParamsFormated()}&limit=10&page=${page}`
+            )
 
             if (data) {
-                setAdverts(data.items)
-                setTotal(data.meta.totalItems)
+                setAdverts([...adverts, ...data.items])
+                setPage((prev) => prev + 1)
             }
         }
-
-        getAdverts()
-    }, [])
+    }
 
     React.useEffect(() => {
         const getAdverts = async () => {
-            const { data } = await api.get(`/api/v1/adverts${getParamsFormated()}`)
+            const { data } = await api.get(`/api/v1/adverts${getParamsFormated()}&limit=10`)
             if (data) {
+                console.log(data)
                 setAdverts(data.items)
                 setTotal(data.count)
+                setPage(2)
             }
         }
 
         getAdverts()
     }, [location])
 
-    const checkboxFields = {
-        marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
-        vendedor: ['Concessionária', 'Loja', 'Pessoa Física'],
-        opcionais: ['Airbag', 'Alarme', 'Ar Condicionado', 'Ar Quente'],
-        cambio: [
-            'Automática',
-            'Automática Sequencial',
-            'Automatizada',
-            'Automatizada dct',
-            'Manual',
-        ],
-        combustivel: ['Álcool', 'Álcool e gás natural', 'Diesel', 'Gás Natural'],
-        finalPlaca: ['1 e 2', '3 e 4', '5 e 6', '7 e 8', '9 e 0'],
-        blindagem: ['Sim', 'Não'],
-        cores: ['Amarelo', 'Azul', 'Bege', 'Branco'],
-        carroceria: ['Sedã', 'Utilitário Esportivo', 'Cupê'],
-        caracteristicas: ['Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
-    }
+    // const checkboxFields = {
+    //     marcas: ['Adamo', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Beach', 'Bentley', 'Bianco'],
+    //     vendedor: ['Concessionária', 'Loja', 'Pessoa Física'],
+    //     opcionais: ['Airbag', 'Alarme', 'Ar Condicionado', 'Ar Quente'],
+    //     cambio: [
+    //         'Automática',
+    //         'Automática Sequencial',
+    //         'Automatizada',
+    //         'Automatizada dct',
+    //         'Manual',
+    //     ],
+    //     combustivel: ['Álcool', 'Álcool e gás natural', 'Diesel', 'Gás Natural'],
+    //     finalPlaca: ['1 e 2', '3 e 4', '5 e 6', '7 e 8', '9 e 0'],
+    //     blindagem: ['Sim', 'Não'],
+    //     cores: ['Amarelo', 'Azul', 'Bege', 'Branco'],
+    //     carroceria: ['Sedã', 'Utilitário Esportivo', 'Cupê'],
+    //     caracteristicas: ['Alienado', 'Garantia de Fábrica', 'IPVA Pago'],
+    // }
 
     return (
         <div className='bg-gray-900'>
             <section className='container mx-auto mt-[150px] grid grid-cols-[300px_1fr] items-center border-y border-gray-700 py-10'>
-                <button className='flex items-center gap-2 text-gray-400' onClick={getLocation}>
+                <button
+                    className='flex items-center gap-2 text-gray-400'
+                    onClick={getLocation}
+                    disabled={true}
+                >
                     <IoLocationOutline className='text-lg' />
                     <span className='underline underline-offset-2'>
                         {currentLocation
@@ -204,7 +211,7 @@ const Search = () => {
                     className={visibleFilter ? 'block bg-white py-10 px-3' : 'hidden'}
                     onChange={getFormValues}
                 >
-                    <div className='border-b border-gray-700 pb-10'>
+                    {/* <div className='border-b border-gray-700 pb-10'>
                         <p className='text-sm font-medium text-gray-200'>Marcas</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.marcas.map((item) => (
@@ -222,6 +229,19 @@ const Search = () => {
                             Ver todas as marcas
                             <IoChevronForwardOutline />
                         </button>
+                    </div> */}
+                    <div className='border-b border-gray-700 py-10'>
+                        <p className='mb-3 text-sm font-medium text-gray-200'>Pesquisa</p>
+                        <label>
+                            <Input
+                                placeholder='Pesquisa'
+                                className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                classInput='placeholder:text-gray-600 !text-sm'
+                                defaultValue={searchParams.get('title') ?? ''}
+                                {...register('title')}
+                            />
+                            <span className='text-xs text-gray-500'>ex: Honda Civic</span>
+                        </label>
                     </div>
                     <div className='border-b border-gray-700 py-10'>
                         <p className='mb-3 text-sm font-medium text-gray-200'>Ano</p>
@@ -292,7 +312,7 @@ const Search = () => {
                             </label>
                         </div>
                     </div>
-                    <div className='border-b border-gray-700 py-10'>
+                    {/* <div className='border-b border-gray-700 py-10'>
                         <p className='text-sm font-medium text-gray-200'>Câmbio</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.cambio.map((item) => (
@@ -363,14 +383,18 @@ const Search = () => {
                             Ver todas as características
                             <IoChevronForwardOutline />
                         </button>
-                    </div>
+                    </div> */}
                     <button className='mt-8 flex items-center gap-2 text-gray-400'>
                         Limpar filtros
                         <IoCloseOutline />
                     </button>
                 </form>
                 <div className={`${!visibleFilter ? 'flex justify-center' : ''} mb-20`}>
-                    <div
+                    <InfiniteScroll
+                        dataLength={adverts.length}
+                        hasMore={true}
+                        loader={null}
+                        next={handleMore}
                         className={`${
                             'grid-cols-' + amountColums
                         } mt-10 grid h-max gap-x-4 gap-y-8 ${
@@ -382,7 +406,7 @@ const Search = () => {
                                 <Card
                                     data={{
                                         id: item.id,
-                                        image: item.images ? getUrlAws(item.images[0]) : undefined,
+                                        images: item.images,
                                         title: item.title,
                                         price: item.value,
                                         description: item.about,
@@ -395,7 +419,7 @@ const Search = () => {
                                 />
                             </Link>
                         ))}
-                    </div>
+                    </InfiniteScroll>
                 </div>
             </section>
         </div>

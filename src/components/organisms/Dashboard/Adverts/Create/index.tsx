@@ -144,48 +144,53 @@ const CreateAdverts = () => {
                 }
             }
         } else {
-            const { data } = await api.post('/api/v1/adverts', {
-                title: dataForm.title,
-                plate: infoPlate.veiculo.placa,
-                brand: infoPlate.veiculo.marca_modelo.split('/')[0],
-                model: infoPlate.veiculo.marca_modelo.split('/')[1],
-                modelYear: infoPlate.veiculo.ano.split('/')[0],
-                manufactureYear: infoPlate.veiculo.ano.split('/')[1],
-                version: infoPlate.fipes[0].marca_modelo,
-                color: infoPlate.veiculo.cor,
-                kilometer: dataForm.kilometer,
-                about: dataForm.about,
-                alert: dataForm.alert,
-                value: dataForm.value,
-                user: user?.id,
-                city: infoPlate.veiculo.municipio,
-                state: infoPlate.veiculo.uf,
-                fuel:
-                    infoPlate.veiculo.combustivel.search('/') !== -1
-                        ? 'Flex'
-                        : infoPlate.veiculo.combustivel,
-                amountPeaple: infoPlate.veiculo.quantidade_passageiro,
-                rolling: infoPlate.veiculo.cilindradas,
-                highlight: highlight,
-                fipeValue: infoPlate.fipes[0].valor,
-            })
+            try {
+                const { data } = await api.post('/api/v1/adverts', {
+                    title: dataForm.title,
+                    plate: infoPlate.veiculo.placa,
+                    brand: infoPlate.veiculo.marca_modelo.split('/')[0],
+                    model: infoPlate.veiculo.marca_modelo.split('/')[1],
+                    modelYear: infoPlate.veiculo.ano.split('/')[0],
+                    manufactureYear: infoPlate.veiculo.ano.split('/')[1],
+                    version: infoPlate.fipes[0].marca_modelo,
+                    color: infoPlate.veiculo.cor,
+                    kilometer: dataForm.kilometer,
+                    about: dataForm.about,
+                    alert: dataForm.alert,
+                    value: dataForm.value,
+                    user: user?.id,
+                    city: infoPlate.veiculo.municipio,
+                    state: infoPlate.veiculo.uf,
+                    fuel:
+                        infoPlate.veiculo.combustivel.search('/') !== -1
+                            ? 'Flex'
+                            : infoPlate.veiculo.combustivel,
+                    amountPeaple: infoPlate.veiculo.quantidade_passageiro,
+                    rolling: infoPlate.veiculo.cilindradas,
+                    highlight: highlight,
+                    fipeValue: infoPlate.fipes[0].valor,
+                })
 
-            if (data && data.error) {
-                setLoading(false)
-                return toast.error(
-                    'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
-                )
-            } else {
-                if (images.length > 0) {
-                    const status = await uploadImage(images as Array<File>, data.id)
+                if (data && data.error) {
+                    setLoading(false)
+                    return toast.error(
+                        'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
+                    )
+                } else {
+                    if (images.length > 0) {
+                        const status = await uploadImage(images as Array<File>, data.id)
 
-                    if (status !== 201) {
-                        toast.error('Erro ao enviar as imagens do seu anúncio')
+                        if (status !== 201) {
+                            toast.error('Erro ao enviar as imagens do seu anúncio')
+                        }
                     }
-                }
 
-                toast.success('Anúncio criado')
-                navigate('/dashboard/adverts')
+                    toast.success('Anúncio criado')
+                    navigate('/dashboard/adverts')
+                }
+            } catch (err: any) {
+                toast.error(err.response.data.message[0])
+                setLoading(false)
             }
         }
     }
@@ -520,12 +525,12 @@ const CreateAdverts = () => {
                             <Card
                                 data={{
                                     id: '',
-                                    image:
-                                        images && images.length > 0
-                                            ? URL.createObjectURL(images[0])
-                                            : imagesUploaded && imagesUploaded.length > 0
-                                            ? getUrlAws(imagesUploaded[0])
-                                            : null,
+                                    // image:
+                                    //     images && images.length > 0
+                                    //         ? URL.createObjectURL(images[0])
+                                    //         : imagesUploaded && imagesUploaded.length > 0
+                                    //         ? getUrlAws(imagesUploaded[0])
+                                    //         : null,
                                     title: String(
                                         watch('title')
                                             ? watch('title')
