@@ -14,6 +14,7 @@ import formatMoney from 'utils/formatMoney'
 import WithoutImage from 'assets/images/withoutImage.png'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
 
 interface IAdvertNegociation extends IAdvert {
     user: IUser
@@ -115,6 +116,13 @@ const Sold = () => {
                         ) : null}
                     </p>
                 </div>
+                {user?.roles === 'intermediary' ? (
+                    <Link to='/dashboard/negotiations/create'>
+                        <p className='rounded-lg bg-primary py-3 px-10 font-semibold text-white'>
+                            Criar negociação
+                        </p>
+                    </Link>
+                ) : null}
                 {/* <div>
                     <span className='text-sm font-medium'>Período</span>
                     <div className='mt-2 flex gap-3'>

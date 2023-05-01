@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import getUrlAws from 'utils/getUrlAws'
 import WithoutImage from 'assets/images/withoutImage.png'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { useAuth } from 'hooks/auth'
 
 export interface IAdvert {
     id: string
@@ -68,9 +69,10 @@ const Adverts = () => {
 
     const titlesTable = ['Veículo', 'Proposta', 'Vizualizações', 'Valor', 'Status', 'Gerenciar']
     const navigate = useNavigate()
+    const { user } = useAuth()
 
     const getAdverts = async () => {
-        const { data } = await api.get('/api/v1/adverts?limit=10')
+        const { data } = await api.get(`/api/v1/adverts?limit=10&userId=${user?.id}`)
 
         if (data) {
             setAdverts(data)
@@ -79,7 +81,9 @@ const Adverts = () => {
 
     const handleMore = async () => {
         if (adverts) {
-            const { data } = await api.get(`/api/v1/adverts?page=${page}&limit=10`)
+            const { data } = await api.get(
+                `/api/v1/adverts?page=${page}&limit=10&userId=${user?.id}`
+            )
 
             if (data) {
                 setAdverts({ ...adverts, items: [...adverts.items, ...data.items] })

@@ -19,6 +19,7 @@ import DashboardSales from 'pages/Dashboard/Sales'
 import DashboardConfigurations from 'pages/Dashboard/Configurations'
 import DashboardCreateAdverts from 'pages/Dashboard/Adverts/Create'
 import ProtectedRoute from 'components/atoms/ProtectedRoute'
+import CreateNegociations from 'pages/Dashboard/Sold/Create'
 
 const App = () => {
     const router = createBrowserRouter([
@@ -45,7 +46,7 @@ const App = () => {
         {
             path: '/admin',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminHome />
                 </ProtectedRoute>
             ),
@@ -53,7 +54,7 @@ const App = () => {
         {
             path: '/admin/advertiser',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminAdvertiser />
                 </ProtectedRoute>
             ),
@@ -61,7 +62,7 @@ const App = () => {
         {
             path: '/admin/customers',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminCustomers />
                 </ProtectedRoute>
             ),
@@ -69,7 +70,7 @@ const App = () => {
         {
             path: '/admin/negotiations',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminNegotiations />
                 </ProtectedRoute>
             ),
@@ -77,7 +78,7 @@ const App = () => {
         {
             path: '/admin/sold',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminSold />
                 </ProtectedRoute>
             ),
@@ -85,7 +86,7 @@ const App = () => {
         {
             path: '/admin/adverts',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminAdverts />
                 </ProtectedRoute>
             ),
@@ -93,7 +94,7 @@ const App = () => {
         {
             path: '/admin/configurations',
             element: (
-                <ProtectedRoute role='admin'>
+                <ProtectedRoute role={['admin']}>
                     <AdminConfigurations />
                 </ProtectedRoute>
             ),
@@ -101,7 +102,7 @@ const App = () => {
         {
             path: '/dashboard',
             element: (
-                <ProtectedRoute role='user'>
+                <ProtectedRoute role={['user', 'intermediary']}>
                     <DashboardHome />
                 </ProtectedRoute>
             ),
@@ -109,7 +110,7 @@ const App = () => {
         {
             path: '/dashboard/negotiations',
             element: (
-                <ProtectedRoute role='user'>
+                <ProtectedRoute role={['user', 'intermediary']}>
                     <DashboardSold />
                 </ProtectedRoute>
             ),
@@ -117,7 +118,7 @@ const App = () => {
         {
             path: '/dashboard/adverts',
             element: (
-                <ProtectedRoute role='user'>
+                <ProtectedRoute role={['user', 'intermediary']}>
                     <DashboardAdverts />
                 </ProtectedRoute>
             ),
@@ -125,7 +126,7 @@ const App = () => {
         {
             path: '/dashboard/adverts/create',
             element: (
-                <ProtectedRoute role='user'>
+                <ProtectedRoute role={['user', 'intermediary']}>
                     <DashboardCreateAdverts />
                 </ProtectedRoute>
             ),
@@ -133,7 +134,7 @@ const App = () => {
         {
             path: '/dashboard/sales',
             element: (
-                <ProtectedRoute role='user'>
+                <ProtectedRoute role={['user', 'intermediary']}>
                     <DashboardSales />
                 </ProtectedRoute>
             ),
@@ -141,8 +142,16 @@ const App = () => {
         {
             path: '/dashboard/configurations',
             element: (
-                <ProtectedRoute role='user'>
+                <ProtectedRoute role={['user', 'intermediary']}>
                     <DashboardConfigurations />
+                </ProtectedRoute>
+            ),
+        },
+        {
+            path: '/dashboard/negotiations/create',
+            element: (
+                <ProtectedRoute role={['intermediary']}>
+                    <CreateNegociations />
                 </ProtectedRoute>
             ),
         },
