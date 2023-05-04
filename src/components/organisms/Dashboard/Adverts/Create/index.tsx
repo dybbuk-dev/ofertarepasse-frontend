@@ -199,9 +199,7 @@ const CreateAdverts = () => {
         setLoading(true)
         try {
             const { data } = await api.get(
-                `https://placas.fipeapi.com.br/placas/${dataForm.plate.replace('-', '')}?key=${
-                    process.env.REACT_APP_WIPSITES
-                }`,
+                `/api/v1/fipe?plate=${dataForm.plate.replace('-', '')}`,
                 {
                     transformRequest: (_, headers) => {
                         delete headers['Authorization']
