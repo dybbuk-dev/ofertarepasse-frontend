@@ -332,7 +332,7 @@ const CreateAdverts = () => {
                             checked={!!watch('plate') && watch('plate').length === 8}
                         >
                             <ReactInputMask
-                                mask='aaa-9999'
+                                mask='aaa-****'
                                 placeholder='Ex: ABC-1234'
                                 autoFocus={true}
                                 className='field'
