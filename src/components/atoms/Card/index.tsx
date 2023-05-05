@@ -80,7 +80,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                             {data.images.map((_, index) => (
                                 <div
                                     key={index}
-                                    className={`h-[3px] w-[15px] shadow ${
+                                    className={`h-[2px] w-[10px] shadow ${
                                         indexImageSlide === index ? 'bg-primary' : 'bg-white'
                                     }`}
                                 />
@@ -161,8 +161,10 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                 <div className='py-3 px-4'>
                     <div className='grid grid-cols-[1fr_auto] items-start'>
                         <div>
-                            <p className='text-lg font-semibold text-gray-100'>{data.title}</p>
-                            <p className='text-xs font-medium text-gray-500 line-clamp-1'>
+                            <p className='text-lg font-semibold uppercase text-gray-100'>
+                                {data.title}
+                            </p>
+                            <p className='text-xs font-medium uppercase text-gray-500 line-clamp-1'>
                                 {data.description}
                             </p>
                         </div>

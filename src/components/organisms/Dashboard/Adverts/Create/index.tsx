@@ -4,7 +4,12 @@ import Button from 'components/atoms/Button'
 import Card from 'components/atoms/Card'
 import * as React from 'react'
 import { BiImageAlt } from 'react-icons/bi'
-import { IoCheckmarkCircle, IoCheckmarkOutline, IoTrashOutline } from 'react-icons/io5'
+import {
+    IoCheckmarkCircle,
+    IoCheckmarkOutline,
+    IoCloseCircle,
+    IoTrashOutline,
+} from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
@@ -72,11 +77,13 @@ const DefaultBox = ({
     children,
     checked,
     position = 'center',
+    error = false,
 }: {
     title: string
     children: React.ReactNode
     checked?: boolean
     position?: 'center' | 'end'
+    error?: boolean
 }) => {
     return (
         <div className='rounded-xl bg-white'>
@@ -87,13 +94,21 @@ const DefaultBox = ({
                 className={`relative flex ${position === 'center' ? 'items-center' : 'items-end'}`}
             >
                 {children}
-                <IoCheckmarkCircle
-                    className={`absolute ${
-                        position !== 'center' ? 'bottom-2' : ''
-                    } right-2 text-2xl text-green-500 duration-200 ease-in-out ${
-                        checked ? 'opacity-100' : 'opacity-0'
-                    }`}
-                />
+                {error ? (
+                    <IoCloseCircle
+                        className={`absolute ${
+                            position !== 'center' ? 'bottom-2' : ''
+                        } right-2 text-2xl text-red-500 duration-200 ease-in-out`}
+                    />
+                ) : (
+                    <IoCheckmarkCircle
+                        className={`absolute ${
+                            position !== 'center' ? 'bottom-2' : ''
+                        } right-2 text-2xl text-green-500 duration-200 ease-in-out ${
+                            checked ? 'opacity-100' : 'opacity-0'
+                        }`}
+                    />
+                )}
             </DivCustom>
         </div>
     )
@@ -126,6 +141,18 @@ const CreateAdverts = () => {
         return status
     }
 
+    const getVersion = () => {
+        let version = infoPlate.fipes[0].marca_modelo as string
+        ;[
+            infoPlate.veiculo.marca_modelo.split('/')[0],
+            infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0],
+        ].map((item: string) => {
+            version = version.toLowerCase().replace(item.toLowerCase(), '')
+        })
+
+        return version
+    }
+
     const onSubmit = async (dataForm: IDataForm) => {
         setLoading(true)
 
@@ -133,12 +160,15 @@ const CreateAdverts = () => {
 
         if (!correct) {
             setLoading(false)
-            return toast.error('Valor do veículo está abaixo do permitido')
+            return toast.error('Valor do veículo está acima do permitido')
         }
 
         if (advert) {
             const { data } = await api.patch(`/api/v1/adverts/${advert.id}`, {
-                title: infoPlate.veiculo.marca_modelo.split('/').join(' - '),
+                title:
+                    infoPlate.veiculo.marca_modelo.split('/')[0] +
+                    ' ' +
+                    infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0],
                 kilometer: dataForm.kilometer,
                 about: dataForm.about,
                 alert: dataForm.alert,
@@ -177,13 +207,16 @@ const CreateAdverts = () => {
         } else {
             try {
                 const { data } = await api.post('/api/v1/adverts', {
-                    title: infoPlate.veiculo.marca_modelo.split('/').join(' - '),
+                    title:
+                        infoPlate.veiculo.marca_modelo.split('/')[0] +
+                        ' ' +
+                        infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0],
                     plate: infoPlate.veiculo.placa,
                     brand: infoPlate.veiculo.marca_modelo.split('/')[0],
                     model: infoPlate.veiculo.marca_modelo.split('/')[1],
                     modelYear: infoPlate.veiculo.ano.split('/')[0],
                     manufactureYear: infoPlate.veiculo.ano.split('/')[1],
-                    version: infoPlate.fipes[0].marca_modelo,
+                    version: getVersion(),
                     color: infoPlate.veiculo.cor,
                     kilometer: dataForm.kilometer,
                     about: dataForm.about,
@@ -277,7 +310,7 @@ const CreateAdverts = () => {
 
             return {
                 minValue,
-                correct: price >= minValue,
+                correct: price <= minValue,
             }
         } else {
             return {
@@ -421,7 +454,8 @@ const CreateAdverts = () => {
                                     checked={!!infoPlate.veiculo.marca_modelo}
                                 >
                                     <p className='field'>
-                                        {infoPlate.veiculo.marca_modelo.split('/').join(' - ')}
+                                        {infoPlate.veiculo.marca_modelo.split('/')[0]} -{' '}
+                                        {infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0]}
                                     </p>
                                 </DefaultBox>
                                 <DefaultBox
@@ -447,16 +481,10 @@ const CreateAdverts = () => {
                                     <p className='field'>{infoPlate.fipes[0].marca_modelo}</p>
                                 </DefaultBox>
                                 <DefaultBox
-                                    title='Ano do modelo'
-                                    checked={!!infoPlate.veiculo.ano.split('/')[0]}
+                                    title='Ano do modelo / fabricação'
+                                    checked={!!infoPlate.veiculo.ano}
                                 >
-                                    <p className='field'>{infoPlate.veiculo.ano.split('/')[0]}</p>
-                                </DefaultBox>
-                                <DefaultBox
-                                    title='Ano da Fabricação'
-                                    checked={!!infoPlate.veiculo.ano.split('/')[1]}
-                                >
-                                    <p className='field'>{infoPlate.veiculo.ano.split('/')[1]}</p>
+                                    <p className='field'>{infoPlate.veiculo.ano}</p>
                                 </DefaultBox>
                                 <DefaultBox title='Cor' checked={!!infoPlate.veiculo.cor}>
                                     <p className='field'>{infoPlate.veiculo.cor}</p>
@@ -531,6 +559,7 @@ const CreateAdverts = () => {
                                             !!watch('value') &&
                                             verifyPrice(Number(watch('value'))).correct
                                         }
+                                        error={!verifyPrice(Number(watch('value'))).correct}
                                     >
                                         <input
                                             placeholder='R$'
@@ -541,10 +570,8 @@ const CreateAdverts = () => {
                                         />
                                     </DefaultBox>
                                     <p className='mt-1 ml-2 text-[12px] font-light'>
-                                        O veículo tem que ser no mínimo{' '}
-                                        {formatMoney(
-                                            verifyPrice(Number(watch('value') + 1)).minValue + 1
-                                        )}{' '}
+                                        O veículo tem que ser no máximo{' '}
+                                        {formatMoney(verifyPrice(Number(watch('value'))).minValue)}{' '}
                                         que corresponde a 5% abaixo da FIPE
                                     </p>
                                 </div>
@@ -613,7 +640,7 @@ const CreateAdverts = () => {
                             )}
                         </Button>
                     </form>
-                    <div className='relative h-full w-[260px]'>
+                    <div className='relative h-full w-[290px]'>
                         <div className='sticky top-10'>
                             <p className='mb-5 text-sm font-medium'>Pré-visualização do anúncio</p>
                             <Card
@@ -630,11 +657,11 @@ const CreateAdverts = () => {
                                             ? URL.createObjectURL(images[0])
                                             : null,
                                     title: infoPlate
-                                        ? infoPlate.veiculo.marca_modelo.split('/').join(' - ')
-                                        : null,
-                                    description: infoPlate
-                                        ? infoPlate.fipes[0].marca_modelo
-                                        : '--------',
+                                        ? infoPlate.veiculo.marca_modelo.split('/')[0] +
+                                          ' ' +
+                                          infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0]
+                                        : '',
+                                    description: infoPlate ? getVersion() : '--------',
                                     price: Number(
                                         watch('value') ? watch('value') : advert ? advert.value : 0
                                     ),
