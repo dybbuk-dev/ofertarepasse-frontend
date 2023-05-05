@@ -2,7 +2,10 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'https://api.ofertarepasse.com.br:2083',
+    baseURL:
+        process.env.NODE_ENV === 'development'
+            ? 'http://localhost:2083'
+            : 'https://api.ofertarepasse.com.br:2083',
 })
 
 api.interceptors.request.use(
