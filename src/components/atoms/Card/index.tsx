@@ -25,6 +25,7 @@ interface ICard extends React.HTMLAttributes<HTMLDivElement> {
         year: string
         distance: number
         location: string
+        previewImage?: string | null
     }
     inline?: boolean
     inverseColors?: boolean
@@ -89,7 +90,13 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                 </div>
             ) : (
                 <img
-                    src={data.images ? getUrlAws(data.images[0]) : WithoutImage}
+                    src={
+                        data.previewImage
+                            ? data.previewImage
+                            : data.images
+                            ? getUrlAws(data.images[0])
+                            : WithoutImage
+                    }
                     className={`${inline ? 'h-full' : 'h-[165px]'} w-full  object-cover ${
                         inline ? 'rounded-l-xl' : 'rounded-t-xl'
                     }`}
