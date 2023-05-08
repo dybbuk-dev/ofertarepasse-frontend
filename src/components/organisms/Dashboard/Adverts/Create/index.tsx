@@ -141,18 +141,6 @@ const CreateAdverts = () => {
         return status
     }
 
-    const getVersion = () => {
-        let version = infoPlate.fipes[0].marca_modelo as string
-        ;[
-            infoPlate.veiculo.marca_modelo.split('/')[0],
-            infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0],
-        ].map((item: string) => {
-            version = version.toLowerCase().replace(item.toLowerCase(), '')
-        })
-
-        return version
-    }
-
     const onSubmit = async (dataForm: IDataForm) => {
         setLoading(true)
 
@@ -165,10 +153,7 @@ const CreateAdverts = () => {
 
         if (advert) {
             const { data } = await api.patch(`/api/v1/adverts/${advert.id}`, {
-                title:
-                    infoPlate.veiculo.marca_modelo.split('/')[0] +
-                    ' ' +
-                    infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0],
+                title: `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`,
                 kilometer: dataForm.kilometer,
                 about: dataForm.about,
                 alert: dataForm.alert,
@@ -207,16 +192,13 @@ const CreateAdverts = () => {
         } else {
             try {
                 const { data } = await api.post('/api/v1/adverts', {
-                    title:
-                        infoPlate.veiculo.marca_modelo.split('/')[0] +
-                        ' ' +
-                        infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0],
+                    title: `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`,
                     plate: infoPlate.veiculo.placa,
-                    brand: infoPlate.veiculo.marca_modelo.split('/')[0],
-                    model: infoPlate.veiculo.marca_modelo.split('/')[1],
+                    brand: infoPlate.veiculo.marca,
+                    model: infoPlate.veiculo.modelo,
                     modelYear: infoPlate.veiculo.ano.split('/')[0],
                     manufactureYear: infoPlate.veiculo.ano.split('/')[1],
-                    version: getVersion(),
+                    version: infoPlate.veiculo.versao,
                     color: infoPlate.veiculo.cor,
                     kilometer: dataForm.kilometer,
                     about: dataForm.about,
@@ -454,31 +436,17 @@ const CreateAdverts = () => {
                                     checked={!!infoPlate.veiculo.marca_modelo}
                                 >
                                     <p className='field'>
-                                        {infoPlate.veiculo.marca_modelo.split('/')[0]} -{' '}
-                                        {infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0]}
+                                        {`${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`}
                                     </p>
                                 </DefaultBox>
-                                <DefaultBox
-                                    title='Marca'
-                                    checked={!!infoPlate.veiculo.marca_modelo}
-                                >
-                                    <p className='field'>
-                                        {infoPlate.veiculo.marca_modelo.split('/')[0]}
-                                    </p>
+                                <DefaultBox title='Marca' checked={!!infoPlate.veiculo.marca}>
+                                    <p className='field'>{infoPlate.veiculo.marca}</p>
                                 </DefaultBox>
-                                <DefaultBox
-                                    title='Modelo'
-                                    checked={!!infoPlate.veiculo.marca_modelo}
-                                >
-                                    <p className='field'>
-                                        {infoPlate.veiculo.marca_modelo.split('/')[1]}
-                                    </p>
+                                <DefaultBox title='Modelo' checked={!!infoPlate.veiculo.modelo}>
+                                    <p className='field'>{infoPlate.veiculo.modelo}</p>
                                 </DefaultBox>
-                                <DefaultBox
-                                    title='Versão'
-                                    checked={!!infoPlate.fipes[0].marca_modelo}
-                                >
-                                    <p className='field'>{infoPlate.fipes[0].marca_modelo}</p>
+                                <DefaultBox title='Versão' checked={!!infoPlate.veiculo.versao}>
+                                    <p className='field'>{infoPlate.veiculo.versao}</p>
                                 </DefaultBox>
                                 <DefaultBox
                                     title='Ano do modelo / fabricação'
@@ -657,11 +625,9 @@ const CreateAdverts = () => {
                                             ? URL.createObjectURL(images[0])
                                             : null,
                                     title: infoPlate
-                                        ? infoPlate.veiculo.marca_modelo.split('/')[0] +
-                                          ' ' +
-                                          infoPlate.veiculo.marca_modelo.split('/')[1].split(' ')[0]
+                                        ? `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`
                                         : '',
-                                    description: infoPlate ? getVersion() : '--------',
+                                    description: infoPlate ? infoPlate.veiculo.versao : '--------',
                                     price: Number(
                                         watch('value') ? watch('value') : advert ? advert.value : 0
                                     ),

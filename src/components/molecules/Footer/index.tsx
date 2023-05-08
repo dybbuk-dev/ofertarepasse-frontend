@@ -88,7 +88,7 @@ const Footer = () => {
                                             id: item.id,
                                             images: item.images,
                                             title: item.title,
-                                            description: item.about,
+                                            description: item.version,
                                             distance: item.kilometer,
                                             location: `${item.city} - ${item.state}`,
                                             price: item.value,

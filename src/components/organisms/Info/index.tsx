@@ -82,10 +82,11 @@ const Info = () => {
                             <div className='flex items-start justify-between'>
                                 <div>
                                     <h1 className='mb-2 text-3xl font-extrabold uppercase text-gray-100'>
-                                        {advert.title}
+                                        {advert.brand}{' '}
+                                        <span className='text-primary'>{advert.model}</span>
                                     </h1>
                                     <h2 className='text-xl font-medium uppercase text-gray-500'>
-                                        {advert.model}
+                                        {advert.version}
                                     </h2>
                                 </div>
                                 <div className='flex flex-col items-end gap-2'>

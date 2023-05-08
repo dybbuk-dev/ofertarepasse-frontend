@@ -16,6 +16,7 @@ import MenWithWoman from 'assets/images/men_with_woman.png'
 import api from 'services/api'
 import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 import { useAuth } from 'hooks/auth'
+import formatUrlDetails from 'utils/formatUrlDetails'
 
 const Home = () => {
     const [optionBuy, setOptionBuy] = React.useState('car')
@@ -78,7 +79,7 @@ const Home = () => {
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
-                                <Link to={`/search?title=${search}`}>
+                                <Link to={`/estoque?title=${search}`}>
                                     <Button className='absolute right-5 top-6 !w-max !bg-primary !px-10 font-semibold text-white'>
                                         Buscar Veículos
                                     </Button>
@@ -93,19 +94,21 @@ const Home = () => {
                 <section className={`mt-24 ${adverts.length === 0 ? 'hidden' : ''}`}>
                     <div className='mb-10 flex items-center justify-between font-medium'>
                         <p>Anúncios em Destaque</p>
-                        <Link to='/search'>
+                        <Link to='/estoque'>
                             <span className='text-primary'>Ver todos veículos disponíveis</span>
                         </Link>
                     </div>
                     <div className='grid grid-cols-5 gap-5'>
                         {adverts.map((item) => (
                             <Link
-                                to={`/comprar/${item.brand}/${item.model.replaceAll(
-                                    '/',
-                                    ''
-                                )}/${item.version.replaceAll('/', '')}/${item.modelYear}/${
-                                    item.id
-                                }`}
+                                to={formatUrlDetails(
+                                    `/comprar/${item.brand}/${item.model.replaceAll(
+                                        '/',
+                                        ''
+                                    )}/${item.version.replaceAll('/', '')}/${item.modelYear}/${
+                                        item.id
+                                    }`
+                                )}
                                 key={item.id}
                             >
                                 <Card
@@ -113,7 +116,7 @@ const Home = () => {
                                         id: item.id,
                                         images: item.images,
                                         title: item.title,
-                                        description: item.about,
+                                        description: item.version,
                                         distance: item.kilometer,
                                         location: `${item.city} - ${item.state}`,
                                         price: item.value,

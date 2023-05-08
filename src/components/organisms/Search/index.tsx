@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import api from 'services/api'
 import { IAdvert } from '../Dashboard/Adverts'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import formatUrlDetails from 'utils/formatUrlDetails'
 
 const Search = () => {
     const [amountColums, setAmountColums] = React.useState(4)
@@ -402,14 +403,25 @@ const Search = () => {
                         }`}
                     >
                         {adverts.map((item) => (
-                            <Link to={`/info/${item.id}`} key={item.id} className='h-max'>
+                            <Link
+                                to={formatUrlDetails(
+                                    `/comprar/${item.brand}/${item.model.replaceAll(
+                                        '/',
+                                        ''
+                                    )}/${item.version.replaceAll('/', '')}/${item.modelYear}/${
+                                        item.id
+                                    }`
+                                )}
+                                key={item.id}
+                                className='h-max'
+                            >
                                 <Card
                                     data={{
                                         id: item.id,
                                         images: item.images,
                                         title: item.title,
                                         price: item.value,
-                                        description: item.about,
+                                        description: item.version,
                                         distance: item.kilometer,
                                         location: `${item.city} - ${item.state}`,
                                         year: item.modelYear,

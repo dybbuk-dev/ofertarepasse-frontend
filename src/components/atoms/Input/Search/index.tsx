@@ -84,7 +84,7 @@ const Search = ({ className, onChange, ...props }: ISearch) => {
                                 className='!w-max'
                                 onClick={() => {
                                     updateAccessSearch(item.id)
-                                    navigate(`/search?title=${item.text}`)
+                                    navigate(`/estoque?title=${item.text}`)
                                 }}
                             >
                                 <span className='font-medium text-gray-500'>{item.text}</span>
@@ -102,7 +102,7 @@ const Search = ({ className, onChange, ...props }: ISearch) => {
                                     className='rounded-full border border-gray-600 px-3 py-1 text-gray-400'
                                     onClick={() => {
                                         updateAccessSearch(item.id)
-                                        navigate(`/search?title=${item.text}`)
+                                        navigate(`/estoque?title=${item.text}`)
                                     }}
                                 >
                                     {item.text}
