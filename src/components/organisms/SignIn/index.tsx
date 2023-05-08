@@ -7,6 +7,7 @@ import Button from 'components/atoms/Button'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { useAuth } from 'hooks/auth'
+import { GoogleLogin } from '@react-oauth/google'
 
 interface IDataForm {
     email: string
@@ -15,7 +16,7 @@ interface IDataForm {
 
 const SignIn = () => {
     const { register, handleSubmit } = useForm<IDataForm>()
-    const { signIn } = useAuth()
+    const { signIn, handleAuthGoogle } = useAuth()
     const navigate = useNavigate()
 
     const onSubmit = async (dataForm: IDataForm) => {
@@ -36,7 +37,7 @@ const SignIn = () => {
                         <Link to='/'>
                             <img src={Logo} alt='Logo Oferta Repasse' />
                         </Link>
-                        <Link to='/signup'>
+                        <Link to='/cadastro'>
                             <p className='text-[13px] text-gray-100'>Já tem uma conta?</p>
                             <span className='text-[13px] font-semibold text-primary'>
                                 Cadastre-se Grátis
@@ -48,13 +49,25 @@ const SignIn = () => {
                             Entre com suas redes sociais
                         </p>
                         <ButtonSocial social='facebook' />
-                        <ButtonSocial social='google' className='my-4 border border-gray-700' />
+                        <div className='my-5 w-full'>
+                            <GoogleLogin
+                                onSuccess={(response) => {
+                                    handleAuthGoogle(response.credential as string)
+                                }}
+                                onError={() => {
+                                    console.log('Login Failed')
+                                }}
+                            />
+                        </div>
+                        {/* <ButtonSocial
+                            social='google'
+                            className='my-4 border border-gray-700'
+                            onClick={handleAuthGoogle}
+                        /> */}
                         <ButtonSocial social='apple' />
-
                         <p className='mt-16 mb-10 text-[26px] text-gray-100'>
                             ou digite o seu e-mail e senha
                         </p>
-
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <Input
                                 placeholder='example@example.com'
@@ -66,15 +79,15 @@ const SignIn = () => {
                                 type='password'
                                 {...register('password')}
                             />
-                            <div className='my-5 flex justify-end'>
+                            {/* <div className='my-5 flex justify-end'>
                                 <Link to='#'>
                                     <span className='text-[13px] font-medium text-gray-400 underline underline-offset-2'>
                                         Esqueci minha senha
                                     </span>
                                 </Link>
-                            </div>
+                            </div> */}
                             <Button
-                                className='bg-primary text-left font-semibold text-white'
+                                className='mt-5 bg-primary text-left font-semibold text-white'
                                 type='submit'
                             >
                                 Entrar

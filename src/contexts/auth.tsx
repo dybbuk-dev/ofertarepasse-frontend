@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import api from 'services/api'
+import { toast } from 'react-toastify'
 
 export interface IUser {
     id: string
@@ -30,7 +31,7 @@ interface IAuthContext {
     signIn: (email: string, password: string) => Promise<{ error: boolean; message?: string }>
     signOut: () => void
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
-    // loading: boolean
+    handleAuthGoogle: (credential: string) => void
 }
 
 export const AuthContext = React.createContext({} as IAuthContext)
@@ -65,6 +66,22 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
         }
     }
 
+    const handleAuthGoogle = async (credencial: any) => {
+        try {
+            const { data } = await api.post('/api/auth/google', { credencial })
+
+            localStorage.setItem(
+                'ofertarepasse@user',
+                JSON.stringify({ token: data.token, id: data.id })
+            )
+            setUser(data)
+            setIsAuthenticated(true)
+            window.location.href = '/'
+        } catch (err: any) {
+            toast.error('Erro ao tentar se autenticar com o google')
+        }
+    }
+
     const signOut = async () => {
         localStorage.removeItem('ofertarepasse@user')
         setUser(null)
@@ -93,7 +110,7 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
 
     return (
         <AuthContext.Provider
-            value={{ user, isAuthenticated, signIn, signOut, setIsAuthenticated }}
+            value={{ user, isAuthenticated, signIn, signOut, setIsAuthenticated, handleAuthGoogle }}
         >
             {children}
         </AuthContext.Provider>

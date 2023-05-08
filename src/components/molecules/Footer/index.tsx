@@ -74,7 +74,15 @@ const Footer = () => {
                         </div>
                         <div className='grid grid-cols-5 gap-5'>
                             {recommendations.map((item) => (
-                                <Link to={`/info/${item.id}`} key={item.id}>
+                                <Link
+                                    to={`/comprar/${item.brand}/${item.model.replaceAll(
+                                        '/',
+                                        ''
+                                    )}/${item.version.replaceAll('/', '')}/${item.modelYear}/${
+                                        item.id
+                                    }`}
+                                    key={item.id}
+                                >
                                     <Card
                                         data={{
                                             id: item.id,

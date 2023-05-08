@@ -99,7 +99,15 @@ const Home = () => {
                     </div>
                     <div className='grid grid-cols-5 gap-5'>
                         {adverts.map((item) => (
-                            <Link to={`/info/${item.id}`} key={item.id}>
+                            <Link
+                                to={`/comprar/${item.brand}/${item.model.replaceAll(
+                                    '/',
+                                    ''
+                                )}/${item.version.replaceAll('/', '')}/${item.modelYear}/${
+                                    item.id
+                                }`}
+                                key={item.id}
+                            >
                                 <Card
                                     data={{
                                         id: item.id,

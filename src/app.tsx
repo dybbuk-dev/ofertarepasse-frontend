@@ -28,19 +28,19 @@ const App = () => {
             element: <Home />,
         },
         {
-            path: '/signin',
+            path: '/login',
             element: <SignIn />,
         },
         {
-            path: '/signup',
+            path: '/cadastro',
             element: <SignUp />,
         },
         {
-            path: '/search',
+            path: '/estoque',
             element: <Search />,
         },
         {
-            path: '/info/:id',
+            path: '/comprar/:marca/:modelo/:versao/:ano/:id',
             element: <Info />,
         },
         {

@@ -10,11 +10,11 @@ const Menu = () => {
     const items = [
         {
             label: 'Comprar',
-            href: '/',
+            href: '/estoque',
         },
         {
             label: 'Vender',
-            href: '/',
+            href: '/dashboard/adverts/create',
         },
         {
             label: 'Suporte',
@@ -64,12 +64,12 @@ const Menu = () => {
                             </div>
                         ) : (
                             <div className='flex items-center gap-8'>
-                                <Link to='/signup'>
+                                <Link to='/cadastro'>
                                     <span className='text-sm font-medium text-gray-100'>
                                         Criar Conta Grátis
                                     </span>
                                 </Link>
-                                <Link to='/signin'>
+                                <Link to='/login'>
                                     <span className='flex items-center gap-1 text-sm font-medium text-gray-100'>
                                         <Person />
                                         Entrar

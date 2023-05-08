@@ -7,10 +7,12 @@ import Button from 'components/atoms/Button'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from 'components/atoms/Input/Radio'
+import { GoogleLogin } from '@react-oauth/google'
 
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import api from 'services/api'
+import { useAuth } from 'hooks/auth'
 
 interface IDataForm {
     name: string
@@ -21,7 +23,9 @@ interface IDataForm {
 
 const SignUp = () => {
     const { register, handleSubmit, control } = useForm<IDataForm>()
+
     const navigate = useNavigate()
+    const { handleAuthGoogle } = useAuth()
 
     const onSubmit = async (dataForm: IDataForm) => {
         const { data } = await api.post('/api/v1/users', {
@@ -35,7 +39,7 @@ const SignUp = () => {
             toast.error(data.message)
         } else {
             toast.success('User created successfully')
-            navigate('/signin')
+            navigate('/login')
         }
     }
 
@@ -47,7 +51,7 @@ const SignUp = () => {
                         <Link to='/'>
                             <img src={Logo} alt='Logo Oferta Repasse' />
                         </Link>
-                        <Link to='/signin'>
+                        <Link to='/login'>
                             <p className='text-[13px] text-gray-100'>Já tem uma conta?</p>
                             <span className='text-[13px] font-semibold text-gray-100'>
                                 Fazer o Login
@@ -59,7 +63,17 @@ const SignUp = () => {
                             Cadastre-se com suas redes sociais
                         </p>
                         <ButtonSocial social='facebook' />
-                        <ButtonSocial social='google' className='my-4 border border-gray-700' />
+                        <div className='my-5 w-full'>
+                            <GoogleLogin
+                                onSuccess={(response) => {
+                                    handleAuthGoogle(response.credential as string)
+                                }}
+                                onError={() => {
+                                    console.log('Login Failed')
+                                }}
+                            />
+                        </div>
+                        {/* <ButtonSocial social='google' className='my-4 border border-gray-700' /> */}
                         <ButtonSocial social='apple' />
 
                         <p className='mt-16 mb-10 text-[26px] text-gray-100'>
