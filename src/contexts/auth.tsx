@@ -82,8 +82,6 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
                 responseUser = data
             }
 
-            console.log(responseUser)
-
             if (responseUser) {
                 localStorage.setItem(
                     'ofertarepasse@user',

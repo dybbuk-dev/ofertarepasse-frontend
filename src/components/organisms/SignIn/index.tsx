@@ -84,14 +84,14 @@ const SignIn = () => {
                                 {...register('password')}
                             />
                             <div className='my-5 flex justify-end'>
-                                <Link to='#'>
+                                <Link to='/esqueci-minha-senha'>
                                     <span className='text-[13px] font-medium text-gray-400 underline underline-offset-2'>
                                         Esqueci minha senha
                                     </span>
                                 </Link>
                             </div>
                             <Button
-                                className='mt-5 bg-primary text-left font-semibold text-white'
+                                className='bg-primary text-left font-semibold text-white'
                                 type='submit'
                             >
                                 Entrar
