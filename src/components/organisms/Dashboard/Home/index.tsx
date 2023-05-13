@@ -176,7 +176,7 @@ const HomeDashboard = () => {
                                             <div className='flex items-center gap-2'>
                                                 <img
                                                     src={
-                                                        item.images
+                                                        item.images && item.images.length > 0
                                                             ? getUrlAws(item.images[0])
                                                             : WithoutImage
                                                     }

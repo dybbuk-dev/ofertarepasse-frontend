@@ -18,14 +18,13 @@ import React from 'react'
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
         id: string
-        images?: Array<string> | null
+        images?: Array<string | Blob> | null
         title: string
         description: string
         price: number
         year: string
         distance: number
         location: string
-        previewImage?: string | null
     }
     inline?: boolean
     inverseColors?: boolean
@@ -43,16 +42,26 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
             } rounded-xl`}
             {...props}
         >
-            {data.images && data.images.length > 1 ? (
+            {data.images && data.images.length > 0 ? (
                 <div className='relative w-full'>
                     <img
-                        src={getUrlAws(data.images[indexImageSlide])}
+                        src={
+                            typeof data.images[indexImageSlide] === 'string'
+                                ? getUrlAws(data.images[indexImageSlide] as string)
+                                : data.images[indexImageSlide]
+                                ? URL.createObjectURL(data.images[indexImageSlide] as Blob)
+                                : WithoutImage
+                        }
                         className={`${inline ? 'h-full' : 'h-[165px]'} min-w-full object-cover ${
                             inline ? 'rounded-l-xl' : 'rounded-t-xl'
                         }`}
                     />
-                    <div className='absolute top-0 left-0 flex h-full w-full justify-center'>
-                        <div className='group flex h-full w-full justify-between hover:opacity-100'>
+                    <div
+                        className={`absolute top-0 left-0  h-full w-full justify-center ${
+                            data.images.length > 1 ? 'flex' : 'hidden'
+                        }`}
+                    >
+                        <div className='group flex h-full w-full justify-between overflow-hidden rounded-t-xl hover:opacity-100'>
                             <button
                                 className='options flex h-full items-center bg-gradient-to-r from-[#00000077] px-3 opacity-0 duration-200 ease-in-out group-hover:opacity-100'
                                 onClick={(e) => {
@@ -91,10 +100,10 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
             ) : (
                 <img
                     src={
-                        data.previewImage
-                            ? data.previewImage
-                            : data.images
-                            ? getUrlAws(data.images[0])
+                        data.images && data.images.length > 0
+                            ? typeof data.images[0] === 'string'
+                                ? getUrlAws(data.images[0])
+                                : URL.createObjectURL(data.images[0])
                             : WithoutImage
                     }
                     className={`${inline ? 'h-full' : 'h-[165px]'} w-full  object-cover ${

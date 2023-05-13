@@ -8,7 +8,9 @@ import {
     IoCheckmarkCircle,
     IoCheckmarkOutline,
     IoCloseCircle,
-    IoTrashOutline,
+    IoStar,
+    IoStarOutline,
+    IoTrash,
 } from 'react-icons/io5'
 import { useForm } from 'react-hook-form'
 import api from 'services/api'
@@ -19,6 +21,7 @@ import styled from 'styled-components'
 import formatMoney from 'utils/formatMoney'
 import getUrlAws from 'utils/getUrlAws'
 import ReactInputMask from 'react-input-mask'
+import { produce } from 'immer'
 
 interface IDataForm {
     title: string
@@ -116,17 +119,31 @@ const DefaultBox = ({
 
 const CreateAdverts = () => {
     const [highlight, setHighlight] = React.useState<Array<string>>([])
-    const [imagesUploaded, setImagesUploaded] = React.useState<Array<string>>([])
-    const [images, setImages] = React.useState<Array<File>>([])
+    const [images, setImages] = React.useState<Array<File | string>>([])
     const [infoPlate, setInfoPlate] = React.useState<any>(null)
     const [loading, setLoading] = React.useState(false)
     const [advert, setAdvert] = React.useState<IAdvert | null>(null)
     const [loadingPage, setLoadingPage] = React.useState(true)
+    const [imagesDeleted, setImagesDeleted] = React.useState<Array<string>>([])
+    const [reorderImage, setReorderImage] = React.useState(false)
 
     const { register, handleSubmit, watch } = useForm<IDataForm>()
     const { user } = useAuth()
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
+
+    const itemsHighlightVehicle = [
+        'Airbag',
+        'Alarme',
+        'Ar Concidionado',
+        'Ar Quente',
+        'Computador de Bordo',
+        'Controle de Tração',
+        'Desembaçador traseiro',
+        'Banco com regulagem de altura',
+        'Freio ABS',
+        'Controle automático de velocidade',
+    ]
 
     const uploadImage = async (images: File[], id: string) => {
         const formData = new FormData()
@@ -159,6 +176,7 @@ const CreateAdverts = () => {
                 alert: dataForm.alert,
                 value: dataForm.value,
                 highlight: highlight,
+                images: reorderImage ? images : undefined,
             })
 
             if (data) {
@@ -168,23 +186,30 @@ const CreateAdverts = () => {
                         'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
                     )
                 } else {
-                    if (images && images.length > 0) {
-                        const status = await uploadImage(images as Array<File>, data.id)
+                    if (
+                        images.length > 0 &&
+                        images.filter((item) => typeof item !== 'string').length > 0
+                    ) {
+                        const status = await uploadImage(
+                            images.filter((item) => typeof item !== 'string') as Array<File>,
+                            advert.id
+                        )
 
                         if (status !== 201) {
                             toast.error('Erro ao enviar as imagens do seu anúncio')
-                        } else {
-                            if (imagesUploaded && imagesUploaded.length > 0) {
-                                try {
-                                    await api.post('/api/v1/adverts/delete-file', {
-                                        files: imagesUploaded,
-                                    })
-                                } catch (err) {
-                                    toast.error('Erro ao excluir imagens antigas do anúncio')
-                                }
-                            }
                         }
                     }
+
+                    if (imagesDeleted.length > 0) {
+                        try {
+                            await api.post(`/api/v1/adverts/${advert.id}/delete-file`, {
+                                files: imagesDeleted,
+                            })
+                        } catch (err) {
+                            toast.error('Erro ao excluir imagens antigas do anúncio')
+                        }
+                    }
+
                     toast.success('Anúncio atualizado')
                     navigate('/dashboard/adverts')
                 }
@@ -224,7 +249,10 @@ const CreateAdverts = () => {
                     )
                 } else {
                     if (images.length > 0) {
-                        const status = await uploadImage(images as Array<File>, data.id)
+                        const status = await uploadImage(
+                            images.filter((item) => typeof item !== 'string') as Array<File>,
+                            data.id
+                        )
 
                         if (status !== 201) {
                             toast.error('Erro ao enviar as imagens do seu anúncio')
@@ -272,19 +300,6 @@ const CreateAdverts = () => {
         }
     }
 
-    const itemsHighlightVehicle = [
-        'Airbag',
-        'Alarme',
-        'Ar Concidionado',
-        'Ar Quente',
-        'Computador de Bordo',
-        'Controle de Tração',
-        'Desembaçador traseiro',
-        'Banco com regulagem de altura',
-        'Freio ABS',
-        'Controle automático de velocidade',
-    ]
-
     const verifyPrice = (price: number) => {
         if (infoPlate.fipes[0].valor) {
             let minValue = infoPlate.fipes[0].valor * 0.05
@@ -310,7 +325,7 @@ const CreateAdverts = () => {
 
                 if (data) {
                     setAdvert(data)
-                    setImagesUploaded(data.images)
+                    setImages(data.images)
                     setHighlight(data.highlight)
                     await getInfoPlate({ plate: data.plate })
                 }
@@ -344,7 +359,9 @@ const CreateAdverts = () => {
                     >
                         <DefaultBox
                             title='Placa do Veículo'
-                            checked={!!watch('plate') && watch('plate').length === 8}
+                            checked={
+                                (!!watch('plate') && watch('plate').length === 8) || !!advert?.plate
+                            }
                         >
                             <ReactInputMask
                                 mask='aaa-****'
@@ -358,79 +375,115 @@ const CreateAdverts = () => {
                                 {...register('plate')}
                             />
                         </DefaultBox>
-                        <div className='rounded-xl border border-dashed border-gray-700 bg-white py-8 px-5'>
-                            <BiImageAlt className='text-3xl text-primary' />
-                            <div className='mt-3 mb-5'>
-                                <p className='text-smd font-medium text-gray-400'>
-                                    Clique em &quot;Procurar&quot; logo a baixo para enviar imagens
-                                    do seu veículo.
-                                </p>
-                                <p className='text-sm text-gray-400'>Tamanho máximo 2MB cada</p>
-                            </div>
-                            <label
-                                className='rounded border border-gray-600 py-2 px-4 font-medium text-gray-500'
-                                role='button'
-                            >
-                                Procurar
-                                <input
-                                    type='file'
-                                    className='hidden'
-                                    multiple={true}
-                                    accept='image/png, image/jpeg'
-                                    onChange={(e) =>
-                                        e.target.files ? setImages(Array.from(e.target.files)) : []
-                                    }
-                                />
-                            </label>
-                            {imagesUploaded && imagesUploaded.length > 0 ? (
-                                <div className='mt-8 grid grid-cols-3 gap-2'>
-                                    <p className='col-span-3 text-sm text-gray-400'>
-                                        Imagens atuais do anúncio:
-                                    </p>
-                                    {imagesUploaded.map((item, index) => (
-                                        <img
-                                            key={index}
-                                            src={getUrlAws(item as string)}
-                                            className='h-full w-full rounded object-cover'
-                                        />
-                                    ))}
-                                </div>
-                            ) : null}
-                            {images && images.length > 0 ? (
-                                <div className='mt-8 grid grid-cols-3 gap-2'>
-                                    <p className='col-span-3 text-sm text-gray-400'>
-                                        Novas imagens do anúncio:
-                                    </p>
-                                    {images.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className='relative overflow-hidden rounded'
-                                        >
-                                            <button
-                                                type='button'
-                                                className='absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center bg-[#00000099] text-white opacity-0 hover:opacity-100'
-                                                onClick={() => {
-                                                    setImages(
-                                                        images.filter(
-                                                            (itemFilter) => itemFilter !== item
-                                                        )
-                                                    )
-                                                }}
-                                            >
-                                                <IoTrashOutline className='text-xl' />
-                                                <p>Excluir</p>
-                                            </button>
-                                            <img
-                                                src={URL.createObjectURL(item)}
-                                                className='h-full w-full object-cover'
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : null}
-                        </div>
                         {infoPlate ? (
                             <>
+                                <div className='rounded-xl border border-dashed border-gray-700 bg-white py-8 px-5'>
+                                    <BiImageAlt className='text-3xl text-primary' />
+                                    <div className='mt-3 mb-5'>
+                                        <p className='text-smd font-medium text-gray-400'>
+                                            Clique em &quot;Procurar&quot; logo a baixo para enviar
+                                            imagens do seu veículo.
+                                        </p>
+                                        <p className='mt-2 text-xs text-gray-400'>
+                                            Maximo de 12 fotos com o tamanho máximo de 2MB cada
+                                        </p>
+                                    </div>
+                                    <label
+                                        className='rounded border border-gray-600 py-2 px-4 font-medium text-gray-500'
+                                        role='button'
+                                    >
+                                        Procurar
+                                        <input
+                                            type='file'
+                                            className='hidden'
+                                            multiple={true}
+                                            accept='image/png, image/jpeg'
+                                            onChange={(e) => {
+                                                e.target.files
+                                                    ? setImages([...images, ...e.target.files])
+                                                    : []
+                                            }}
+                                        />
+                                    </label>
+                                    {images.length > 0 ? (
+                                        <div className='mt-8 grid grid-cols-3 gap-2'>
+                                            <p className='col-span-3 text-sm text-gray-400'>
+                                                Imagens do anúncio:
+                                            </p>
+                                            {images.map((item, index) => {
+                                                return (
+                                                    <div
+                                                        className={
+                                                            'relative h-[80px] w-[100px] overflow-hidden rounded duration-200 ease-in-out'
+                                                        }
+                                                        key={index}
+                                                    >
+                                                        <div
+                                                            className={
+                                                                'absolute top-0 left-0 flex h-full w-full items-center justify-center bg-[#00000099] opacity-0 hover:opacity-100'
+                                                            }
+                                                        >
+                                                            <button
+                                                                type='button'
+                                                                onClick={() => {
+                                                                    if (!reorderImage)
+                                                                        setReorderImage(true)
+
+                                                                    setImages(
+                                                                        produce(images, (draft) => {
+                                                                            const itemChange =
+                                                                                draft[0]
+
+                                                                            draft[0] = item
+                                                                            draft[index] =
+                                                                                itemChange
+                                                                        })
+                                                                    )
+                                                                }}
+                                                            >
+                                                                {index === 0 ? (
+                                                                    <IoStar className='text-2xl text-yellow-500' />
+                                                                ) : (
+                                                                    <IoStarOutline className='text-2xl text-white' />
+                                                                )}
+                                                            </button>
+                                                            <button
+                                                                type='button'
+                                                                className='ml-3'
+                                                                onClick={() => {
+                                                                    setImages(
+                                                                        images.filter(
+                                                                            (itemFilter) =>
+                                                                                itemFilter !== item
+                                                                        )
+                                                                    )
+                                                                    if (typeof item === 'string') {
+                                                                        setImagesDeleted([
+                                                                            ...imagesDeleted,
+                                                                            item as string,
+                                                                        ])
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <IoTrash className='text-2xl text-white' />
+                                                            </button>
+                                                        </div>
+                                                        <img
+                                                            src={
+                                                                typeof item !== 'string'
+                                                                    ? URL.createObjectURL(
+                                                                          item as any
+                                                                      )
+                                                                    : getUrlAws(item as string)
+                                                            }
+                                                            className='h-full w-full object-cover'
+                                                        />
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    ) : null}
+                                </div>
                                 <DefaultBox
                                     title='Título'
                                     checked={!!infoPlate.veiculo.marca_modelo}
@@ -524,10 +577,15 @@ const CreateAdverts = () => {
                                     <DefaultBox
                                         title='Valor'
                                         checked={
-                                            !!watch('value') &&
-                                            verifyPrice(Number(watch('value'))).correct
+                                            (!!watch('value') &&
+                                                verifyPrice(Number(watch('value'))).correct) ||
+                                            !!advert?.value
                                         }
-                                        error={!verifyPrice(Number(watch('value'))).correct}
+                                        error={
+                                            !verifyPrice(
+                                                Number(advert ? advert?.value : watch('value'))
+                                            ).correct
+                                        }
                                     >
                                         <input
                                             placeholder='R$'
@@ -609,21 +667,12 @@ const CreateAdverts = () => {
                         </Button>
                     </form>
                     <div className='relative h-full w-[290px]'>
-                        <div className='sticky top-10'>
+                        <div className={`sticky top-10 ${infoPlate ? 'block' : 'hidden'}`}>
                             <p className='mb-5 text-sm font-medium'>Pré-visualização do anúncio</p>
                             <Card
                                 data={{
                                     id: '',
-                                    images:
-                                        advert && images && images.length > 0
-                                            ? images.map((item) => URL.createObjectURL(item))
-                                            : imagesUploaded && imagesUploaded.length > 0
-                                            ? imagesUploaded
-                                            : null,
-                                    previewImage:
-                                        !advert && images && images.length > 0
-                                            ? URL.createObjectURL(images[0])
-                                            : null,
+                                    images: images.length > 0 ? images : null,
                                     title: infoPlate
                                         ? `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`
                                         : '',
