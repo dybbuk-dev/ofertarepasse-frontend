@@ -31,7 +31,7 @@ interface IAuthContext {
     signIn: (email: string, password: string) => Promise<{ error: boolean; message?: string }>
     signOut: () => void
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
-    handleAuthGoogle: (credential: string) => void
+    handleAuthGoogle: (provider: 'google' | 'facebook', token: string) => void
 }
 
 export const AuthContext = React.createContext({} as IAuthContext)
@@ -66,19 +66,35 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
         }
     }
 
-    const handleAuthGoogle = async (credencial: any) => {
+    const handleAuthGoogle = async (provider: string, token: string) => {
         try {
-            const { data } = await api.post('/api/auth/google', { credencial })
+            let responseUser: any = null
 
-            localStorage.setItem(
-                'ofertarepasse@user',
-                JSON.stringify({ token: data.token, id: data.id })
-            )
-            setUser(data)
-            setIsAuthenticated(true)
-            window.location.href = '/'
+            if (provider === 'google') {
+                const { data } = await api.post('/api/auth/google', { token })
+
+                responseUser = data
+            }
+
+            if (provider === 'facebook') {
+                const { data } = await api.post('/api/auth/facebook', { token })
+
+                responseUser = data
+            }
+
+            console.log(responseUser)
+
+            if (responseUser) {
+                localStorage.setItem(
+                    'ofertarepasse@user',
+                    JSON.stringify({ token: responseUser.token, id: responseUser.id })
+                )
+                setUser(responseUser)
+                setIsAuthenticated(true)
+                window.location.href = '/'
+            }
         } catch (err: any) {
-            toast.error('Erro ao tentar se autenticar com o google')
+            toast.error(`Erro ao tentar se autenticar com o ${provider}`)
         }
     }
 

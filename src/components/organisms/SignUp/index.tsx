@@ -63,7 +63,7 @@ const SignUp = () => {
                             Cadastre-se com suas redes sociais
                         </p>
                         <ButtonSocial social='facebook' />
-                        <div className='my-5 w-full'>
+                        {/* <div className='my-5 w-full'>
                             <GoogleLogin
                                 onSuccess={(response) => {
                                     handleAuthGoogle(response.credential as string)
@@ -72,7 +72,7 @@ const SignUp = () => {
                                     console.log('Login Failed')
                                 }}
                             />
-                        </div>
+                        </div> */}
                         {/* <ButtonSocial social='google' className='my-4 border border-gray-700' /> */}
                         <ButtonSocial social='apple' />
 

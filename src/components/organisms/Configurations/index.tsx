@@ -141,7 +141,7 @@ const Configurations = () => {
 
     return (
         <section>
-            <p className='text-3xl font-light text-gray-200'>Configurations</p>
+            <p className='text-3xl font-light text-gray-200'>Configurações</p>
             <form
                 className='mt-10 grid grid-cols-[auto_1fr] gap-8 rounded-2xl bg-white p-10'
                 onSubmit={handleSubmit(onSubmit)}
