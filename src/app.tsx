@@ -20,6 +20,7 @@ import DashboardConfigurations from 'pages/Dashboard/Configurations'
 import DashboardCreateAdverts from 'pages/Dashboard/Adverts/Create'
 import ProtectedRoute from 'components/atoms/ProtectedRoute'
 import CreateNegociations from 'pages/Dashboard/Sold/Create'
+import MissingPassword from 'components/organisms/MissingPassword'
 
 const App = () => {
     const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const App = () => {
         {
             path: '/estoque',
             element: <Search />,
+        },
+        {
+            path: '/esqueci-minha-senha',
+            element: <MissingPassword />,
         },
         {
             path: '/comprar/:marca/:modelo/:versao/:ano/:id',
