@@ -60,7 +60,7 @@ const SignIn = () => {
                         </LoginSocialFacebook>
                         <LoginSocialGoogle
                             client_id={process.env.REACT_APP_GOOGLE_CLIENTE_ID as string}
-                            scope='email'
+                            scope='email profile'
                             onResolve={({ data }: any) => {
                                 handleAuthGoogle('google', data.access_token)
                             }}
@@ -68,16 +68,6 @@ const SignIn = () => {
                         >
                             <ButtonSocial social='google' className='my-4 border border-gray-700' />
                         </LoginSocialGoogle>
-                        {/* <div className='my-5 w-full'>
-                            <GoogleLogin
-                                onSuccess={(response) => {
-                                    handleAuthGoogle(response.credential as string)
-                                }}
-                                onError={() => {
-                                    console.log('Login Failed')
-                                }}
-                            />
-                        </div> */}
                         <ButtonSocial social='apple' />
                         <p className='mt-16 mb-10 text-[26px] text-gray-100'>
                             ou digite o seu e-mail e senha
@@ -93,13 +83,13 @@ const SignIn = () => {
                                 type='password'
                                 {...register('password')}
                             />
-                            {/* <div className='my-5 flex justify-end'>
+                            <div className='my-5 flex justify-end'>
                                 <Link to='#'>
                                     <span className='text-[13px] font-medium text-gray-400 underline underline-offset-2'>
                                         Esqueci minha senha
                                     </span>
                                 </Link>
-                            </div> */}
+                            </div>
                             <Button
                                 className='mt-5 bg-primary text-left font-semibold text-white'
                                 type='submit'

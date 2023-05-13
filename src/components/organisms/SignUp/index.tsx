@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
+import { LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login'
 
 interface IDataForm {
     name: string
@@ -62,17 +63,26 @@ const SignUp = () => {
                         <p className='mb-10 text-[26px] text-gray-100'>
                             Cadastre-se com suas redes sociais
                         </p>
-                        <ButtonSocial social='facebook' />
-                        {/* <div className='my-5 w-full'>
-                            <GoogleLogin
-                                onSuccess={(response) => {
-                                    handleAuthGoogle(response.credential as string)
-                                }}
-                                onError={() => {
-                                    console.log('Login Failed')
-                                }}
-                            />
-                        </div> */}
+                        <LoginSocialFacebook
+                            isOnlyGetToken
+                            appId={process.env.REACT_APP_FACEBOOK_ID as string}
+                            onResolve={({ data }: any) =>
+                                handleAuthGoogle('facebook', data.accessToken)
+                            }
+                            onReject={(err) => console.log({ err })}
+                        >
+                            <ButtonSocial social='facebook' />
+                        </LoginSocialFacebook>
+                        <LoginSocialGoogle
+                            client_id={process.env.REACT_APP_GOOGLE_CLIENTE_ID as string}
+                            scope='email profile'
+                            onResolve={({ data }: any) => {
+                                handleAuthGoogle('google', data.access_token)
+                            }}
+                            onReject={(err) => console.log({ err })}
+                        >
+                            <ButtonSocial social='google' className='my-4 border border-gray-700' />
+                        </LoginSocialGoogle>
                         {/* <ButtonSocial social='google' className='my-4 border border-gray-700' /> */}
                         <ButtonSocial social='apple' />
 
