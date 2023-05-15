@@ -90,7 +90,6 @@ const Search = () => {
         const getAdverts = async () => {
             const { data } = await api.get(`/api/v1/adverts${getParamsFormated()}&limit=10`)
             if (data) {
-                console.log(data)
                 setAdverts(data.items)
                 setTotal(data.count)
                 setPage(2)
