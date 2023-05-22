@@ -55,7 +55,7 @@ const Menu = () => {
                         {user ? (
                             <div className='flex items-center gap-2'>
                                 <p className='text-sm font-medium text-gray-400'>{user.name}</p>
-                                <Link to='/dashboard'>
+                                <Link to={user.roles === 'admin' ? '/admin' : '/dashboard'}>
                                     <img
                                         src={user.image ? getUrlAws(user.image) : DefaultProfile}
                                         className='h-[50px] w-[50px] rounded-full object-cover'

@@ -1,21 +1,44 @@
-import Select from 'components/atoms/Select'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import Select from 'components/atoms/Select'
 import * as React from 'react'
-import InputMask from 'react-input-mask'
+// import InputMask from 'react-input-mask'
 import { MdOutlineCloudDownload } from 'react-icons/md'
 import InputSimple from 'components/atoms/Input/Simple'
-import MenInCar from 'assets/images/men_in_car.png'
 import Checkbox from 'components/atoms/Input/Checkbox'
-import { IoCloseCircleOutline, IoCreateOutline, IoTrashOutline } from 'react-icons/io5'
+import {
+    // IoCloseCircleOutline,
+    // IoCreateOutline,
+    IoTrashOutline,
+} from 'react-icons/io5'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { IUser } from 'contexts/auth'
+import { INegociations } from 'components/organisms/Dashboard/Sold'
+import { IAdvert } from 'components/organisms/Dashboard/Adverts'
+import api from 'services/api'
+import { toast } from 'react-toastify'
+import getUrlAws from 'utils/getUrlAws'
+import DefaultProfile from 'assets/images/defaultProfile.png'
+import Modal from 'components/atoms/Modal'
+import Button from 'components/atoms/Button'
+
+interface IAdvertisers extends IUser {
+    negociations: Array<INegociations>
+    adverts: Array<IAdvert>
+}
 
 const Advertiser = () => {
+    const [advertisers, setAdvertisers] = React.useState<Array<IAdvertisers>>([])
+    const [amount, setAmount] = React.useState<number>(0)
+    const [page, setPage] = React.useState(2)
     const [filter, setFilter] = React.useState({
         action: '',
+        search: '',
     })
+    const [advertiserSelected, setAdvertiserSelected] = React.useState<string | null>(null)
 
     const titlesTable = [
         '',
         'Nome',
-        'Status',
         'Anúncios Ativos',
         'Negociações',
         'Telefone',
@@ -23,129 +46,103 @@ const Advertiser = () => {
         'Gerenciar',
     ]
 
-    const items = [
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: false,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: false,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: false,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: false,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: true,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-        {
-            image: MenInCar,
-            name: 'Miguel Henrique',
-            active: false,
-            amountAdverts: 18,
-            negotiations: 10,
-            phone: '(00) 00000-0000',
-            createdAt: Date.now(),
-        },
-    ]
+    const getAdvertisers = async () => {
+        try {
+            const { data } = await api.get('/api/v1/advertisers?page=1&limit=10')
+
+            setAdvertisers(data.items)
+            setAmount(data.meta.itemCount)
+        } catch (_) {
+            toast.error('Erro ao trazer os anúnciantes')
+        }
+    }
+
+    const handleMore = async () => {
+        if (advertisers) {
+            const { data } = await api.get(`/api/v1/advertisers?page=${page}&limit=10`)
+
+            if (data) {
+                setAdvertisers([...advertisers, ...data.data])
+                setPage((prev) => prev + 1)
+            }
+        }
+    }
+
+    const handleRemove = async () => {
+        try {
+            await api.delete(`/api/v1/advertisers/${advertiserSelected}`)
+
+            setAdvertisers(advertisers.filter((item) => item.id !== advertiserSelected))
+            setAmount((prev) => prev - 1)
+
+            toast.success('Anúnciante excluido')
+            setAdvertiserSelected(null)
+        } catch (err: any) {
+            toast.error(err.response.data.message)
+        }
+    }
+
+    React.useEffect(() => {
+        getAdvertisers()
+    }, [])
+
+    React.useEffect(() => {
+        const getAdvertsSearch = async () => {
+            try {
+                const { data } = await api.get(
+                    `/api/v1/advertisers?search=${filter.search}&limit=30`
+                )
+
+                setAdvertisers(data.items)
+                setAmount(data.meta.itemCount)
+            } catch (_) {
+                toast.error('Erro ao trazer os anúncios pesquisados')
+            }
+        }
+
+        if (filter.search !== '') {
+            getAdvertsSearch()
+        } else {
+            setPage(2)
+            getAdvertisers()
+        }
+    }, [filter.search])
 
     return (
         <div>
+            {advertiserSelected && (
+                <Modal title='Excluir Anunciante' onClose={() => setAdvertiserSelected(null)}>
+                    <div className='w-[400px]'>
+                        <p className='text-gray-500'>
+                            Ao excluir um anúnciante todos os anúncios e negociações serão
+                            excluidas. <br />
+                            Tem certeza que deseja continuar?
+                        </p>
+                        <div className='mt-8 flex flex-row gap-x-2'>
+                            <Button
+                                className='bg-gray-500 text-white'
+                                onClick={() => setAdvertiserSelected(null)}
+                            >
+                                <span>Não</span>
+                            </Button>
+                            <Button className='bg-primary text-white' onClick={handleRemove}>
+                                <span>Sim</span>
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
             <div className='flex items-center justify-between'>
                 <div>
                     <span className='text-3xl font-light text-gray-200'>Anunciantes</span>
                     <p className='mt-3 text-sm text-gray-200'>
-                        Total de <span className='font-semibold'>5.693</span> registros entre{' '}
+                        Total de <span className='font-semibold'>{amount}</span> registros
+                        {/* entre{' '}
                         <span className='font-semibold'>05/12/2022</span> e{' '}
-                        <span className='font-semibold'>04/01/2023</span>
+                        <span className='font-semibold'>04/01/2023</span> */}
                     </p>
                 </div>
-                <div>
+                {/* <div>
                     <span className='text-sm font-medium'>Período</span>
                     <div className='mt-2 flex gap-3'>
                         <div className='relative flex w-[125px] items-center overflow-hidden rounded border border-gray-100'>
@@ -163,105 +160,98 @@ const Advertiser = () => {
                             <p className='absolute left-2 text-sm text-gray-100'>até</p>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
-            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-3'>
-                <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
+            <div className='mt-8 mb-5 grid grid-cols-[1fr_auto] gap-x-3'>
+                {/* <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} /> */}
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
                     placeholder='Faça uma busca por nome, local, telefone, e-mail'
-                />
-                <Select
-                    label='100 registros'
-                    onChange={(e) => setFilter({ ...filter, action: e })}
+                    value={filter.search}
+                    onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                 />
                 <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
                     <MdOutlineCloudDownload className='text-xl' />
                     Exportar
                 </button>
-                <Select label='Ordenar por' onChange={(e) => setFilter({ ...filter, action: e })} />
             </div>
             <div className='mb-10 rounded-xl bg-white'>
-                <table className='w-full'>
-                    <tr className='border-b border-gray-900'>
-                        {titlesTable.map((item) => (
-                            <th
-                                key={item}
-                                className={`py-6 text-left text-sm font-medium capitalize text-black ${
-                                    item === '' ? 'w-[60px]' : 'w-auto'
-                                }`}
-                            >
-                                {item}
-                            </th>
-                        ))}
-                    </tr>
-                    {items.map((item, index) => (
-                        <tr
-                            key={index}
-                            className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
-                        >
-                            <td className='pl-2'>
-                                <Checkbox />
-                            </td>
-                            <td className='flex items-center gap-2 py-6'>
-                                <img
-                                    src={item.image}
-                                    alt={`Foto de ${item.name}`}
-                                    className='h-[35px] w-[35px] rounded-full object-cover'
-                                />
-                                <p className='text-black'>{item.name}</p>
-                            </td>
-                            <td>
-                                <div
-                                    className={`flex w-max items-center gap-2 rounded-full ${
-                                        item.active ? 'bg-green-100' : 'bg-gray-900'
-                                    } px-4 py-1`}
+                <InfiniteScroll
+                    dataLength={advertisers.length}
+                    next={handleMore}
+                    hasMore={true}
+                    loader={null}
+                >
+                    <table className='w-full'>
+                        <tr className='border-b border-gray-900'>
+                            {titlesTable.map((item) => (
+                                <th
+                                    key={item}
+                                    className={`py-6 text-left text-sm font-medium capitalize text-black ${
+                                        item === '' ? 'w-[60px]' : 'w-auto'
+                                    }`}
                                 >
-                                    <div
-                                        className={`h-[8px] w-[8px] rounded-full ${
-                                            item.active ? 'bg-green' : 'bg-gray-600'
-                                        }`}
-                                    />
-                                    <span
-                                        className={` ${
-                                            item.active ? 'text-green' : 'text-gray-600'
-                                        }`}
-                                    >
-                                        {item.active ? 'Online' : 'Offline'}
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <span>
-                                    {item.amountAdverts}{' '}
-                                    {item.amountAdverts > 1 ? 'anúncios' : 'anúncio'}
-                                </span>
-                            </td>
-                            <td>
-                                <span>
-                                    {item.negotiations}{' '}
-                                    {item.negotiations > 1 ? 'negociações' : 'negociação'}
-                                </span>
-                            </td>
-                            <td>
-                                <span>{item.phone}</span>
-                            </td>
-                            <td>
-                                <span>{new Date(item.createdAt).toLocaleDateString()}</span>
-                            </td>
-                            <td>
-                                <div className='flex gap-3 text-lg '>
-                                    <IoCloseCircleOutline
-                                        role='button'
-                                        className='hover:text-primary'
-                                    />
-                                    <IoTrashOutline role='button' className='hover:text-primary' />
-                                    <IoCreateOutline role='button' className='hover:text-primary' />
-                                </div>
-                            </td>
+                                    {item}
+                                </th>
+                            ))}
                         </tr>
-                    ))}
-                </table>
+                        {advertisers.map((item, index) => (
+                            <tr
+                                key={index}
+                                className='border-b border-gray-900 text-smd text-gray-500 last:border-none'
+                            >
+                                <td className='pl-2'>
+                                    <Checkbox />
+                                </td>
+                                <td className='flex items-center gap-2 py-6'>
+                                    <img
+                                        src={item.image ? getUrlAws(item.image) : DefaultProfile}
+                                        alt={`Foto de ${item.name}`}
+                                        className='h-[35px] w-[35px] rounded-full object-cover'
+                                    />
+                                    <p className='text-black'>{item.name}</p>
+                                </td>
+                                <td>
+                                    <span>
+                                        {item.adverts.length}{' '}
+                                        {item.adverts.length > 1 ? 'anúncios' : 'anúncio'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {item.negociations.length}{' '}
+                                        {item.negociations.length > 1
+                                            ? 'negociações'
+                                            : 'negociação'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>{item.phone ?? '--------'}</span>
+                                </td>
+                                <td>
+                                    <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                                </td>
+                                <td>
+                                    <div className='flex gap-3 text-lg'>
+                                        {/* <IoCloseCircleOutline
+                                            role='button'
+                                            className='hover:text-primary'
+                                        /> */}
+                                        <IoTrashOutline
+                                            role='button'
+                                            className='hover:text-primary'
+                                            onClick={() => setAdvertiserSelected(item.id)}
+                                        />
+                                        {/* <IoCreateOutline
+                                            role='button'
+                                            className='hover:text-primary'
+                                        /> */}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </table>
+                </InfiniteScroll>
             </div>
         </div>
     )

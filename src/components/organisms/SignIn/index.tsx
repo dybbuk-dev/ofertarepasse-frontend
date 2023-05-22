@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import MenCar from 'assets/images/men_in_car.png'
 import Logo from 'assets/images/logo.png'
 import { Link, useNavigate } from 'react-router-dom'

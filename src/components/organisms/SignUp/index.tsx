@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import WomamCar from 'assets/images/womam_in_car.png'
 import Logo from 'assets/images/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,7 +8,6 @@ import Button from 'components/atoms/Button'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from 'components/atoms/Input/Radio'
-import { GoogleLogin } from '@react-oauth/google'
 
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
