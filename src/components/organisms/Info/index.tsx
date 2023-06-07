@@ -311,7 +311,7 @@ const Info = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <Link to='/signin'>
+                                        <Link to='/login'>
                                             <Button className='!bg-primary !py-4 font-semibold'>
                                                 Entrar
                                             </Button>

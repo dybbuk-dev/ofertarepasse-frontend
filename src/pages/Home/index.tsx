@@ -61,9 +61,7 @@ const Home = () => {
                                 >
                                     Comprar Carro
                                 </button>
-                                <Link
-                                    to={isAuthenticated ? '/dashboard/adverts/create' : '/signin'}
-                                >
+                                <Link to={isAuthenticated ? '/dashboard/adverts/create' : '/login'}>
                                     <p
                                         className={
                                             'ease cursor-pointer font-medium text-gray-500 duration-200'
