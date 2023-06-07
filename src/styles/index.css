@@ -32,3 +32,12 @@
     background-color: #f3722c;
     border-radius: 30px;
 }
+
+body {
+    box-sizing: border-box;
+}
+
+.container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}

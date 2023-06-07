@@ -43,14 +43,14 @@ const Home = () => {
         <DefaultTemplate>
             <section className='w-full bg-gray-900 pt-[250px]'>
                 <div className='container mx-auto'>
-                    <p className='text-[2.7rem] font-bold'>
+                    <p className='text-[1.5rem] font-bold sm:text-[2rem] md:text-[2.7rem]'>
                         Veículos com valores abaixo da FIPE é só na{' '}
                         <span className='text-primary'>ofertarepasse.</span>
                     </p>
-                    <p className='text-[2.3rem] text-primary'>
+                    <p className='text-[1rem] text-primary sm:text-[1.5rem] md:text-[2.3rem]'>
                         Bom pra quem vende, ótimo pra quem compra.
                     </p>
-                    <div className='grid grid-cols-[1fr_auto] items-center gap-16'>
+                    <div className='my-8 grid grid-rows-[1fr_auto] items-center gap-16 sm:my-0 sm:grid-cols-[1fr_auto]'>
                         <div className='rounded-2xl bg-white py-8'>
                             <div className='mx-8 flex items-center gap-5 border-b border-gray-700 pb-4'>
                                 <button
@@ -71,14 +71,14 @@ const Home = () => {
                                     </p>
                                 </Link>
                             </div>
-                            <div className='relative pt-10'>
+                            <div className='mt-8 flex flex-col items-end xl:flex-row xl:items-center'>
                                 <SearchInput
                                     placeholder='Digite marca ou modelo do carro'
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                                 <Link to={`/estoque?title=${search}`}>
-                                    <Button className='absolute right-5 top-6 !w-max !bg-primary !px-10 font-semibold text-white'>
+                                    <Button className='mx-8 mt-8 !w-max !bg-primary !px-10 font-semibold text-white xl:mt-0'>
                                         Buscar Veículos
                                     </Button>
                                 </Link>
@@ -96,7 +96,7 @@ const Home = () => {
                             <span className='text-primary'>Ver todos veículos disponíveis</span>
                         </Link>
                     </div>
-                    <div className='grid grid-cols-5 gap-5'>
+                    <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                         {adverts.map((item) => (
                             <Link
                                 to={formatUrlDetails(
@@ -126,11 +126,11 @@ const Home = () => {
                     </div>
                 </section>
                 <section className='mt-24'>
-                    <div className='flex items-center justify-between rounded-2xl border-[3px] border-gray-900 py-8 px-10'>
-                        <p className='text-lg font-medium text-gray-200'>
+                    <div className='flex flex-col items-center justify-between rounded-2xl border-[3px] border-gray-900 py-8 px-10 xl:flex-row'>
+                        <p className='mb-4 text-lg font-medium text-gray-200 xl:mb-0'>
                             A Marca do seu novo veículo
                         </p>
-                        <div className='grid grid-cols-7 items-center justify-items-end'>
+                        <div className='grid grid-cols-2 items-center justify-items-center gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7'>
                             {brands.map((brand, index) => (
                                 <img key={index} src={brand} className='w-[70%] object-contain' />
                             ))}
@@ -138,29 +138,26 @@ const Home = () => {
                     </div>
                 </section>
                 <section className='mt-36'>
-                    <div className='grid grid-cols-2 rounded-xl bg-gradient-to-r from-secondary to-[#ff9d57]'>
-                        <div className='p-14'>
-                            <p className='text-3xl font-semibold text-white'>
+                    <div className='flex flex-col rounded-xl bg-gradient-to-r from-secondary to-[#ff9d57] lg:flex-row'>
+                        <div className='grow p-14'>
+                            <p className='text-center text-xl font-semibold text-white md:text-left md:text-2xl lg:text-3xl'>
                                 Bom pra quem vende. <br />
                                 Ótimo pra quem compra.
                             </p>
-                            <p className='mt-4 mb-10 font-medium text-white'>
+                            <p className='mt-4 mb-10 text-center text-xs font-medium text-white md:text-left md:text-sm lg:text-base'>
                                 Encontre motos e carros com valores abaixo da tabela fipe.
                             </p>
-                            <div className='flex items-center gap-4'>
-                                <Button className='!bg-white !py-5 font-semibold text-primary'>
+                            <div className='flex flex-col items-center gap-4 md:flex-row'>
+                                <Button className='!bg-white !py-5 text-sm font-semibold text-primary md:text-base'>
                                     Encontrar meu veículo
                                 </Button>
-                                <Button className='!bg-secondary !py-5 font-semibold text-white'>
+                                <Button className='!bg-secondary !py-5 text-sm font-semibold text-white md:text-base'>
                                     Vender meu veículo
                                 </Button>
                             </div>
                         </div>
-                        <div className='relative flex items-center justify-center'>
-                            <img
-                                src={MenWithWoman}
-                                className='absolute bottom-0 w-[345px] object-contain'
-                            />
+                        <div className='flex justify-center'>
+                            <img src={MenWithWoman} className='w-[345px] object-contain' />
                         </div>
                     </div>
                 </section>

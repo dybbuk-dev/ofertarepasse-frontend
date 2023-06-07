@@ -56,7 +56,7 @@ const Search = ({ className, onChange, ...props }: ISearch) => {
     return (
         <div className='relative w-full px-8'>
             <input
-                className={`w-full bg-transparent text-xl outline-none placeholder:text-gray-500 ${className}`}
+                className={`w-full bg-transparent text-xs outline-none placeholder:text-gray-500 sm:text-sm md:text-base ${className}`}
                 onFocus={() => {
                     getResearches('')
                     setFocused(true)

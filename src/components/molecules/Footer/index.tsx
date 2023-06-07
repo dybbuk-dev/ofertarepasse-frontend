@@ -72,7 +72,7 @@ const Footer = () => {
                                 <span className='text-primary'>Ver todos veículos disponíveis</span>
                             </Link>
                         </div>
-                        <div className='grid grid-cols-5 gap-5'>
+                        <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                             {recommendations.map((item) => (
                                 <Link
                                     to={`/comprar/${item.brand}/${item.model.replaceAll(
@@ -101,29 +101,29 @@ const Footer = () => {
                     </section>
                 ) : null}
                 <section className='mt-24 mb-[200px] flex items-center justify-center'>
-                    <div className='grid h-[330px] w-full grid-cols-2 items-center justify-items-center rounded-2xl bg-gray-900'>
-                        <p className='text-4xl font-semibold text-gray-200'>
+                    <div className='grid w-full grid-cols-3 items-center justify-items-center gap-2 rounded-2xl bg-gray-900 px-12 sm:h-[270px] md:h-[330px] md:gap-8 lg:grid-cols-4'>
+                        <div className='col-span-2 text-xl font-semibold text-gray-200 xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl'>
                             Cuide melhor do seu <br />
                             veículo e <span className='text-primary'>economize muito.</span>
-                        </p>
-                        <div className='relative flex h-full w-full items-center justify-center'>
-                            <img src={MenWithPhone} className='absolute bottom-0 right-[55%]' />
-                            <div className='ml-[200px]'>
-                                <p className='font-medium text-gray-200'>
-                                    Conheça o Blog Oficial
-                                    <br /> do OfertaRepasse.
-                                </p>
-                                <Button className='mt-4 bg-primary text-white'>
-                                    Conhecer Blog
-                                </Button>
-                            </div>
+                        </div>
+                        <div className='relative row-span-2 h-full w-[200px] xs:w-[220px] sm:w-[250px] md:w-[300px] lg:row-span-1'>
+                            <img src={MenWithPhone} className='absolute bottom-0' />
+                        </div>
+                        <div className=''>
+                            <p className='text-xs font-medium text-gray-200 xs:text-sm sm:text-base'>
+                                Conheça o Blog Oficial
+                                <br /> do OfertaRepasse.
+                            </p>
+                            <Button className='mt-4 bg-primary text-xs text-white sm:text-sm lg:text-base'>
+                                Conhecer Blog
+                            </Button>
                         </div>
                     </div>
                 </section>
             </section>
             <section className='border-t border-[#f4f4f4] pt-[100px]'>
                 <div className='container mx-auto'>
-                    <div className='grid grid-cols-6'>
+                    <div className='grid grid-cols-2 gap-4 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6'>
                         {items.map((item) => (
                             <div key={item.title}>
                                 <p className='mb-6 text-sm font-semibold text-gray-200'>
@@ -144,7 +144,7 @@ const Footer = () => {
                                 </div>
                             </div>
                         ))}
-                        <div className='col-span-5 flex items-center justify-between text-sm'>
+                        <div className='col-span-2 flex items-center justify-between text-sm xs:col-span-3 sm:col-span-4 md:col-span-3 lg:col-span-5'>
                             <p className='font-medium'>
                                 Atendimento de <strong>Segunda a Sexta</strong> 07:30 ás 18:00 -{' '}
                                 <strong>Sábado</strong> 07:30 ás 12:00

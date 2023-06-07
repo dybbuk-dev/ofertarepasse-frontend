@@ -30,7 +30,7 @@ const Menu = () => {
         <header className='absolute top-0 left-0 w-full'>
             <nav>
                 <div className='bg-white py-3 text-xs'>
-                    <div className='container mx-auto flex items-center justify-between'>
+                    <div className='container mx-auto flex flex-col items-center justify-between md:flex-row'>
                         <p className='font-medium'>
                             <span className='underline underline-offset-2'>
                                 Encontre milhares de veículos
@@ -48,7 +48,7 @@ const Menu = () => {
                     </div>
                 </div>
                 <div>
-                    <div className='container mx-auto flex items-center justify-between bg-transparent py-8'>
+                    <div className='container mx-auto flex flex-col items-end justify-between bg-transparent py-8 md:flex-row md:items-center'>
                         <Link to='/'>
                             <img src={Logo} />
                         </Link>
