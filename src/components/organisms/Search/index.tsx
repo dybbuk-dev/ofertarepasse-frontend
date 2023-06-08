@@ -19,12 +19,13 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import formatUrlDetails from 'utils/formatUrlDetails'
 import CloseIcon from '@mui/icons-material/Close'
 import GridViewIcon from '@mui/icons-material/GridView'
+import Button from 'components/atoms/Button'
 
 const gridCols = ['grid-cols-3', 'grid-cols-4', 'grid-cols-5']
 
 const Search = () => {
     const [amountColums, setAmountColums] = React.useState(4)
-    const [visibleFilter, setVisibleFilter] = React.useState(true)
+    const [visibleFilter, setVisibleFilter] = React.useState(window.innerWidth >= 1024)
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [total, setTotal] = React.useState<number>(0)
     const [currentLocation, setCurrentLocation] = React.useState<string | null>(null)
@@ -226,6 +227,9 @@ const Search = () => {
                 >
                     <div className='py-10 px-3'>
                         <div className='flex h-20 w-full items-center justify-end px-5 lg:hidden'>
+                            <div className='mr-2'>
+                                Clique aqui para recolher este painel de filtro.
+                            </div>
                             <button
                                 onClick={(e) => {
                                     e.preventDefault()
@@ -235,6 +239,9 @@ const Search = () => {
                                 <CloseIcon sx={{ color: 'black' }} />
                             </button>
                         </div>
+                        <Button className='my-5 w-full !bg-primary !px-10 font-semibold text-white'>
+                            Buscar Veículos
+                        </Button>
                         {/* <div className='border-b border-gray-700 pb-10'>
                         <p className='text-sm font-medium text-gray-200'>Marcas</p>
                         <div className='my-3 flex flex-col'>
@@ -254,7 +261,7 @@ const Search = () => {
                             <IoChevronForwardOutline />
                         </button>
                     </div> */}
-                        <div className='border-b border-gray-700 py-10'>
+                        <div className='border-b border-gray-700 pb-10'>
                             <p className='mb-3 text-sm font-medium text-gray-200'>Pesquisa</p>
                             <label>
                                 <Input
