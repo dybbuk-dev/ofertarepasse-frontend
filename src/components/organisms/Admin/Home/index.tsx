@@ -196,7 +196,7 @@ const HomeDashboard = () => {
                         <IoChevronUpOutline />
                     </div>
                 </div>
-                <div className='w-full overflow-y-scroll bg-transparent'>
+                <div className='w-full overflow-x-auto bg-transparent'>
                     <div className='mt-10 w-full min-w-[560px] rounded-2xl bg-white pt-7'>
                         <div className='grid grid-cols-4 border-b border-gray-900 px-10 pb-7'>
                             <p>Cidade e Estado</p>
