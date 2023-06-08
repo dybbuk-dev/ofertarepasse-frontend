@@ -1,5 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import React from 'react'
+import React, { useState } from 'react'
 import Button from 'components/atoms/Button'
 import MenuDasboard from 'components/molecules/Menu/MenuDashboard'
 import {
@@ -29,7 +29,7 @@ interface IDashboardTemplate {
 const DashboardTemplate = ({ children }: IDashboardTemplate) => {
     const { user } = useAuth()
 
-    const [navbarVisible, setNavbarVisible] = React.useState(false)
+    const [navbarVisible, setNavbarVisible] = useState(false)
 
     const buttonsMenu = [
         {

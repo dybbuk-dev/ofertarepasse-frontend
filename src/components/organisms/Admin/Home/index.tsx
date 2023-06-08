@@ -1,8 +1,10 @@
 import { IoArrowDownOutline, IoArrowUpOutline, IoChevronUpOutline } from 'react-icons/io5'
 import ReactECharts from 'echarts-for-react'
 import CountUp from 'react-countup'
+import { useAuth } from 'hooks/auth'
 
 const HomeDashboard = () => {
+    const { user } = useAuth()
     const negotiations = [
         {
             city: 'São Paulo, SP',
@@ -116,10 +118,16 @@ const HomeDashboard = () => {
     return (
         <div>
             <section className='text-gray-200'>
-                <span className='mr-4 text-3xl font-light'>Dashboard</span>
-                <span className='text-lg font-light'>Seja bem-vindo, Ibisem!</span>
-                <div className='mt-10 grid grid-cols-3 rounded-2xl bg-white py-10 px-16'>
-                    <div>
+                <div className='flex flex-col text-center md:flex-row md:items-end md:text-left'>
+                    <span className='mr-4 text-xl font-light xs:text-2xl md:text-3xl'>
+                        Dashboard
+                    </span>
+                    <span className='text-base font-light md:text-lg'>
+                        Seja bem-vindo, {user?.name.split(' ')[0]}!
+                    </span>
+                </div>
+                <div className='mt-2 grid grid-cols-none grid-rows-3 gap-y-4 rounded-2xl bg-white py-2 px-4 xs:mt-5 xs:py-4 xs:px-8 md:mt-10 md:grid-cols-3 md:grid-rows-none md:py-10 md:px-16'>
+                    <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={968} duration={1}>
                                 {({ countUpRef }) => (
@@ -133,7 +141,7 @@ const HomeDashboard = () => {
                         </div>
                         <p className='mt-4 text-sm font-medium'>novos anúncios este mês</p>
                     </div>
-                    <div className='justify-self-center'>
+                    <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={1268} duration={1}>
                                 {({ countUpRef }) => (
@@ -147,7 +155,7 @@ const HomeDashboard = () => {
                         </div>
                         <p className='mt-4 text-sm font-medium'>novos usuários este mês</p>
                     </div>
-                    <div className='justify-self-end'>
+                    <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={688} duration={1}>
                                 {({ countUpRef }) => (
@@ -165,7 +173,7 @@ const HomeDashboard = () => {
             </section>
             <section className='mt-10'>
                 <div className='flex items-center justify-between'>
-                    <span className='text-2xl font-light'>Atividade Diária</span>
+                    <span className='text-xl font-light md:text-2xl'>Atividade Diária</span>
                     <div className='flex items-center gap-2'>
                         <span>Semanal</span>
                         <IoChevronUpOutline />
@@ -182,32 +190,34 @@ const HomeDashboard = () => {
             </section>
             <section className='my-10'>
                 <div className='flex items-center justify-between'>
-                    <span className='text-2xl font-light'>Negociações por região</span>
+                    <span className='text-xl font-light md:text-2xl'>Negociações por região</span>
                     <div className='flex items-center gap-2'>
                         <span>Populares</span>
                         <IoChevronUpOutline />
                     </div>
                 </div>
-                <div className='mt-10 overflow-hidden rounded-2xl bg-white pt-7'>
-                    <div className='grid grid-cols-4 border-b border-gray-900 px-10 pb-7'>
-                        <p>Cidade e Estado</p>
-                        <p className='justify-self-center'>Anúncios Ativos</p>
-                        <p className='justify-self-center'>Negociações</p>
-                        <p className='justify-self-end'>Usuários</p>
-                    </div>
-                    {negotiations.map((item, index) => (
-                        <div
-                            key={index}
-                            className='grid grid-cols-4 border-b border-gray-900 px-10 py-7 last:border-none'
-                        >
-                            <p>{item.city}</p>
-                            <p className='justify-self-center'>{item.amount} anúncios ativos</p>
-                            <p className='justify-self-center text-primary'>
-                                {item.negotiations} negociações
-                            </p>
-                            <p className='justify-self-end'>{item.users} usuários</p>
+                <div className='w-full overflow-y-scroll bg-transparent'>
+                    <div className='mt-10 w-full min-w-[560px] rounded-2xl bg-white pt-7'>
+                        <div className='grid grid-cols-4 border-b border-gray-900 px-10 pb-7'>
+                            <p>Cidade e Estado</p>
+                            <p className='justify-self-center'>Anúncios Ativos</p>
+                            <p className='justify-self-center'>Negociações</p>
+                            <p className='justify-self-end'>Usuários</p>
                         </div>
-                    ))}
+                        {negotiations.map((item, index) => (
+                            <div
+                                key={index}
+                                className='grid grid-cols-4 border-b border-gray-900 px-10 py-7 last:border-none'
+                            >
+                                <p>{item.city}</p>
+                                <p className='justify-self-center'>{item.amount} anúncios ativos</p>
+                                <p className='justify-self-center text-primary'>
+                                    {item.negotiations} negociações
+                                </p>
+                                <p className='justify-self-end'>{item.users} usuários</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
         </div>
