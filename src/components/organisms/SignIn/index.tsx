@@ -101,7 +101,7 @@ const SignIn = () => {
                     </div>
                 </div>
             </section>
-            <div className='h-[50vh] w-full overflow-hidden md:h-full md:w-auto'>
+            <div className='h-[50vh] w-full overflow-hidden md:h-full'>
                 <img src={MenCar} className='h-full w-full object-cover' />
             </div>
         </div>
