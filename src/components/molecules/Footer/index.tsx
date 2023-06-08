@@ -13,37 +13,62 @@ const Footer = () => {
     const items = [
         {
             title: 'Comprar',
-            items: ['Carros Usados', 'Motos Usadas'],
+            items: [
+                { title: 'Carros Usados', link: '/' },
+                { title: 'Motos Usadas', link: '/' },
+            ],
         },
         {
             title: 'Minha Conta',
-            items: ['Meu Perfil', 'Favoritos', 'Meus Veículos', 'Suporte'],
+            items: [
+                { title: 'Meu Perfil', link: '/dashboard' },
+                { title: 'Favoritos', link: '/' },
+                { title: 'Meus Veículos', link: '/' },
+                { title: 'Suporte', link: '/' },
+            ],
         },
         {
             title: 'Links Úteis',
-            items: ['Tabela Fipe 2023', 'Financiamento', 'Politicas', 'Termos de Uso', 'LGPD'],
+            items: [
+                { title: 'Tabela Fipe 2023', link: '/' },
+                { title: 'Financiamento', link: '/' },
+                { title: 'Politicas', link: '/' },
+                { title: 'Termos de Uso', link: '/' },
+                { title: 'LGPD', link: '/' },
+            ],
         },
         {
             title: 'OfertaRepasse',
             items: [
-                'Quem Somos',
-                'Estoque de Carros',
-                'Estoque de Motos',
-                'Blog Oficial',
-                'Suporte',
+                { title: 'Quem Somos', link: '/' },
+                { title: 'Estoque de Carros', link: '/' },
+                { title: 'Estoque de Motos', link: '/' },
+                { title: 'Blog Oficial', link: '/' },
+                { title: 'Suporte', link: '/' },
             ],
         },
         {
             title: 'Suporte',
-            items: ['Chat Online', 'WhatsApp', 'E-mail'],
+            items: [
+                { title: 'Chat Online', link: '/' },
+                { title: 'WhatsApp', link: '/' },
+                { title: 'E-mail', link: '/' },
+            ],
         },
         {
             title: 'Conecte-se',
-            items: ['Facebook', 'Instagram', 'WhatsApp'],
+            items: [
+                { title: 'Facebook', link: '/' },
+                { title: 'Instagram', link: '/' },
+                { title: 'WhatsApp', link: '/' },
+            ],
         },
         {
             title: 'Vender',
-            items: ['Carros Usados', 'Motos Usadas'],
+            items: [
+                { title: 'Carros Usados', link: '/' },
+                { title: 'Motos Usadas', link: '/' },
+            ],
         },
     ]
 
@@ -130,14 +155,14 @@ const Footer = () => {
                                     {item.title}
                                 </p>
                                 <div className='flex flex-col'>
-                                    {item.items.map((link, index) => (
-                                        <Link to='/' key={index}>
+                                    {item.items.map(({ title, link }, index) => (
+                                        <Link to={link} key={index}>
                                             <span
                                                 className={
                                                     'ease text-sm font-medium text-gray-200 duration-200 hover:text-primary'
                                                 }
                                             >
-                                                {link}
+                                                {title}
                                             </span>
                                         </Link>
                                     ))}
