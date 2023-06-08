@@ -114,7 +114,7 @@ const Info = () => {
                             <div
                                 className={`grid ${
                                     advert.images && advert.images.length > 1
-                                        ? 'grid-cols-[1fr_20%]'
+                                        ? 'grid-cols-none grid-rows-[1fr_20%] sm:grid-cols-[1fr_20%] sm:grid-rows-none'
                                         : 'grid-cols-1'
                                 }  mt-8 grid-rows-[425px] gap-3 2xl:grid-rows-[500px]`}
                             >
@@ -152,7 +152,7 @@ const Info = () => {
                                                 ? getUrlAws(advert.images[indexImage])
                                                 : WithoutImage
                                         }
-                                        className='h-full w-full rounded-xl object-cover'
+                                        className='h-full rounded-xl object-cover'
                                     />
                                 </div>
                                 {advert.images && advert.images.length > 1 ? (
@@ -160,7 +160,7 @@ const Info = () => {
                                         {advert.images.map((item, index) => (
                                             <button
                                                 key={index}
-                                                className='h-full w-full'
+                                                className='w-full sm:h-full'
                                                 onClick={() => setIndexImage(index)}
                                             >
                                                 <img
