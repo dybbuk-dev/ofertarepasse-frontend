@@ -30,7 +30,7 @@ const Menu = () => {
         <header className='absolute top-0 left-0 w-full'>
             <nav>
                 <div className='bg-white py-3 text-xs'>
-                    <div className='container mx-auto flex flex-col items-center justify-between md:flex-row'>
+                    <div className='container mx-auto flex flex-col items-center justify-between divide-y divide-solid divide-slate-300 md:flex-row md:divide-y-0'>
                         <p className='font-medium'>
                             <span className='underline underline-offset-2'>
                                 Encontre milhares de veículos

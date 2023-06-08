@@ -33,7 +33,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                     />
                 </Link>
             </div>
-            <div className='flex min-h-[calc(100vh-100px)] w-full flex-col rounded-r-2xl bg-white px-0 py-5 lg:justify-between lg:px-5'>
+            <div className='flex min-h-[calc(100vh-100px)] w-full flex-col divide-y divide-solid rounded-r-2xl bg-white px-0 py-5 lg:justify-between lg:divide-none lg:px-5'>
                 <div>
                     {buttons.map((item, index) => (
                         <Link key={index} to={item.href}>
@@ -58,7 +58,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                         </Link>
                     ))}
                 </div>
-                <div className='flex flex-col gap-3 px-5'>
+                <div className='flex flex-col gap-3 px-5 pt-5 lg:pt-0'>
                     <Link
                         to={
                             location.pathname.search('/admin') !== -1

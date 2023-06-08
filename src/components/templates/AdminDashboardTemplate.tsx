@@ -23,6 +23,9 @@ import HamburgerMenu from 'components/atoms/HamburgerMenu'
 import { IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 
+import LogoAdm from 'assets/images/logoDashboardAdm.png'
+import LogoPro from 'assets/images/logoDashboardPro.png'
+
 interface IAdminDashboardTemplate {
     children: React.ReactNode
 }
@@ -140,6 +143,13 @@ const AdminDashboardTemplate = ({ children }: IAdminDashboardTemplate) => {
                         </div>
                     </div>
                     <div className='mt-10 px-2 pb-2 xs:px-4 xs:pb-4 md:px-10 md:pb-10'>
+                        <Link to='/' className='w-full lg:hidden'>
+                            <img
+                                className='mx-auto pb-5'
+                                src={location.pathname.search('/admin') !== -1 ? LogoAdm : LogoPro}
+                                alt='Oferta Repasse ADM'
+                            />
+                        </Link>
                         {children}
                     </div>
                 </main>
