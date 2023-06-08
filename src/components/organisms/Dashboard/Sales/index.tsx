@@ -88,9 +88,11 @@ const Adverts = () => {
     return (
         <div>
             <div className='flex items-center justify-between'>
-                <div>
-                    <span className='text-3xl font-light text-gray-200'>Minhas Vendas</span>
-                    <p className='mt-3 text-sm text-gray-200'>
+                <div className='flex w-full flex-col items-center md:flex-row md:items-end'>
+                    <span className='text-xl font-light text-gray-200 xs:text-2xl md:text-3xl'>
+                        Minhas Vendas
+                    </span>
+                    <p className='mt-3 text-xs text-gray-200 xs:text-sm'>
                         Total de <span className='font-semibold'>{sales?.count ?? 0}</span>{' '}
                         registros
                         {!!filter.date.min || !!filter.date.max ? (
@@ -122,7 +124,7 @@ const Adverts = () => {
                     </div>
                 </div> */}
             </div>
-            <div className='mt-8 mb-5 grid grid-cols-[1fr_auto] gap-3'>
+            <div className='mt-2 mb-5 grid grid-cols-none grid-rows-2 gap-x-3 gap-y-3 xs:mt-4 md:mt-8 md:grid-cols-[1fr_auto] md:grid-rows-none'>
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
                     placeholder='Faça uma busca pelo nome da venda'
@@ -141,7 +143,7 @@ const Adverts = () => {
                     hasMore={true}
                     loader={null}
                 >
-                    <table className='w-full'>
+                    <table className='w-full min-w-[560px]'>
                         <tr className='border-b border-gray-900'>
                             {titlesTable.map((item, index) => (
                                 <th

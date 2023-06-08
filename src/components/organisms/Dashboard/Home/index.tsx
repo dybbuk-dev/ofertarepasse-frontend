@@ -98,11 +98,15 @@ const HomeDashboard = () => {
     return (
         <div>
             <section className='text-gray-200'>
-                <span className='mr-4 text-3xl font-light'>Dashboard</span>
-                <span className='text-lg font-light'>
-                    Seja bem-vindo, {user?.name.split(' ')[0]}!
-                </span>
-                <div className='mt-10 grid grid-cols-none grid-rows-3 gap-y-4 rounded-2xl bg-white py-2 px-4 xs:py-4 xs:px-8 md:grid-cols-3 md:grid-rows-none md:py-10 md:px-16'>
+                <div className='flex flex-col text-center md:flex-row md:items-end md:text-left'>
+                    <span className='mr-4 text-xl font-light xs:text-2xl md:text-3xl'>
+                        Dashboard
+                    </span>
+                    <span className='text-base font-light md:text-lg'>
+                        Seja bem-vindo, {user?.name.split(' ')[0]}!
+                    </span>
+                </div>
+                <div className='mt-2 grid grid-cols-none grid-rows-3 gap-y-4 rounded-2xl bg-white py-2 px-4 xs:mt-5 xs:py-4 xs:px-8 md:mt-10 md:grid-cols-3 md:grid-rows-none md:py-10 md:px-16'>
                     <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={infoDash.adverts} duration={1}>
@@ -115,7 +119,7 @@ const HomeDashboard = () => {
                                 28%
                             </div> */}
                         </div>
-                        <p className='mt-4 text-sm font-medium'>anúncios ativos</p>
+                        <p className='mt-4 text-xs font-medium xs:text-sm'>anúncios ativos</p>
                     </div>
                     <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
@@ -129,7 +133,9 @@ const HomeDashboard = () => {
                                 15%
                             </div> */}
                         </div>
-                        <p className='mt-4 text-sm font-medium'>visualizações em anúncios</p>
+                        <p className='mt-4 text-xs font-medium xs:text-sm'>
+                            visualizações em anúncios
+                        </p>
                     </div>
                     <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
@@ -143,15 +149,15 @@ const HomeDashboard = () => {
                                 10%
                             </div> */}
                         </div>
-                        <p className='mt-4 text-sm font-medium'>negociações</p>
+                        <p className='mt-4 text-xs font-medium xs:text-sm'>negociações</p>
                     </div>
                 </div>
             </section>
             {adverts ? (
-                <section className='mt-20'>
+                <section className='mt-5 xs:mt-10 md:mt-20'>
                     <span className='text-2xl font-light'>Meus Anúncios</span>
-                    <div className='my-10 w-full overflow-x-scroll rounded-xl bg-white'>
-                        <table className='w-[560px]' width='100%'>
+                    <div className='my-3 w-full overflow-x-scroll rounded-xl bg-white xs:my-5 md:my-10'>
+                        <table className='w-full min-w-[560px]'>
                             <thead>
                                 <tr className='border-b border-gray-900'>
                                     {titlesTable.map((item, index) => (
@@ -260,8 +266,8 @@ const HomeDashboard = () => {
             {negotiations && negotiations.length > 0 ? (
                 <section className='mt-20'>
                     <span className='text-2xl font-light'>Minhas Negociações</span>
-                    <div className='mt-10 rounded-xl bg-white'>
-                        <table className='w-full'>
+                    <div className='mt-10 w-full overflow-x-scroll rounded-xl bg-white'>
+                        <table className='w-full min-w-[560px]'>
                             <thead>
                                 <tr className='border-b border-gray-900'>
                                     {titlesTableNegotiations.map((item, index) => (

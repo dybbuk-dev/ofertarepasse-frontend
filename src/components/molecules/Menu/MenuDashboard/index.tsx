@@ -7,6 +7,9 @@ import { useAuth } from 'hooks/auth'
 import SettingsIcon from '@mui/icons-material/Settings'
 import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { IconButton } from '@mui/material'
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 
 interface IMenuDashboard {
     buttons: Array<{
@@ -21,7 +24,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
     const { signOut } = useAuth()
 
     return (
-        <nav className='flex min-h-screen w-full flex-col items-center'>
+        <nav className='flex min-h-screen w-full flex-col items-center overflow-hidden transition-[width] duration-500'>
             <div className='hidden h-[100px] w-full items-center px-5 lg:flex'>
                 <Link to='/'>
                     <img
@@ -30,7 +33,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                     />
                 </Link>
             </div>
-            <div className='flex min-h-[calc(100vh-100px)] w-full flex-col justify-between rounded-r-2xl bg-white py-7 px-0 lg:px-5'>
+            <div className='flex min-h-[calc(100vh-100px)] w-full flex-col rounded-r-2xl bg-white px-0 py-5 lg:justify-between lg:px-5'>
                 <div>
                     {buttons.map((item, index) => (
                         <Link key={index} to={item.href}>
@@ -50,7 +53,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                                 >
                                     {item.icon}
                                 </div>
-                                <p className='hidden text-left text-sm lg:block'>{item.label}</p>
+                                <p className='text-left text-sm'>{item.label}</p>
                             </button>
                         </Link>
                     ))}
@@ -70,23 +73,12 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                                     : 'text-gray-100'
                             }`}
                         >
-                            <div className='hidden lg:block'>Configuraçõesb</div>
-                            <div className='block lg:hidden'>
-                                <SettingsIcon />
-                            </div>
+                            Configuraçõesb
                         </button>
                     </Link>
-                    <button className='text-left text-sm text-gray-100'>
-                        <div className='hidden lg:block'>Suporte</div>
-                        <div className='block lg:hidden'>
-                            <ContactSupportIcon />
-                        </div>
-                    </button>
+                    <button className='text-left text-sm text-gray-100'>Suporte</button>
                     <button className='text-left text-sm text-gray-100' onClick={() => signOut()}>
-                        <div className='hidden lg:block'>Sair</div>
-                        <div className='block lg:hidden'>
-                            <LogoutIcon />
-                        </div>
+                        Sair
                     </button>
                 </div>
             </div>

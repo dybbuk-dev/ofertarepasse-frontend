@@ -165,9 +165,11 @@ const Adverts = () => {
                 </Modal>
             ) : null}
             <div className='flex items-center justify-between'>
-                <div>
-                    <span className='text-3xl font-light text-gray-200'>Meus Anúncios</span>
-                    <p className='mt-3 text-sm text-gray-200'>
+                <div className='flex w-full flex-col items-center md:flex-row md:items-end'>
+                    <span className='text-xl font-light text-gray-200 xs:text-2xl md:text-3xl'>
+                        Meus Anúncios
+                    </span>
+                    <p className='mt-3 text-xs text-gray-200 xs:text-sm'>
                         Total de <span className='font-semibold'>{adverts.count ?? 0}</span>{' '}
                         registros
                         {!!filter.date.min || !!filter.date.max ? (
@@ -199,7 +201,7 @@ const Adverts = () => {
                     </div>
                 </div> */}
             </div>
-            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto] gap-3'>
+            <div className='mt-2 mb-5 grid grid-cols-none grid-rows-3 gap-x-3 gap-y-3 xs:mt-4 md:mt-8 md:grid-cols-[auto_1fr_auto] md:grid-rows-none'>
                 <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
                 <InputSimple
                     className='rounded-xl bg-white px-5 py-3'
@@ -219,7 +221,7 @@ const Adverts = () => {
                     hasMore={true}
                     loader={null}
                 >
-                    <table className='w-full'>
+                    <table className='w-full min-w-[560px]'>
                         <thead>
                             <tr className='border-b border-gray-900'>
                                 {titlesTable.map((item, index) => (
