@@ -45,10 +45,10 @@ const SignUp = () => {
     }
 
     return (
-        <div className='grid min-h-screen grid-cols-2 items-center gap-14'>
-            <section className='flex flex-col items-end py-10'>
-                <div className='w-[500px]'>
-                    <div className='flex items-center justify-between'>
+        <div className='flex flex-col-reverse items-center md:h-screen md:flex-row'>
+            <section className='flex flex-col items-center overflow-y-scroll py-10 md:h-[100vh] md:min-w-[500px] md:px-5'>
+                <div className=''>
+                    <div className='flex flex-col items-center justify-between md:flex-row'>
                         <Link to='/'>
                             <img src={Logo} alt='Logo Oferta Repasse' />
                         </Link>
@@ -59,8 +59,8 @@ const SignUp = () => {
                             </span>
                         </Link>
                     </div>
-                    <div className='mt-[10vh] w-[384px]'>
-                        <p className='mb-10 text-[26px] text-gray-100'>
+                    <div className='mt-3 px-2 md:mt-10 md:px-10'>
+                        <p className='mb-3 text-center text-[26px] text-gray-100 xs:mb-5 md:mb-10 md:text-left'>
                             Cadastre-se com suas redes sociais
                         </p>
                         <LoginSocialFacebook
@@ -86,7 +86,7 @@ const SignUp = () => {
                         {/* <ButtonSocial social='google' className='my-4 border border-gray-700' /> */}
                         <ButtonSocial social='apple' />
 
-                        <p className='mt-16 mb-10 text-[26px] text-gray-100'>
+                        <p className='mt-4 mb-3 text-center text-[26px] text-gray-100 xs:mb-6 xs:mt-8 md:mb-10 md:mt-16 md:text-left'>
                             ou crie uma conta com seu e-mail
                         </p>
 
@@ -122,7 +122,7 @@ const SignUp = () => {
                                 {...register('password')}
                             />
                             <Button
-                                className='mt-3 bg-primary text-left font-semibold text-white'
+                                className='mt-3 bg-primary text-center font-semibold text-white xs:mt-6 md:mt-10 md:text-left'
                                 type='submit'
                             >
                                 Criar conta
@@ -131,7 +131,7 @@ const SignUp = () => {
                     </div>
                 </div>
             </section>
-            <div className='h-full w-full overflow-hidden'>
+            <div className='h-[50vh] w-full overflow-hidden md:h-full md:w-auto'>
                 <img src={WomamCar} className='h-full w-full object-cover' />
             </div>
         </div>
