@@ -48,7 +48,7 @@ const Menu = () => {
                     </div>
                 </div>
                 <div>
-                    <div className='container mx-auto flex flex-col items-end justify-between bg-transparent py-2 xs:py-4 md:flex-row md:items-center md:py-8'>
+                    <div className='container mx-auto flex flex-col items-end justify-between bg-transparent pt-2 md:flex-row md:items-center md:pt-6 lg:pt-8'>
                         <Link to='/'>
                             <img src={Logo} />
                         </Link>

@@ -41,7 +41,7 @@ const Home = () => {
 
     return (
         <DefaultTemplate>
-            <section className='w-full bg-gray-900 pt-[180px]'>
+            <section className='mt-[180px] w-full bg-gray-900 pt-[30px]'>
                 <div className='container mx-auto'>
                     <p className='text-[1.5rem] font-bold sm:text-[2rem] md:text-[2.7rem]'>
                         Veículos com valores abaixo da FIPE é só na{' '}

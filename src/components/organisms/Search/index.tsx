@@ -17,6 +17,10 @@ import api from 'services/api'
 import { IAdvert } from '../Dashboard/Adverts'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import formatUrlDetails from 'utils/formatUrlDetails'
+import CloseIcon from '@mui/icons-material/Close'
+import GridViewIcon from '@mui/icons-material/GridView'
+
+const gridCols = ['grid-cols-3', 'grid-cols-4', 'grid-cols-5']
 
 const Search = () => {
     const [amountColums, setAmountColums] = React.useState(4)
@@ -120,9 +124,9 @@ const Search = () => {
 
     return (
         <div className='bg-gray-900'>
-            <section className='container mx-auto mt-[150px] grid grid-cols-[300px_1fr] items-center border-y border-gray-700 py-10'>
+            <section className='container mx-auto mt-[180px] grid grid-cols-none grid-rows-[50px_1fr] items-center border-y border-gray-700 py-10 pt-[30px] lg:grid-cols-[300px_1fr] lg:grid-rows-none'>
                 <button
-                    className='flex items-center gap-2 text-gray-400'
+                    className='flex items-center justify-center gap-2 text-gray-400'
                     onClick={getLocation}
                     disabled={true}
                 >
@@ -133,7 +137,7 @@ const Search = () => {
                             : 'Escolha uma Localização'}
                     </span>
                 </button>
-                <div className='flex items-center justify-between'>
+                <div className='flex flex-col items-center justify-between gap-y-4 md:flex-row'>
                     <div className='text-gray-200'>
                         <p className='text-xl'>
                             {searchParams.get('title')
@@ -143,7 +147,7 @@ const Search = () => {
                         </p>
                         <p className='text-sm'>{total} veículos encontrados</p>
                     </div>
-                    <div className='flex items-center gap-6'>
+                    <div className='flex items-center gap-6 pr-5'>
                         <button
                             className={`flex gap-[2px] text-gray-500 [&>div]:hover:border-primary ${
                                 amountColums === 3 ? '[&>div]:border-primary' : ''
@@ -192,8 +196,15 @@ const Search = () => {
                             <div className='ease h-[7px] w-[15px] rounded border border-gray-500 duration-200' />
                             <div className='ease h-[7px] w-[15px] rounded border border-gray-500 duration-200' />
                         </button>
-                        <button onClick={() => setVisibleFilter(!visibleFilter)}>
-                            <Filter color={visibleFilter ? '#484854' : '#F3722C'} />
+                    </div>
+
+                    <div className='flex items-center gap-6'>
+                        <button
+                            onClick={() => {
+                                setVisibleFilter(!visibleFilter)
+                            }}
+                        >
+                            <Filter color={visibleFilter ? '#F3722C' : '#484854'} />
                         </button>
                         <button className='ml-5 flex items-center gap-[2px] text-sm text-gray-200'>
                             Mais Relevantes
@@ -203,15 +214,28 @@ const Search = () => {
                 </div>
             </section>
             <section
-                className={`container mx-auto grid gap-8 ${
-                    visibleFilter ? 'grid-cols-[325px_1fr]' : 'grid-cols-1'
-                }`}
+                className={`container mx-auto grid grid-cols-1 gap-8 ${
+                    visibleFilter ? ' lg:grid-cols-[325px_1fr]' : ''
+                } relative`}
             >
                 <form
-                    className={visibleFilter ? 'block bg-white py-10 px-3' : 'hidden'}
+                    className={`bg-white ${
+                        visibleFilter ? 'w-full lg:block' : 'w-0 lg:hidden'
+                    } absolute z-10 overflow-hidden transition-[width] duration-500 lg:static lg:w-auto`}
                     onChange={getFormValues}
                 >
-                    {/* <div className='border-b border-gray-700 pb-10'>
+                    <div className='py-10 px-3'>
+                        <div className='flex h-20 w-full items-center justify-end px-5 lg:hidden'>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    setVisibleFilter(false)
+                                }}
+                            >
+                                <CloseIcon sx={{ color: 'black' }} />
+                            </button>
+                        </div>
+                        {/* <div className='border-b border-gray-700 pb-10'>
                         <p className='text-sm font-medium text-gray-200'>Marcas</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.marcas.map((item) => (
@@ -230,89 +254,89 @@ const Search = () => {
                             <IoChevronForwardOutline />
                         </button>
                     </div> */}
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='mb-3 text-sm font-medium text-gray-200'>Pesquisa</p>
-                        <label>
-                            <Input
-                                placeholder='Pesquisa'
-                                className='!rounded border-2 !border-gray-700 !py-2 !px-3'
-                                classInput='placeholder:text-gray-600 !text-sm'
-                                defaultValue={searchParams.get('title') ?? ''}
-                                {...register('title')}
-                            />
-                            <span className='text-xs text-gray-500'>ex: Honda Civic</span>
-                        </label>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='mb-3 text-sm font-medium text-gray-200'>Ano</p>
-                        <div className='grid grid-cols-2 gap-4'>
+                        <div className='border-b border-gray-700 py-10'>
+                            <p className='mb-3 text-sm font-medium text-gray-200'>Pesquisa</p>
                             <label>
                                 <Input
-                                    placeholder='de'
+                                    placeholder='Pesquisa'
                                     className='!rounded border-2 !border-gray-700 !py-2 !px-3'
                                     classInput='placeholder:text-gray-600 !text-sm'
-                                    {...register('minYear')}
+                                    defaultValue={searchParams.get('title') ?? ''}
+                                    {...register('title')}
                                 />
-                                <span className='text-xs text-gray-500'>ex: 2012</span>
-                            </label>
-                            <label>
-                                <Input
-                                    placeholder='até'
-                                    className='!rounded border-2 !border-gray-700 !py-2 !px-3'
-                                    classInput='placeholder:text-gray-600 !text-sm'
-                                    {...register('maxYear')}
-                                />
-                                <span className='text-xs text-gray-500'>ex: 2022</span>
+                                <span className='text-xs text-gray-500'>ex: Honda Civic</span>
                             </label>
                         </div>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='mb-3 text-sm font-medium text-gray-200'>Preço</p>
-                        <div className='grid grid-cols-2 gap-4'>
-                            <label>
-                                <Input
-                                    placeholder='de'
-                                    className='!rounded border-2 !border-gray-700 !py-2 !px-3'
-                                    classInput='placeholder:text-gray-600 !text-sm'
-                                    {...register('minPrice')}
-                                />
-                                <span className='text-xs text-gray-500'>ex: 15.000</span>
-                            </label>
-                            <label>
-                                <Input
-                                    placeholder='até'
-                                    className='!rounded border-2 !border-gray-700 !py-2 !px-3'
-                                    classInput='placeholder:text-gray-600 !text-sm'
-                                    {...register('maxPrice')}
-                                />
-                                <span className='text-xs text-gray-500'>ex: 50.000</span>
-                            </label>
+                        <div className='border-b border-gray-700 py-10'>
+                            <p className='mb-3 text-sm font-medium text-gray-200'>Ano</p>
+                            <div className='grid grid-cols-2 gap-4'>
+                                <label>
+                                    <Input
+                                        placeholder='de'
+                                        className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                        classInput='placeholder:text-gray-600 !text-sm'
+                                        {...register('minYear')}
+                                    />
+                                    <span className='text-xs text-gray-500'>ex: 2012</span>
+                                </label>
+                                <label>
+                                    <Input
+                                        placeholder='até'
+                                        className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                        classInput='placeholder:text-gray-600 !text-sm'
+                                        {...register('maxYear')}
+                                    />
+                                    <span className='text-xs text-gray-500'>ex: 2022</span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div className='border-b border-gray-700 py-10'>
-                        <p className='mb-3 text-sm font-medium text-gray-200'>Quilometragem</p>
-                        <div className='grid grid-cols-2 gap-4'>
-                            <label>
-                                <Input
-                                    placeholder='de'
-                                    className='!rounded border-2 !border-gray-700 !py-2 !px-3'
-                                    classInput='placeholder:text-gray-600 !text-sm'
-                                    {...register('minKilometer')}
-                                />
-                                <span className='text-xs text-gray-500'>ex: 10.000</span>
-                            </label>
-                            <label>
-                                <Input
-                                    placeholder='até'
-                                    className='!rounded border-2 !border-gray-700 !py-2 !px-3'
-                                    classInput='placeholder:text-gray-600 !text-sm'
-                                    {...register('maxKilometer')}
-                                />
-                                <span className='text-xs text-gray-500'>ex: 50.000</span>
-                            </label>
+                        <div className='border-b border-gray-700 py-10'>
+                            <p className='mb-3 text-sm font-medium text-gray-200'>Preço</p>
+                            <div className='grid grid-cols-2 gap-4'>
+                                <label>
+                                    <Input
+                                        placeholder='de'
+                                        className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                        classInput='placeholder:text-gray-600 !text-sm'
+                                        {...register('minPrice')}
+                                    />
+                                    <span className='text-xs text-gray-500'>ex: 15.000</span>
+                                </label>
+                                <label>
+                                    <Input
+                                        placeholder='até'
+                                        className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                        classInput='placeholder:text-gray-600 !text-sm'
+                                        {...register('maxPrice')}
+                                    />
+                                    <span className='text-xs text-gray-500'>ex: 50.000</span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    {/* <div className='border-b border-gray-700 py-10'>
+                        <div className='border-b border-gray-700 py-10'>
+                            <p className='mb-3 text-sm font-medium text-gray-200'>Quilometragem</p>
+                            <div className='grid grid-cols-2 gap-4'>
+                                <label>
+                                    <Input
+                                        placeholder='de'
+                                        className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                        classInput='placeholder:text-gray-600 !text-sm'
+                                        {...register('minKilometer')}
+                                    />
+                                    <span className='text-xs text-gray-500'>ex: 10.000</span>
+                                </label>
+                                <label>
+                                    <Input
+                                        placeholder='até'
+                                        className='!rounded border-2 !border-gray-700 !py-2 !px-3'
+                                        classInput='placeholder:text-gray-600 !text-sm'
+                                        {...register('maxKilometer')}
+                                    />
+                                    <span className='text-xs text-gray-500'>ex: 50.000</span>
+                                </label>
+                            </div>
+                        </div>
+                        {/* <div className='border-b border-gray-700 py-10'>
                         <p className='text-sm font-medium text-gray-200'>Câmbio</p>
                         <div className='my-3 flex flex-col'>
                             {checkboxFields.cambio.map((item) => (
@@ -384,10 +408,11 @@ const Search = () => {
                             <IoChevronForwardOutline />
                         </button>
                     </div> */}
-                    <button className='mt-8 flex items-center gap-2 text-gray-400'>
-                        Limpar filtros
-                        <IoCloseOutline />
-                    </button>
+                        <button className='mt-8 flex items-center gap-2 text-gray-400'>
+                            Limpar filtros
+                            <IoCloseOutline />
+                        </button>
+                    </div>
                 </form>
                 <div className={`${!visibleFilter ? 'flex justify-center' : ''} mb-20`}>
                     <InfiniteScroll
@@ -396,7 +421,7 @@ const Search = () => {
                         loader={null}
                         next={handleMore}
                         className={`${
-                            'grid-cols-' + amountColums
+                            gridCols[amountColums - 3]
                         } mt-10 grid h-max gap-x-4 gap-y-8 ${
                             !visibleFilter ? 'max-w-[1200px]' : ''
                         }`}

@@ -75,17 +75,17 @@ const Info = () => {
 
     return (
         <section className='bg-gray-900'>
-            <div className='mt-[150px] border-t border-gray-700'>
-                <div className='container mx-auto grid grid-cols-[1fr_auto] gap-10'>
-                    <div className='my-10'>
+            <div className='mt-[180px] border-t border-gray-700'>
+                <div className='container mx-auto grid grid-cols-none grid-rows-[auto_1fr] gap-10 lg:grid-cols-[1fr_auto] lg:grid-rows-none'>
+                    <div className='order-2 my-10 lg:order-1'>
                         <div className='rounded-xl bg-white px-5 py-8 pb-5'>
                             <div className='flex items-start justify-between'>
                                 <div>
-                                    <h1 className='mb-2 text-3xl font-extrabold uppercase text-gray-100'>
+                                    <h1 className='mb-2 text-base font-extrabold uppercase text-gray-100 xs:text-xl md:text-3xl'>
                                         {advert.brand}{' '}
                                         <span className='text-primary'>{advert.model}</span>
                                     </h1>
-                                    <h2 className='text-xl font-medium uppercase text-gray-500'>
+                                    <h2 className='text-sm font-medium uppercase text-gray-500 xs:text-base md:text-xl'>
                                         {advert.version}
                                     </h2>
                                 </div>
@@ -105,7 +105,7 @@ const Info = () => {
                                             <IoHeartOutline className='text-3xl text-gray-500' />
                                         )}
                                     </button>
-                                    <span className='text-gray-600'>
+                                    <span className='text-xs text-gray-600 xs:text-sm md:text-base'>
                                         <span className='font-bold'>ID</span>{' '}
                                         {advert.id.split('-')[advert.id.split('-').length - 1]}
                                     </span>
@@ -177,12 +177,12 @@ const Info = () => {
                                 ) : null}
                             </div>
                         </div>
-                        <div className='mt-5 grid grid-cols-3 rounded-xl bg-gray-100 py-12 px-8'>
+                        <div className='mt-5 grid grid-cols-none grid-rows-3 rounded-xl bg-gray-100 py-3 px-2 xs:py-6 xs:px-4 md:grid-cols-3 md:grid-rows-none md:py-12 md:px-8'>
                             <div className='text-white'>
                                 <p className='text-xs font-medium'>
                                     Valor <span className='text-lg font-bold'>fipe</span>
                                 </p>
-                                <p className='mt-2 mb-1 text-3xl'>
+                                <p className='mt-2 mb-1 text-xl xs:text-2xl md:text-3xl'>
                                     {formatMoney(advert.fipeValue)}
                                 </p>
                                 <p className='text-xs'>Valor deste veículo na Tabela Fipe</p>
@@ -191,7 +191,7 @@ const Info = () => {
                                 <p className='text-xs font-medium'>
                                     Valor média <span className='text-lg font-bold'>web</span>
                                 </p>
-                                <p className='mt-2 mb-1 text-3xl'>
+                                <p className='mt-2 mb-1 text-xl xs:text-2xl md:text-3xl'>
                                     {formatMoney(advert.fipeValue + advert.fipeValue * 0.2)}
                                 </p>
                                 <p className='text-xs'>valor médio em toda internet</p>
@@ -200,12 +200,14 @@ const Info = () => {
                                 <p className='text-xs font-medium'>
                                     Valor <span className='text-lg font-bold'>OfertaRepasse</span>
                                 </p>
-                                <p className='mt-2 mb-1 text-3xl'>{formatMoney(advert.value)}</p>
+                                <p className='mt-2 mb-1 text-xl xs:text-2xl md:text-3xl'>
+                                    {formatMoney(advert.value)}
+                                </p>
                                 <p className='text-xs'>Valor deste veículo na Ofertarepasse</p>
                             </div>
                         </div>
-                        <div className='mt-5 rounded-xl bg-white py-8'>
-                            <div className='grid grid-cols-4 gap-y-10 px-8'>
+                        <div className='mt-5 rounded-xl bg-white py-2 xs:py-4 md:py-8'>
+                            <div className='grid grid-cols-1 gap-y-3 px-2 xs:grid-cols-2 xs:gap-y-6 xs:px-4 md:grid-cols-4 md:gap-y-10 md:px-8'>
                                 <div>
                                     <p className='mb-1 text-sm font-medium text-gray-500'>Cidade</p>
                                     <p className='font-semibold text-gray-200'>{advert.city}</p>
@@ -242,7 +244,7 @@ const Info = () => {
                                 </div>
                             </div>
                             {advert.alert ? (
-                                <div className='my-20 bg-[#FEF4F4] px-8 py-10'>
+                                <div className='my-5 bg-[#FEF4F4] px-8 py-10 xs:my-10 md:my-20'>
                                     <p className='flex items-center gap-3 text-sm font-medium text-secondary'>
                                         <RiErrorWarningLine className='text-2xl' />
                                         Detalhes do Veículo
@@ -252,7 +254,7 @@ const Info = () => {
                                     </p>
                                 </div>
                             ) : null}
-                            <div className='mt-10 px-8'>
+                            <div className='mt-3 px-2 xs:mt-6 xs:px-4 md:mt-10 md:px-8'>
                                 <p className='mb-4 text-sm font-medium text-gray-500'>
                                     Outras Informações
                                 </p>
@@ -263,7 +265,7 @@ const Info = () => {
                             <p className='mb-4 text-sm font-medium text-gray-500'>
                                 Itens do veículo
                             </p>
-                            <div className='mt-7 grid grid-cols-4 gap-4'>
+                            <div className='mt-7 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-4'>
                                 {advert.highlight.map((item, index) => (
                                     <p
                                         key={index}
@@ -275,9 +277,9 @@ const Info = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='relative mt-10'>
+                    <div className='relative order-1 mt-10 lg:order-2'>
                         <div className='sticky top-5 rounded-xl bg-white text-gray-100'>
-                            <div className='px-12 py-8'>
+                            <div className='px-3 py-2 xs:px-6 xs:py-4 md:px-12 md:py-8'>
                                 <p className='text-xs font-medium'>
                                     Valor <span className='text-lg font-bold'>OfertaRepasse</span>
                                 </p>
