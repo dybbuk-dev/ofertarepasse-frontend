@@ -71,14 +71,18 @@ const Home = () => {
                                     </p>
                                 </Link>
                             </div>
-                            <div className='mt-8 flex flex-col items-end xl:flex-row xl:items-center'>
+                            <div className='my-4 flex flex-col-reverse items-end md:mb-0 xl:flex-row xl:items-center'>
                                 <SearchInput
+                                    className='py-4'
                                     placeholder='Digite marca ou modelo do carro'
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
-                                <Link to={`/estoque?title=${search}`}>
-                                    <Button className='mx-8 mt-8 !w-max !bg-primary !px-10 font-semibold text-white xl:mt-0'>
+                                <Link
+                                    to={`/estoque?title=${search}`}
+                                    className='w-full px-5 xl:w-auto'
+                                >
+                                    <Button className='my-4 w-full !bg-primary !px-10 font-semibold text-white xl:my-0 xl:!w-max'>
                                         Buscar Veículos
                                     </Button>
                                 </Link>
