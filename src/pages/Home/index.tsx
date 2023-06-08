@@ -41,7 +41,7 @@ const Home = () => {
 
     return (
         <DefaultTemplate>
-            <section className='w-full bg-gray-900 pt-[250px]'>
+            <section className='w-full bg-gray-900 pt-[180px]'>
                 <div className='container mx-auto'>
                     <p className='text-[1.5rem] font-bold sm:text-[2rem] md:text-[2.7rem]'>
                         Veículos com valores abaixo da FIPE é só na{' '}
@@ -50,8 +50,8 @@ const Home = () => {
                     <p className='text-[1rem] text-primary sm:text-[1.5rem] md:text-[2.3rem]'>
                         Bom pra quem vende, ótimo pra quem compra.
                     </p>
-                    <div className='my-8 grid grid-rows-[1fr_auto] items-center gap-16 sm:my-0 sm:grid-cols-[1fr_auto]'>
-                        <div className='rounded-2xl bg-white py-8'>
+                    <div className='my-8 grid grid-rows-[1fr_auto] items-center gap-2 xs:gap-8 sm:my-0 sm:grid-cols-[1fr_auto] md:gap-16'>
+                        <div className='rounded-2xl bg-white py-2 xs:py-3 md:py-8'>
                             <div className='mx-8 flex items-center gap-5 border-b border-gray-700 pb-4'>
                                 <button
                                     onClick={() => setOptionBuy('car')}
@@ -89,7 +89,9 @@ const Home = () => {
                 </div>
             </section>
             <section className='container mx-auto'>
-                <section className={`mt-24 ${adverts.length === 0 ? 'hidden' : ''}`}>
+                <section
+                    className={`mt-4 xs:mt-12 md:mt-24 ${adverts.length === 0 ? 'hidden' : ''}`}
+                >
                     <div className='mb-10 flex items-center justify-between font-medium'>
                         <p>Anúncios em Destaque</p>
                         <Link to='/estoque'>
@@ -125,8 +127,8 @@ const Home = () => {
                         ))}
                     </div>
                 </section>
-                <section className='mt-24'>
-                    <div className='flex flex-col items-center justify-between rounded-2xl border-[3px] border-gray-900 py-8 px-10 xl:flex-row'>
+                <section className='mt-4 xs:mt-12 md:mt-24'>
+                    <div className='flex flex-col items-center justify-between rounded-2xl border-[3px] border-gray-900 py-3 px-4 xs:py-5 xs:px-7 md:px-10 md:py-8 xl:flex-row'>
                         <p className='mb-4 text-lg font-medium text-gray-200 xl:mb-0'>
                             A Marca do seu novo veículo
                         </p>
@@ -137,9 +139,9 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-                <section className='mt-36'>
+                <section className='mt-4 xs:mt-12 md:mt-36'>
                     <div className='flex flex-col rounded-xl bg-gradient-to-r from-secondary to-[#ff9d57] lg:flex-row'>
-                        <div className='grow p-14'>
+                        <div className='grow p-2 xs:p-6 md:p-14'>
                             <p className='text-center text-xl font-semibold text-white md:text-left md:text-2xl lg:text-3xl'>
                                 Bom pra quem vende. <br />
                                 Ótimo pra quem compra.

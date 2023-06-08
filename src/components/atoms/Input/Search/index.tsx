@@ -62,6 +62,11 @@ const Search = ({ className, onChange, ...props }: ISearch) => {
                     setFocused(true)
                 }}
                 onBlur={() => setTimeout(() => setFocused(false), 100)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        navigate(`/estoque?title=${props.value}`)
+                    }
+                }}
                 onChange={(e) => {
                     getResearches(e.target.value)
 

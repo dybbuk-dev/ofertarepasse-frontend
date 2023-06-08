@@ -65,7 +65,7 @@ const Footer = () => {
         <footer>
             <section className='container mx-auto'>
                 {recommendations && recommendations.length > 0 ? (
-                    <section className='mt-24'>
+                    <section className='mt-6 xs:mt-12 md:mt-24'>
                         <div className='mb-10 flex items-center justify-between font-medium'>
                             <p>Recomendados para você</p>
                             <Link to='/search'>
@@ -100,13 +100,13 @@ const Footer = () => {
                         </div>
                     </section>
                 ) : null}
-                <section className='mt-24 mb-[200px] flex items-center justify-center'>
-                    <div className='grid w-full grid-cols-3 items-center justify-items-center gap-2 rounded-2xl bg-gray-900 px-12 sm:h-[270px] md:h-[330px] md:gap-8 lg:grid-cols-4'>
-                        <div className='col-span-2 text-xl font-semibold text-gray-200 xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl'>
+                <section className='mt-6 mb-[50px] flex items-center justify-center xs:mb-[100px] xs:mt-12 md:mb-[200px] md:mt-24'>
+                    <div className='grid h-[230px] w-full grid-cols-2 items-center justify-items-center gap-2 rounded-2xl bg-gray-900 px-3 xs:h-[270px] xs:px-6 md:h-[330px] md:gap-8 md:px-12 lg:grid-cols-4'>
+                        <div className='col-span-1 text-center text-sm font-semibold text-gray-200 xs:text-base sm:text-2xl md:text-left md:text-3xl lg:col-span-2 lg:text-4xl'>
                             Cuide melhor do seu <br />
                             veículo e <span className='text-primary'>economize muito.</span>
                         </div>
-                        <div className='relative row-span-2 h-full w-[200px] xs:w-[220px] sm:w-[250px] md:w-[300px] lg:row-span-1'>
+                        <div className='relative row-span-2 h-full w-[180px] xs:w-[220px] md:w-[300px] lg:row-span-1'>
                             <img src={MenWithPhone} className='absolute bottom-0' />
                         </div>
                         <div className=''>
@@ -121,7 +121,7 @@ const Footer = () => {
                     </div>
                 </section>
             </section>
-            <section className='border-t border-[#f4f4f4] pt-[100px]'>
+            <section className='border-t border-[#f4f4f4] pt-[25px] xs:pt-[50px] md:pt-[100px]'>
                 <div className='container mx-auto'>
                     <div className='grid grid-cols-2 gap-4 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6'>
                         {items.map((item) => (
@@ -159,7 +159,7 @@ const Footer = () => {
                             </p>
                         </div>
                     </div>
-                    <div className='mt-8 border-t border-[#ECECEC] py-10'>
+                    <div className='mt-8 border-t border-[#ECECEC] py-3 xs:py-6 md:py-10'>
                         <span className='text-sm font-medium text-gray-200'>
                             OfertaRepasse. Todos Direitos Reservados.
                         </span>

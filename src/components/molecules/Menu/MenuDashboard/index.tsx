@@ -4,6 +4,9 @@ import LogoPro from 'assets/images/logoDashboardPro.png'
 import { Link, useLocation } from 'react-router-dom'
 import React from 'react'
 import { useAuth } from 'hooks/auth'
+import SettingsIcon from '@mui/icons-material/Settings'
+import ContactSupportIcon from '@mui/icons-material/ContactSupport'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 interface IMenuDashboard {
     buttons: Array<{
@@ -19,7 +22,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
 
     return (
         <nav className='flex min-h-screen w-full flex-col items-center'>
-            <div className='flex h-[100px] w-full items-center px-5'>
+            <div className='hidden h-[100px] w-full items-center px-5 lg:flex'>
                 <Link to='/'>
                     <img
                         src={location.pathname.search('/admin') !== -1 ? LogoAdm : LogoPro}
@@ -27,7 +30,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                     />
                 </Link>
             </div>
-            <div className='flex min-h-[calc(100vh-100px)] w-full flex-col justify-between rounded-r-2xl bg-white py-7 px-5'>
+            <div className='flex min-h-[calc(100vh-100px)] w-full flex-col justify-between rounded-r-2xl bg-white py-7 px-0 lg:px-5'>
                 <div>
                     {buttons.map((item, index) => (
                         <Link key={index} to={item.href}>
@@ -47,7 +50,7 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                                 >
                                     {item.icon}
                                 </div>
-                                <p className='text-left text-sm'>{item.label}</p>
+                                <p className='hidden text-left text-sm lg:block'>{item.label}</p>
                             </button>
                         </Link>
                     ))}
@@ -67,12 +70,23 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                                     : 'text-gray-100'
                             }`}
                         >
-                            Configurações
+                            <div className='hidden lg:block'>Configuraçõesb</div>
+                            <div className='block lg:hidden'>
+                                <SettingsIcon />
+                            </div>
                         </button>
                     </Link>
-                    <button className='text-left text-sm text-gray-100'>Suporte</button>
+                    <button className='text-left text-sm text-gray-100'>
+                        <div className='hidden lg:block'>Suporte</div>
+                        <div className='block lg:hidden'>
+                            <ContactSupportIcon />
+                        </div>
+                    </button>
                     <button className='text-left text-sm text-gray-100' onClick={() => signOut()}>
-                        Sair
+                        <div className='hidden lg:block'>Sair</div>
+                        <div className='block lg:hidden'>
+                            <LogoutIcon />
+                        </div>
                     </button>
                 </div>
             </div>

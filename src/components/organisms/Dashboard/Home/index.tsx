@@ -102,8 +102,8 @@ const HomeDashboard = () => {
                 <span className='text-lg font-light'>
                     Seja bem-vindo, {user?.name.split(' ')[0]}!
                 </span>
-                <div className='mt-10 grid grid-cols-3 rounded-2xl bg-white py-10 px-16'>
-                    <div>
+                <div className='mt-10 grid grid-cols-none grid-rows-3 gap-y-4 rounded-2xl bg-white py-2 px-4 xs:py-4 xs:px-8 md:grid-cols-3 md:grid-rows-none md:py-10 md:px-16'>
+                    <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={infoDash.adverts} duration={1}>
                                 {({ countUpRef }) => (
@@ -117,7 +117,7 @@ const HomeDashboard = () => {
                         </div>
                         <p className='mt-4 text-sm font-medium'>anúncios ativos</p>
                     </div>
-                    <div className='justify-self-center'>
+                    <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={infoDash.views} duration={1}>
                                 {({ countUpRef }) => (
@@ -131,7 +131,7 @@ const HomeDashboard = () => {
                         </div>
                         <p className='mt-4 text-sm font-medium'>visualizações em anúncios</p>
                     </div>
-                    <div className='justify-self-end'>
+                    <div className='flex flex-row items-end gap-x-4 md:flex-col md:items-start'>
                         <div className='flex items-center gap-1'>
                             <CountUp start={0} end={infoDash.negociations} duration={1}>
                                 {({ countUpRef }) => (
@@ -150,8 +150,8 @@ const HomeDashboard = () => {
             {adverts ? (
                 <section className='mt-20'>
                     <span className='text-2xl font-light'>Meus Anúncios</span>
-                    <div className='my-10 rounded-xl bg-white'>
-                        <table className='w-full'>
+                    <div className='my-10 w-full overflow-x-scroll rounded-xl bg-white'>
+                        <table className='w-[560px]' width='100%'>
                             <thead>
                                 <tr className='border-b border-gray-900'>
                                     {titlesTable.map((item, index) => (
