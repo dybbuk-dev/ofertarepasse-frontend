@@ -131,16 +131,19 @@ const Negotiations = () => {
 
     return (
         <div>
-            <div className='flex items-center justify-between'>
-                <div>
-                    <span className='text-3xl font-light text-gray-200'>Negociações</span>
+            <div className='flex flex-col items-start justify-between sm:flex-row sm:items-center'>
+                <div className='w-full text-center xs:text-left'>
+                    {' '}
+                    <span className='text-xl font-light text-gray-200 xs:text-2xl md:text-3xl'>
+                        Negociações
+                    </span>
                     <p className='mt-3 text-sm text-gray-200'>
                         Total de <span className='font-semibold'>5.693</span> registros entre{' '}
                         <span className='font-semibold'>05/12/2022</span> e{' '}
                         <span className='font-semibold'>04/01/2023</span>
                     </p>
                 </div>
-                <div>
+                <div className='mx-auto flex flex-col gap-x-2 xs:mx-0 xs:flex-row xs:items-center sm:flex-col sm:items-start'>
                     <span className='text-sm font-medium'>Período</span>
                     <div className='mt-2 flex gap-3'>
                         <div className='relative flex w-[125px] items-center overflow-hidden rounded border border-gray-100'>
@@ -160,24 +163,33 @@ const Negotiations = () => {
                     </div>
                 </div>
             </div>
-            <div className='mt-8 mb-5 grid grid-cols-[auto_1fr_auto_auto_auto] gap-3'>
-                <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
+            <div className='mt-2 mb-2 grid grid-cols-1 grid-rows-5 gap-3 xs:mt-4 xs:mb-3 xs:grid-cols-2 xs:grid-rows-3 md:mt-8 md:mb-5 md:grid-cols-4 md:grid-rows-2 2xl:grid-cols-[auto_1fr_auto_auto_auto] 2xl:grid-rows-none'>
+                <div className='order-1 flex xs:order-2 2xl:order-1'>
+                    <Select label='Ação' onChange={(e) => setFilter({ ...filter, action: e })} />
+                </div>
                 <InputSimple
-                    className='rounded-xl bg-white px-5 py-3'
+                    className='cols-span-1 order-2 rounded-xl bg-white px-5 py-3 xs:order-1 xs:col-span-2 md:col-span-4 2xl:order-2 2xl:col-span-1'
                     placeholder='Faça uma busca por nome, local, telefone, e-mail'
                 />
-                <Select
-                    label='100 registros'
-                    onChange={(e) => setFilter({ ...filter, action: e })}
-                />
-                <button className='flex h-full items-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
+                <div className='order-3 flex'>
+                    <Select
+                        label='100 registros'
+                        onChange={(e) => setFilter({ ...filter, action: e })}
+                    />
+                </div>
+                <button className='order-4 flex h-full items-center justify-center gap-1 rounded-xl bg-white px-8 text-gray-200'>
                     <MdOutlineCloudDownload className='text-xl' />
                     Exportar
                 </button>
-                <Select label='Ordenar por' onChange={(e) => setFilter({ ...filter, action: e })} />
+                <div className='order-5 flex'>
+                    <Select
+                        label='Ordenar por'
+                        onChange={(e) => setFilter({ ...filter, action: e })}
+                    />
+                </div>
             </div>
-            <div className='mb-10 rounded-xl bg-white'>
-                <table className='w-full'>
+            <div className='mb-10 w-full overflow-x-scroll rounded-xl bg-white'>
+                <table className='w-full min-w-[900px]'>
                     <tr className='border-b border-gray-900'>
                         {titlesTable.map((item, index) => (
                             <th

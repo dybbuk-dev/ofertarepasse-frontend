@@ -37,9 +37,11 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
 
     return (
         <div
-            className={`h-max ${inline ? 'grid grid-cols-[225px_1fr]' : 'block'} ${
-                inverseColors ? 'bg-white' : 'bg-gray-900'
-            } rounded-xl`}
+            className={`h-max ${
+                inline
+                    ? 'grid grid-cols-[120px_1fr] xs:grid-cols-[100px_1fr] sm:grid-cols-[150px_1fr] md:grid-cols-[225px_1fr]'
+                    : 'block overflow-hidden'
+            } ${inverseColors ? 'bg-white' : 'bg-gray-900'} rounded-xl`}
             {...props}
         >
             {data.images && data.images.length > 0 ? (
@@ -112,51 +114,56 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                 />
             )}
             {inline ? (
-                <div className='px-8 py-3'>
+                <div className='px-2 py-1 xs:px-4 xs:py-2 md:px-8 md:py-3'>
                     <div className='flex items-center justify-between'>
-                        <p className='text-lg font-semibold text-gray-100'>{data.title}</p>
+                        <p className='text-xs font-semibold text-gray-100 xs:text-sm sm:text-base md:text-lg'>
+                            {data.title}
+                        </p>
                         <button>
                             <IoHeartOutline className='text-lg text-gray-500' />
                         </button>
                     </div>
-                    <div className='flex items-center justify-between'>
+                    <div className='flex flex-col items-center justify-between md:flex-row'>
                         <div>
-                            <p className='text-xs font-medium text-gray-500 line-clamp-2'>
+                            <p className='text-[11px] font-medium text-gray-500 line-clamp-2 md:text-xs'>
                                 {data.description}
                             </p>
-                            <div className='my-6 flex flex-wrap items-center gap-4'>
+                            <div className='my-1 flex flex-wrap items-center gap-1 xs:my-3 xs:gap-2 md:my-6 md:gap-4'>
                                 {[
                                     'Aceita Troca',
                                     'Todas revisões feitas pela concessionária',
                                     'Garantia de Fábrica',
                                 ].map((item) => (
-                                    <p key={item} className='flex items-center gap-2 text-xs'>
+                                    <p
+                                        key={item}
+                                        className='flex items-center gap-0 text-[11px] xs:gap-1 md:gap-2 md:text-xs'
+                                    >
                                         <IoCheckmarkOutline /> {item}
                                     </p>
                                 ))}
                             </div>
                         </div>
-                        <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>
+                        <p className='mt-1 mb-1 text-sm font-medium text-gray-200 xs:mt-2 xs:mb-3 xs:text-lg md:mt-4 md:mb-6 md:text-2xl'>
                             {formatMoney(data.price)}
                         </p>
                     </div>
-                    <div className='flex items-center justify-between rounded-xl bg-gray-900 px-5 py-3'>
-                        <div className='flex items-center gap-5'>
+                    <div className='flex flex-col items-center justify-between rounded-xl bg-gray-900 px-1 py-1 xs:px-2 xs:py-2 md:flex-row md:px-5 md:py-3'>
+                        <div className='flex flex-col items-center gap-1 xs:flex-row xs:gap-2 md:gap-5'>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <Calendar />
-                                <span className='text-sm font-medium text-gray-400'>
+                                <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>
                                     {data.year}
                                 </span>
                             </div>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <BarChart />
-                                <span className='text-sm font-medium text-gray-400'>
+                                <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>
                                     {data.distance}
                                 </span>
                             </div>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <Compass />
-                                <span className='text-sm font-medium text-gray-400'>
+                                <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>
                                     {data.location}
                                 </span>
                             </div>

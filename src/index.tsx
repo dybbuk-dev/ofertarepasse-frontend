@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import '@/styles/index.css'
+import '@/styles/index.scss'
 import { ToastContainer } from 'react-toastify'
 import AuthProvider from 'contexts/auth'
 import App from 'app'
