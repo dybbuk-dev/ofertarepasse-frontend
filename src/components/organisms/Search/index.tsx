@@ -233,7 +233,9 @@ const Search = () => {
                             <button
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    setVisibleFilter(false)
+                                    if (window.innerWidth < 1024 && visibleFilter) {
+                                        setVisibleFilter(false)
+                                    }
                                 }}
                             >
                                 <CloseIcon sx={{ color: 'black' }} />

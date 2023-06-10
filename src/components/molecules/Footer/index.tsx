@@ -6,9 +6,12 @@ import React from 'react'
 import { IAdvert } from 'components/organisms/Dashboard/Adverts'
 import api from 'services/api'
 import { toast } from 'react-toastify'
+import { useAuth } from 'hooks/auth'
+import { ADMIN } from 'types'
 
 const Footer = () => {
     const [recommendations, setRecommendations] = React.useState<Array<IAdvert> | null>(null)
+    const { user } = useAuth()
 
     const items = [
         {
@@ -21,7 +24,7 @@ const Footer = () => {
         {
             title: 'Minha Conta',
             items: [
-                { title: 'Meu Perfil', link: '/dashboard' },
+                { title: 'Meu Perfil', link: user?.roles === ADMIN ? '/admin' : 'dashboard' },
                 { title: 'Favoritos', link: '/' },
                 { title: 'Meus Veículos', link: '/' },
                 { title: 'Suporte', link: '/' },
