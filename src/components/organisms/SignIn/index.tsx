@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect } from 'react'
 import MenCar from 'assets/images/men_in_car.png'
 import Logo from 'assets/images/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,6 +10,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { useAuth } from 'hooks/auth'
 import { LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login'
+import { Roles } from 'types'
 
 interface IDataForm {
     email: string
@@ -17,18 +19,26 @@ interface IDataForm {
 
 const SignIn = () => {
     const { register, handleSubmit } = useForm<IDataForm>()
-    const { signIn, handleAuthGoogle } = useAuth()
+    const { signIn, handleAuthGoogle, user, isAuthenticated } = useAuth()
     const navigate = useNavigate()
 
     const onSubmit = async (dataForm: IDataForm) => {
-        const { error, message } = await signIn(dataForm.email, dataForm.password)
+        const { error, message, data } = await signIn(dataForm.email, dataForm.password)
 
         if (error) {
             toast.error(message)
-        } else {
-            navigate('/')
         }
     }
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            if (user?.roles === Roles.ADMIN) {
+                navigate('/admin')
+            } else {
+                navigate('/')
+            }
+        }
+    }, [user, isAuthenticated])
 
     return (
         <div className='flex flex-col-reverse items-center justify-end md:h-screen md:flex-row'>

@@ -10,6 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { IconButton } from '@mui/material'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
+import { Roles } from 'types'
 
 interface IMenuDashboard {
     buttons: Array<{
@@ -21,12 +22,12 @@ interface IMenuDashboard {
 
 const MenuDasboard = ({ buttons }: IMenuDashboard) => {
     const location = useLocation()
-    const { signOut } = useAuth()
+    const { signOut, user } = useAuth()
 
     return (
         <nav className='flex min-h-screen w-full flex-col items-center overflow-hidden transition-[width] duration-500'>
             <div className='hidden h-[100px] w-full items-center px-5 lg:flex'>
-                <Link to='/'>
+                <Link to={user?.roles === Roles.ADMIN ? '/admin' : '/'}>
                     <img
                         src={location.pathname.search('/admin') !== -1 ? LogoAdm : LogoPro}
                         alt='Oferta Repasse ADM'

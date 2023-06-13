@@ -45,8 +45,8 @@ const SignUp = () => {
     }
 
     return (
-        <div className='flex flex-col-reverse items-center md:h-screen md:flex-row'>
-            <section className='flex flex-col items-center overflow-y-scroll py-10 md:h-[100vh] md:min-w-[500px] md:px-5'>
+        <div className='flex flex-col-reverse items-center justify-end md:h-screen md:flex-row'>
+            <section className='flex items-center overflow-y-scroll py-10 md:h-[100vh] md:min-w-[500px] md:px-5'>
                 <div className=''>
                     <div className='flex flex-col items-center justify-between md:flex-row'>
                         <Link to='/'>
@@ -131,7 +131,7 @@ const SignUp = () => {
                     </div>
                 </div>
             </section>
-            <div className='h-[50vh] w-full overflow-hidden md:h-full'>
+            <div className='h-[50vh] w-full max-w-[100vh] overflow-hidden md:h-full'>
                 <img src={WomamCar} className='h-full w-full object-cover' />
             </div>
         </div>
