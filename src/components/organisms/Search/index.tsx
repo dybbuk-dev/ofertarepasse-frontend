@@ -21,7 +21,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import GridViewIcon from '@mui/icons-material/GridView'
 import Button from 'components/atoms/Button'
 
-const gridCols = ['grid-cols-3', 'grid-cols-4', 'grid-cols-5']
+const gridCols = ['lg:grid-cols-3', 'lg:grid-cols-4', 'lg:grid-cols-5']
 
 const Search = () => {
     const [amountColums, setAmountColums] = React.useState(4)
@@ -429,11 +429,13 @@ const Search = () => {
                         hasMore={true}
                         loader={null}
                         next={handleMore}
-                        className={`${
-                            gridCols[amountColums - 3]
-                        } mt-10 grid h-max gap-x-4 gap-y-8 ${
-                            !visibleFilter ? 'max-w-[1200px]' : ''
-                        }`}
+                        className={`grid grid-cols-1 ${
+                            amountColums === 1
+                                ? ''
+                                : `grid-cols-1 xs:grid-cols-2 md:grid-cols-3 ${
+                                      gridCols[amountColums - 3]
+                                  }`
+                        } mt-10 h-max gap-x-4 gap-y-8 ${!visibleFilter ? 'max-w-[1200px]' : ''}`}
                     >
                         {adverts.map((item) => (
                             <Link
