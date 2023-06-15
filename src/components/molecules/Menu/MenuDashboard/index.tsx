@@ -77,7 +77,9 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                             Configuraçõesb
                         </button>
                     </Link>
-                    <button className='text-left text-sm text-gray-100'>Suporte</button>
+                    <Link to='/suporte'>
+                        <button className='text-left text-sm text-gray-100'>Suporte</button>
+                    </Link>
                     <button className='text-left text-sm text-gray-100' onClick={() => signOut()}>
                         Sair
                     </button>

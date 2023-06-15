@@ -13,7 +13,7 @@ import formatMoney from 'utils/formatMoney'
 import { useFavorite } from 'hooks/favorites'
 import WithoutImage from 'assets/images/withoutImage.png'
 import getUrlAws from 'utils/getUrlAws'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
@@ -39,7 +39,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
         <div
             className={`h-max ${
                 inline
-                    ? 'grid grid-cols-[120px_1fr] xs:grid-cols-[100px_1fr] sm:grid-cols-[150px_1fr] md:grid-cols-[225px_1fr]'
+                    ? 'grid grid-cols-[50%_1fr] md:grid-cols-[225px_1fr]'
                     : 'block overflow-hidden'
             } ${inverseColors ? 'bg-white' : 'bg-gray-900'} rounded-xl`}
             {...props}
@@ -148,7 +148,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                         </p>
                     </div>
                     <div className='flex flex-col items-center justify-between rounded-xl bg-gray-900 px-1 py-1 xs:px-2 xs:py-2 md:flex-row md:px-5 md:py-3'>
-                        <div className='flex flex-col items-center gap-1 xs:flex-row xs:gap-2 md:gap-5'>
+                        <div className='flex flex-col items-center gap-1 xs:gap-2 sm:flex-row md:gap-5'>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <Calendar />
                                 <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>

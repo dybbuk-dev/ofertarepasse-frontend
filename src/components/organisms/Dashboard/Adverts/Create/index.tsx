@@ -22,12 +22,16 @@ import formatMoney from 'utils/formatMoney'
 import getUrlAws from 'utils/getUrlAws'
 import ReactInputMask from 'react-input-mask'
 import { produce } from 'immer'
+import Radio from 'components/atoms/Input/Radio'
+import Checkbox from 'components/atoms/Input/Checkbox'
 
 interface IDataForm {
     title: string
     images: FileList | File[]
     plate: string
     kilometer: number
+    vehicleType?: string
+    armored: boolean
     about: string
     value: number
     userId: string
@@ -47,6 +51,9 @@ interface IAdvert {
     modelYear: string
     manufactureYear: string
     version: string
+    vehicleType: string
+    armored: boolean
+    exchange: string
     color: string
     kilometer: number
     value: number
@@ -56,6 +63,7 @@ interface IAdvert {
     active: true
     city: string
     state: string
+    options: string[]
     highlight: string[]
 }
 
@@ -119,6 +127,7 @@ const DefaultBox = ({
 
 const CreateAdverts = () => {
     const [highlight, setHighlight] = React.useState<Array<string>>([])
+    const [options, setOptions] = React.useState<Array<string>>([])
     const [images, setImages] = React.useState<Array<File | string>>([])
     const [infoPlate, setInfoPlate] = React.useState<any>(null)
     const [loading, setLoading] = React.useState(false)
@@ -127,12 +136,12 @@ const CreateAdverts = () => {
     const [imagesDeleted, setImagesDeleted] = React.useState<Array<string>>([])
     const [reorderImage, setReorderImage] = React.useState(false)
 
-    const { register, handleSubmit, watch } = useForm<IDataForm>()
+    const { register, handleSubmit, getValues, watch } = useForm<IDataForm>()
     const { user } = useAuth()
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
 
-    const itemsHighlightVehicle = [
+    const itemsOptionVehicle = [
         'Airbag',
         'Alarme',
         'Ar Concidionado',
@@ -143,6 +152,17 @@ const CreateAdverts = () => {
         'Banco com regulagem de altura',
         'Freio ABS',
         'Controle automático de velocidade',
+    ]
+    const itemsHighlightVehicle = [
+        'Único Dono',
+        'IPVA Pago',
+        'Não Aceita Troca',
+        'Licenciado',
+        'Veículo Financiado',
+        'Garantia de Fábrica',
+        'Todas Revisões em concessionária',
+        'Adaptado para pessoas com deficiência',
+        'Veículo de Colecionados',
     ]
 
     const uploadImage = async (images: File[], id: string) => {
@@ -216,7 +236,8 @@ const CreateAdverts = () => {
             }
         } else {
             try {
-                const { data } = await api.post('/api/v1/adverts', {
+                // const { data } = await api.post('/api/v1/adverts', {
+                console.log({
                     title: `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`,
                     plate: infoPlate.veiculo.placa,
                     brand: infoPlate.veiculo.marca,
@@ -226,6 +247,12 @@ const CreateAdverts = () => {
                     version: infoPlate.veiculo.versao,
                     color: infoPlate.veiculo.cor,
                     kilometer: dataForm.kilometer,
+                    vehicleType:
+                        infoPlate.veiculo.vehicleType === 'Nao Identificado'
+                            ? dataForm.vehicleType
+                            : infoPlate.veiculo.vehicleType,
+                    exchange: infoPlate.veiculo.caixa_cambio,
+                    bodywork: infoPlate.veiculo.bodywork,
                     about: dataForm.about,
                     alert: dataForm.alert,
                     value: dataForm.value,
@@ -238,30 +265,32 @@ const CreateAdverts = () => {
                             : infoPlate.veiculo.combustivel,
                     amountPeaple: infoPlate.veiculo.quantidade_passageiro,
                     rolling: infoPlate.veiculo.cilindradas,
+                    options: options,
                     highlight: highlight,
                     fipeValue: infoPlate.fipes[0].valor,
+                    armored: dataForm.armored,
                 })
 
-                if (data && data.error) {
-                    setLoading(false)
-                    return toast.error(
-                        'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
-                    )
-                } else {
-                    if (images.length > 0) {
-                        const status = await uploadImage(
-                            images.filter((item) => typeof item !== 'string') as Array<File>,
-                            data.id
-                        )
+                // if (data && data.error) {
+                //     setLoading(false)
+                //     return toast.error(
+                //         'Verifique os campos do seu formulário, pode ter algo incorreto ou faltando.'
+                //     )
+                // } else {
+                //     if (images.length > 0) {
+                //         const status = await uploadImage(
+                //             images.filter((item) => typeof item !== 'string') as Array<File>,
+                //             data.id
+                //         )
 
-                        if (status !== 201) {
-                            toast.error('Erro ao enviar as imagens do seu anúncio')
-                        }
-                    }
+                //         if (status !== 201) {
+                //             toast.error('Erro ao enviar as imagens do seu anúncio')
+                //         }
+                //     }
 
-                    toast.success('Anúncio criado')
-                    navigate('/dashboard/adverts')
-                }
+                //     toast.success('Anúncio criado')
+                //     navigate('/dashboard/adverts')
+                // }
             } catch (err: any) {
                 toast.error(err.response.data.message[0])
                 setLoading(false)
@@ -339,6 +368,8 @@ const CreateAdverts = () => {
 
     if (loadingPage) return null
 
+    const { vehicleType } = getValues()
+
     return (
         <div>
             <section>
@@ -352,9 +383,9 @@ const CreateAdverts = () => {
                 </p>
             </section>
             <section className='mt-14'>
-                <div className='grid grid-cols-[350px_auto] gap-x-[100px]'>
+                <div className='grid grid-cols-1 grid-rows-[auto_auto] gap-y-[50px] md:grid-cols-[350px_auto] md:grid-rows-none md:gap-x-[50px] xl:gap-x-[100px]'>
                     <form
-                        className='flex flex-col gap-5'
+                        className='order-2 flex flex-col gap-5 md:order-1'
                         onSubmit={infoPlate ? handleSubmit(onSubmit) : handleSubmit(getInfoPlate)}
                     >
                         <DefaultBox
@@ -502,6 +533,14 @@ const CreateAdverts = () => {
                                     <p className='field'>{infoPlate.veiculo.versao}</p>
                                 </DefaultBox>
                                 <DefaultBox
+                                    title='Tipo de veículo'
+                                    checked={
+                                        infoPlate.veiculo.tipo_de_veiculo != 'Nao Identificado'
+                                    }
+                                >
+                                    <p className='field'>{infoPlate.veiculo.tipo_de_veiculo}</p>
+                                </DefaultBox>
+                                <DefaultBox
                                     title='Ano do modelo / fabricação'
                                     checked={!!infoPlate.veiculo.ano}
                                 >
@@ -528,6 +567,20 @@ const CreateAdverts = () => {
                                         {infoPlate.veiculo.quantidade_passageiro}
                                     </p>
                                 </DefaultBox>
+                                <DefaultBox title='Carroceria' checked={true}>
+                                    <p className='field'>{infoPlate.veiculo.bodywork ?? 'None'}</p>
+                                </DefaultBox>
+                                <DefaultBox title='Câmbio' checked={true}>
+                                    <p className='field'>
+                                        {infoPlate.veiculo.caixa_cambio ?? 'None'}
+                                    </p>
+                                </DefaultBox>
+                                <div>
+                                    <label role='button' className='flex items-center'>
+                                        <Checkbox {...register('armored')} />
+                                        Blindado
+                                    </label>
+                                </div>
                                 <div className='mt-16'>
                                     <p className='text-3xl font-light'>
                                         Mais Informações do Veículo
@@ -559,6 +612,40 @@ const CreateAdverts = () => {
                                         {...register('about')}
                                     />
                                 </DefaultBox>
+                                {infoPlate.veiculo.tipo_de_veiculo === 'Nao Identificado' && (
+                                    <DefaultBox
+                                        title='Tipo de veículo'
+                                        checked={!!watch('vehicleType')}
+                                        position='end'
+                                    >
+                                        <label
+                                            role='button'
+                                            className='text-sm font-medium text-gray-400'
+                                        >
+                                            <Radio
+                                                checked={vehicleType === 'Automovel'}
+                                                value='Automovel'
+                                                {...register('vehicleType')}
+                                            />
+                                            Automovel
+                                        </label>
+                                        <label
+                                            role='button'
+                                            className='text-sm font-medium text-gray-400'
+                                        >
+                                            <Radio
+                                                checked={vehicleType === 'Motocicleta'}
+                                                value='Motocicleta'
+                                                {...register('vehicleType')}
+                                            />
+                                            Motocicleta
+                                        </label>
+                                        {/* <select defaultValue={'Automovel'}>
+                                            <option value='Automovel'>Automovel</option>
+                                            <option value='Motocicleta'>Motocicleta</option>
+                                        </select> */}
+                                    </DefaultBox>
+                                )}
                                 <DefaultBox
                                     title='Alerta'
                                     position='end'
@@ -626,6 +713,30 @@ const CreateAdverts = () => {
                                 </div>
 
                                 <div className='mt-16'>
+                                    <p className='text-3xl font-light'>
+                                        Mais Informações do Veículo
+                                    </p>
+                                    <p className='mt-4 text-sm'>Vamos completar seu anúncio</p>
+                                </div>
+                                <div className='flex flex-wrap items-center gap-4'>
+                                    {itemsOptionVehicle.map((item, index) => (
+                                        <button
+                                            key={index}
+                                            type='button'
+                                            className={`rounded-full  px-7 py-2 font-semibold text-gray-200 ${
+                                                options.find((itemFind) => itemFind === item)
+                                                    ? 'bg-primary !text-white'
+                                                    : 'bg-white'
+                                            }`}
+                                            onClick={() =>
+                                                handleSelectItem(options, setOptions, item)
+                                            }
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className='mt-16'>
                                     <p className='text-3xl font-light'>Destaque seu Veículo</p>
                                     <p className='mt-4 text-sm'>Estamos acabando</p>
                                 </div>
@@ -666,36 +777,46 @@ const CreateAdverts = () => {
                             )}
                         </Button>
                     </form>
-                    <div className='relative h-full w-[290px]'>
-                        <div className={`sticky top-10 ${infoPlate ? 'block' : 'hidden'}`}>
-                            <p className='mb-5 text-sm font-medium'>Pré-visualização do anúncio</p>
-                            <Card
-                                data={{
-                                    id: '',
-                                    images: images.length > 0 ? images : null,
-                                    title: infoPlate
-                                        ? `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`
-                                        : '',
-                                    description: infoPlate ? infoPlate.veiculo.versao : '--------',
-                                    price: Number(
-                                        watch('value') ? watch('value') : advert ? advert.value : 0
-                                    ),
-                                    year: infoPlate ? infoPlate.veiculo.ano : '----',
-                                    distance: Number(
-                                        watch('kilometer')
-                                            ? watch('kilometer')
-                                            : advert
-                                            ? advert.kilometer
-                                            : '----'
-                                    ),
-                                    location: infoPlate
-                                        ? `${infoPlate.veiculo.municipio} - ${infoPlate.veiculo.uf}`
-                                        : '----',
-                                }}
-                                inverseColors={true}
-                            />
+                    {!!infoPlate && (
+                        <div className='relative order-1 w-full md:order-2 md:h-full'>
+                            <div className='sticky top-10 mx-auto w-[290px] xl:mx-0'>
+                                <p className='mb-5 text-sm font-medium'>
+                                    Pré-visualização do anúncio
+                                </p>
+                                <Card
+                                    data={{
+                                        id: '',
+                                        images: images.length > 0 ? images : null,
+                                        title: infoPlate
+                                            ? `${infoPlate.veiculo.marca} ${infoPlate.veiculo.modelo}`
+                                            : '',
+                                        description: infoPlate
+                                            ? infoPlate.veiculo.versao
+                                            : '--------',
+                                        price: Number(
+                                            watch('value')
+                                                ? watch('value')
+                                                : advert
+                                                ? advert.value
+                                                : 0
+                                        ),
+                                        year: infoPlate ? infoPlate.veiculo.ano : '----',
+                                        distance: Number(
+                                            watch('kilometer')
+                                                ? watch('kilometer')
+                                                : advert
+                                                ? advert.kilometer
+                                                : '----'
+                                        ),
+                                        location: infoPlate
+                                            ? `${infoPlate.veiculo.municipio} - ${infoPlate.veiculo.uf}`
+                                            : '----',
+                                    }}
+                                    inverseColors={true}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </section>
         </div>

@@ -21,12 +21,17 @@ import DashboardCreateAdverts from 'pages/Dashboard/Adverts/Create'
 import ProtectedRoute from 'components/atoms/ProtectedRoute'
 import CreateNegociations from 'pages/Dashboard/Sold/Create'
 import MissingPassword from 'components/organisms/MissingPassword'
+import Support from 'components/organisms/Support'
 
 const App = () => {
     const router = createBrowserRouter([
         {
             path: '/',
             element: <Home />,
+        },
+        {
+            path: '/suporte',
+            element: <Support />,
         },
         {
             path: '/login',

@@ -19,7 +19,7 @@ import { useAuth } from 'hooks/auth'
 import formatUrlDetails from 'utils/formatUrlDetails'
 
 const Home = () => {
-    const [optionBuy, setOptionBuy] = React.useState('car')
+    const [optionBuy, setOptionBuy] = React.useState('Automovel')
     const [adverts, setAdverts] = React.useState<Array<IAdvert>>([])
     const [search, setSearch] = React.useState('')
 
@@ -54,12 +54,22 @@ const Home = () => {
                         <div className='rounded-2xl bg-white py-2 xs:py-3 md:py-8'>
                             <div className='mx-8 flex items-center gap-5 border-b border-gray-700 pb-4'>
                                 <button
-                                    onClick={() => setOptionBuy('car')}
+                                    onClick={() => setOptionBuy('Automovel')}
                                     className={`ease font-medium duration-200 ${
-                                        optionBuy === 'car' ? 'text-primary' : 'text-gray-500'
+                                        optionBuy === 'Automovel' ? 'text-primary' : 'text-gray-500'
                                     }`}
                                 >
                                     Comprar Carro
+                                </button>
+                                <button
+                                    onClick={() => setOptionBuy('Motocicleta')}
+                                    className={`ease font-medium duration-200 ${
+                                        optionBuy === 'Motocicleta'
+                                            ? 'text-primary'
+                                            : 'text-gray-500'
+                                    }`}
+                                >
+                                    Comprar Moto
                                 </button>
                                 <Link to={isAuthenticated ? '/dashboard/adverts/create' : '/login'}>
                                     <p
@@ -79,7 +89,7 @@ const Home = () => {
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                                 <Link
-                                    to={`/estoque?title=${search}`}
+                                    to={`/estoque?title=${search}&vehicleType=${optionBuy}`}
                                     className='w-full px-5 xl:w-auto'
                                 >
                                     <Button className='my-4 w-full !bg-primary !px-10 font-semibold text-white xl:my-0 xl:!w-max'>

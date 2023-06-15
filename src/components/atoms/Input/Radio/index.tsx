@@ -1,6 +1,7 @@
+import React from 'react'
 import RadioMui, { RadioProps } from '@mui/material/Radio'
 
-const Radio = ({ ...props }: RadioProps) => {
+const Radio = React.forwardRef(({ ...props }: RadioProps, ref: any) => {
     return (
         <RadioMui
             sx={{
@@ -9,9 +10,12 @@ const Radio = ({ ...props }: RadioProps) => {
                     color: '#F3722C',
                 },
             }}
+            ref={ref}
             {...props}
         />
     )
-}
+})
+
+Radio.displayName = 'Radio'
 
 export default Radio

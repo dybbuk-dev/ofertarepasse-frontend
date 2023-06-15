@@ -16,6 +16,7 @@ import getUrlAws from 'utils/getUrlAws'
 import WithoutImage from 'assets/images/withoutImage.png'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useAuth } from 'hooks/auth'
+import formatUrlDetails from 'utils/formatUrlDetails'
 
 export interface IAdvert {
     id: string
@@ -327,6 +328,23 @@ const Adverts = () => {
                                                   <IoDocumentOutline
                                                       role='button'
                                                       className='text-xl hover:text-primary'
+                                                      onClick={() => {
+                                                          navigator.clipboard.writeText(
+                                                              formatUrlDetails(
+                                                                  `${
+                                                                      window.location.origin
+                                                                  }/comprar/${
+                                                                      item.brand
+                                                                  }/${item.model.replaceAll(
+                                                                      '/',
+                                                                      ''
+                                                                  )}/${item.version.replaceAll(
+                                                                      '/',
+                                                                      ''
+                                                                  )}/${item.modelYear}/${item.id}`
+                                                              )
+                                                          )
+                                                      }}
                                                   />
                                               </div>
                                           </td>

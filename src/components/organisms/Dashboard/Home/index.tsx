@@ -157,7 +157,7 @@ const HomeDashboard = () => {
                 <section className='mt-5 xs:mt-10 md:mt-20'>
                     <span className='text-2xl font-light'>Meus Anúncios</span>
                     <div className='my-3 w-full overflow-x-scroll rounded-xl bg-white xs:my-5 md:my-10'>
-                        <table className='w-full min-w-[560px]'>
+                        <table className='w-full min-w-[870px]'>
                             <thead>
                                 <tr className='border-b border-gray-900'>
                                     {titlesTable.map((item, index) => (

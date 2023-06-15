@@ -59,10 +59,10 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
 
     return (
         <div className='w-full bg-gray-900'>
-            <div className='fixed top-0 left-0 hidden w-[300px] lg:block'>
+            <div className='fixed top-0 left-0 hidden w-[250px] lg:block xl:w-[300px]'>
                 <MenuDasboard buttons={buttonsMenu} />
             </div>
-            <div className='lg:ml-[350px]'>
+            <div className='lg:ml-[280px] xl:ml-[350px]'>
                 <main className='mx-auto min-h-screen w-full'>
                     <div className='menuSearch flex h-[50px] flex-row items-center rounded-b-2xl bg-white px-10 md:h-[70px] md:flex-row'>
                         <InputSimple
