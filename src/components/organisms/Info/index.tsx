@@ -71,6 +71,13 @@ const Info = () => {
         updateViews()
     }, [advert])
 
+    const negociateVehicle = async () => {
+        api.post('/api/v1/negociations', {
+            user: user?.id,
+            advert: advert?.id,
+        })
+    }
+
     if (!advert) return <></>
 
     return (
@@ -293,23 +300,26 @@ const Info = () => {
                             <div className='flex flex-col gap-3 py-5 px-4 text-white'>
                                 {user ? (
                                     <>
+                                        <Button
+                                            className='!bg-primary !py-4 font-semibold'
+                                            onClick={negociateVehicle}
+                                        >
+                                            Comprar Veículo
+                                        </Button>
+                                        <Button className='!bg-gray-100 !py-4 font-semibold'>
+                                            Tenho Interesse
+                                        </Button>
                                         <Link
                                             target='_blank'
                                             to={encodeURI(
                                                 `https://wa.me/5516996174146?text=Olá meu nome é ${user?.name}(${user?.id}), fiquei muito interesado sobre este anúncio(${advert.title} - ${advert.id}) e queria fazer uma negociação.`
                                             )}
                                         >
-                                            <Button className='!bg-primary !py-4 font-semibold'>
-                                                Comprar Veículo
+                                            <Button className='flex items-center justify-center gap-2 !bg-[#25D366] !py-4 font-semibold'>
+                                                <IoLogoWhatsapp className='text-xl' />
+                                                Conversar pelo WhatsApp
                                             </Button>
                                         </Link>
-                                        <Button className='!bg-gray-100 !py-4 font-semibold'>
-                                            Tenho Interesse
-                                        </Button>
-                                        <Button className='flex items-center justify-center gap-2 !bg-[#25D366] !py-4 font-semibold'>
-                                            <IoLogoWhatsapp className='text-xl' />
-                                            Conversar pelo WhatsApp
-                                        </Button>
                                     </>
                                 ) : (
                                     <>

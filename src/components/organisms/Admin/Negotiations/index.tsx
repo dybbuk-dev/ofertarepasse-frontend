@@ -6,8 +6,11 @@ import InputSimple from 'components/atoms/Input/Simple'
 import MenInCar from 'assets/images/men_in_car.png'
 import Checkbox from 'components/atoms/Input/Checkbox'
 import { IoPencil, IoTrashOutline } from 'react-icons/io5'
+import api from 'services/api'
+import { useAuth } from 'hooks/auth'
 
 const Negotiations = () => {
+    const { user } = useAuth()
     const [filter, setFilter] = React.useState({
         action: '',
     })
@@ -128,6 +131,14 @@ const Negotiations = () => {
             createdAt: Date.now(),
         },
     ]
+
+    React.useEffect(() => {
+        // api.get('/api/v1/negociations', {
+        //     params: {
+        //         userId: user?.id,
+        //     },
+        // })
+    }, [])
 
     return (
         <div>

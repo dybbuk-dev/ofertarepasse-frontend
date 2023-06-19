@@ -60,6 +60,11 @@ const MenuDasboard = ({ buttons }: IMenuDashboard) => {
                     ))}
                 </div>
                 <div className='flex flex-col gap-3 px-5 pt-5 lg:pt-0'>
+                    {user?.roles === Roles.ADMIN && (
+                        <Link to='/admin/financing'>
+                            <button className='text-left text-sm text-gray-100'>Financing</button>
+                        </Link>
+                    )}
                     <Link
                         to={
                             location.pathname.search('/admin') !== -1
