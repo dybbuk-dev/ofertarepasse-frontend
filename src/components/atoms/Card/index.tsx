@@ -114,7 +114,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                 />
             )}
             {inline ? (
-                <div className='px-2 py-1 xs:px-4 xs:py-2 md:px-8 md:py-3'>
+                <div className='flex flex-col justify-around px-1 py-2 xs:px-2 md:px-3 md:py-3'>
                     <div className='flex items-center justify-between'>
                         <p className='text-xs font-semibold text-gray-100 xs:text-sm sm:text-base md:text-lg'>
                             {data.title}
@@ -128,7 +128,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                             <p className='text-[11px] font-medium text-gray-500 line-clamp-2 md:text-xs'>
                                 {data.description}
                             </p>
-                            <div className='my-1 flex flex-wrap items-center gap-1 xs:my-3 xs:gap-2 md:my-6 md:gap-4'>
+                            <div className='my-1 hidden flex-wrap items-center gap-0 xs:my-1 xs:flex xs:gap-1 md:my-2 md:gap-2'>
                                 {[
                                     'Aceita Troca',
                                     'Todas revisões feitas pela concessionária',
@@ -138,7 +138,10 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                                         key={item}
                                         className='flex items-center gap-0 text-[11px] xs:gap-1 md:gap-2 md:text-xs'
                                     >
-                                        <IoCheckmarkOutline /> {item}
+                                        <div className='min-w-[12px]'>
+                                            <IoCheckmarkOutline />
+                                        </div>{' '}
+                                        {item}
                                     </p>
                                 ))}
                             </div>
@@ -147,7 +150,7 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                             {formatMoney(data.price)}
                         </p>
                     </div>
-                    <div className='flex flex-col items-center justify-between rounded-xl bg-gray-900 px-1 py-1 xs:px-2 xs:py-2 md:flex-row md:px-5 md:py-3'>
+                    <div className='hidden flex-col items-center justify-between rounded-xl bg-gray-900 px-1 py-0 xs:px-2 xs:py-1 sm:flex md:px-5 md:py-2 xl:flex-row'>
                         <div className='flex flex-col items-center gap-1 xs:gap-2 sm:flex-row md:gap-5'>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <Calendar />

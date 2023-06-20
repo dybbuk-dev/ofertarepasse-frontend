@@ -7,7 +7,7 @@ import Checkbox from 'components/atoms/Input/Checkbox'
 interface CategroyGroupType {
     title: string
     items: { title: string; value: string }[]
-    currentItem: string
+    currentItem: any
     isCheckbox?: boolean
     displayItems?: number
     inline?: boolean
@@ -20,7 +20,7 @@ const CategroyGroup = React.forwardRef<Ref, CategroyGroupType>(
         {
             title,
             items,
-            isCheckbox = false,
+            isCheckbox = true,
             displayItems = -1,
             currentItem,
             inline = false,
@@ -44,6 +44,7 @@ const CategroyGroup = React.forwardRef<Ref, CategroyGroupType>(
                         >
                             {isCheckbox ? (
                                 <Checkbox
+                                    checked={currentItem?.includes(item.value)}
                                     name={title}
                                     value={item.value}
                                     ref={ref}
@@ -51,7 +52,7 @@ const CategroyGroup = React.forwardRef<Ref, CategroyGroupType>(
                                 />
                             ) : (
                                 <Radio
-                                    checked={item.value === currentItem}
+                                    checked={currentItem === item.value}
                                     name={title}
                                     value={item.value}
                                     ref={ref}

@@ -114,6 +114,8 @@ const Search = () => {
     const [sortByViews, setSortByViews] = React.useState<boolean | null>(null)
 
     const [searchParams, setSearchParams] = useSearchParams()
+    const [vehicleType, setVehicleType] = React.useState(searchParams.get('vehicleType'))
+    const [searchByArea, setSearchByArea] = React.useState(false)
     const location = useLocation()
     const { register, getValues, setValue } = useForm()
     const [page, setPage] = React.useState(2)
@@ -128,8 +130,8 @@ const Search = () => {
             )
                 .then(async (res: any) => {
                     const data = await res.json()
-
-                    setCurrentLocation(`${data.address.town}/${data.address.state}`)
+                    console.log('current location!', data)
+                    setCurrentLocation(`${data.address.county}/${data.address.state}`)
                 })
                 .catch(() => {
                     toast.error('Erro ao pegar a localização')
@@ -152,8 +154,9 @@ const Search = () => {
         clearTimeout(timer)
 
         const newTimer = setTimeout(() => {
-            const vehicleType = searchParams.get('vehicleType')
             let newUrlParams = `?vehicleType=${vehicleType}`
+            if (searchByArea) newUrlParams += `&location=${currentLocation}`
+            console.log('Object.entries(getValues())', Object.entries(getValues()))
             Object.entries(getValues()).map((item, index) => {
                 if (item[1] !== null && item[1] !== 'null') {
                     newUrlParams = newUrlParams + `&${item[0]}=${item[1]}`
@@ -180,15 +183,18 @@ const Search = () => {
     }
 
     React.useEffect(() => {
-        setValue('exchange', searchParams.get('exchange'))
-        setValue('armor', searchParams.get('armor'))
-        setValue('bodywork', searchParams.get('bodywork'))
-        setValue('highlight', searchParams.get('highlight'))
-        setValue('options', searchParams.get('options'))
-        setValue('fuel', searchParams.get('fuel'))
-        setValue('finalPlate', searchParams.get('finalPlate'))
-        setValue('colors', searchParams.get('colors'))
-        setValue('withPhoto', searchParams.get('withPhoto'))
+        setValue('exchange', searchParams.get('exchange')?.split(',') ?? [])
+        setValue('armor', searchParams.get('armor')?.split(',') ?? [])
+        setValue('bodywork', searchParams.get('bodywork')?.split(',') ?? [])
+        setValue('highlight', searchParams.get('highlight')?.split(',') ?? [])
+        setValue('options', searchParams.get('options')?.split(',') ?? [])
+        setValue('fuel', searchParams.get('fuel')?.split(',') ?? [])
+        setValue('finalPlate', searchParams.get('finalPlate')?.split(',') ?? [])
+        setValue('colors', searchParams.get('colors')?.split(',') ?? [])
+        setValue('withPhoto', searchParams.get('withPhoto')?.split(',') ?? [])
+
+        getLocation()
+
         const resizeListener = () => {
             if (window.innerWidth < 512) {
                 setIsMobile(true)
@@ -207,6 +213,10 @@ const Search = () => {
             window.removeEventListener('resize', resizeListener)
         }
     }, [])
+
+    React.useEffect(() => {
+        getFormValues()
+    }, [searchByArea])
 
     React.useEffect(() => {
         setVisibleFilter(!isIPad)
@@ -243,11 +253,17 @@ const Search = () => {
             <section className='container mx-auto mt-[180px] grid grid-cols-none grid-rows-[50px_1fr] items-center border-y border-gray-700 py-10 pt-[30px] lg:grid-cols-[300px_1fr] lg:grid-rows-none'>
                 <button
                     className='flex items-center justify-center gap-2 text-gray-400 md:justify-start lg:justify-center'
-                    onClick={getLocation}
-                    disabled={true}
+                    onClick={() => {
+                        setSearchByArea(!searchByArea)
+                    }}
+                    // disabled={true}
                 >
                     <IoLocationOutline className='text-lg' />
-                    <span className='underline underline-offset-2'>
+                    <span
+                        className={`underline underline-offset-2 ${
+                            searchByArea ? 'text-primary' : 'text-black'
+                        }`}
+                    >
                         {currentLocation
                             ? currentLocation.split('/')[0]
                             : 'Escolha uma Localização'}
@@ -483,14 +499,15 @@ const Search = () => {
                                 items={checkboxFields.seller}
                                 currentItem={seller}
                                 title='Vendedor'
-                                displayItems={3}
+                                displayItems={2}
+                                isCheckbox={false}
                                 {...register('seller')}
                             />
                         </div>
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.options}
-                                currentItem={options}
+                                currentItem={options ?? []}
                                 title='Opcionais'
                                 displayItems={4}
                                 {...register('options')}
@@ -499,7 +516,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.exchange}
-                                currentItem={exchange}
+                                currentItem={exchange ?? []}
                                 title='Câmbio'
                                 displayItems={5}
                                 {...register('exchange')}
@@ -508,7 +525,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.fuel}
-                                currentItem={fuel}
+                                currentItem={fuel ?? []}
                                 title='Combustível'
                                 displayItems={4}
                                 {...register('fuel')}
@@ -517,7 +534,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.finalPlate}
-                                currentItem={finalPlate}
+                                currentItem={finalPlate ?? []}
                                 title='Final da Placa'
                                 displayItems={5}
                                 {...register('finalPlate')}
@@ -526,7 +543,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.armor}
-                                currentItem={armor}
+                                currentItem={armor ?? []}
                                 title='Blindagem'
                                 inline={true}
                                 {...register('armor')}
@@ -535,7 +552,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.colors}
-                                currentItem={colors}
+                                currentItem={colors ?? []}
                                 title='Cores'
                                 {...register('colors')}
                             />
@@ -543,7 +560,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.bodywork}
-                                currentItem={bodywork}
+                                currentItem={bodywork ?? []}
                                 title='Carroceria'
                                 displayItems={3}
                                 {...register('bodywork')}
@@ -552,7 +569,7 @@ const Search = () => {
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
                                 items={checkboxFields.highlight}
-                                currentItem={highlight}
+                                currentItem={highlight ?? []}
                                 title='Características'
                                 displayItems={4}
                                 {...register('highlight')}
@@ -567,7 +584,23 @@ const Search = () => {
                                 {'Apenas anúncios com foto'}
                             </label>
                         </div>
-                        <button className='mt-8 flex items-center gap-2 text-gray-400'>
+                        <button
+                            className='mt-8 flex items-center gap-2 text-gray-400'
+                            onClick={(ev) => {
+                                ev.preventDefault()
+                                const newUrlParams = `?vehicleType=${vehicleType}`
+                                setSearchParams(newUrlParams)
+                                setValue('exchange', [])
+                                setValue('armor', [])
+                                setValue('bodywork', [])
+                                setValue('highlight', [])
+                                setValue('options', [])
+                                setValue('fuel', [])
+                                setValue('finalPlate', [])
+                                setValue('colors', [])
+                                setValue('withPhoto', [])
+                            }}
+                        >
                             Limpar filtros
                             <IoCloseOutline />
                         </button>

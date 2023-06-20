@@ -27,7 +27,7 @@ const Footer = () => {
                 { title: 'Meu Perfil', link: user?.roles === Roles.ADMIN ? '/admin' : 'dashboard' },
                 { title: 'Favoritos', link: '/' },
                 { title: 'Meus Veículos', link: '/' },
-                { title: 'Suporte', link: '/' },
+                { title: 'Suporte', link: '/suporte' },
             ],
         },
         {
@@ -53,7 +53,7 @@ const Footer = () => {
         {
             title: 'Suporte',
             items: [
-                { title: 'Chat Online', link: '/' },
+                { title: 'Chat Online', link: '/suporte' },
                 { title: 'WhatsApp', link: '/' },
                 { title: 'E-mail', link: '/' },
             ],
@@ -179,7 +179,7 @@ const Footer = () => {
                             </p>
                             <p>
                                 Fale com nosso time{' '}
-                                <Link to='/'>
+                                <Link to='/suporte'>
                                     <span className='font-semibold text-primary'>
                                         Iniciar Chat Online
                                     </span>

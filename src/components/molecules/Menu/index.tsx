@@ -4,6 +4,7 @@ import Person from 'assets/icon/Person'
 import { useAuth } from 'hooks/auth'
 import DefaultProfile from 'assets/images/defaultProfile.png'
 import getUrlAws from 'utils/getUrlAws'
+import { Roles } from 'types'
 
 const Menu = () => {
     const { user } = useAuth()
@@ -18,7 +19,7 @@ const Menu = () => {
         },
         {
             label: 'Suporte',
-            href: '/',
+            href: '/suporte',
         },
         {
             label: 'Favoritos',

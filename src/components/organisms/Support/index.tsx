@@ -6,11 +6,12 @@ import { IconButton } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import DoneAllIcon from '@mui/icons-material/DoneAll'
 import DefaultProfile from 'assets/images/defaultProfile.png'
-import { socket } from 'socket'
+import { socket } from 'services/socket'
 import api from 'services/api'
 import { useAuth } from 'hooks/auth'
 import getUrlAws from 'utils/getUrlAws'
 import { Roles } from 'types'
+import MenuIcon from '@mui/icons-material/Menu'
 
 export interface IChat {
     id: string
@@ -54,6 +55,7 @@ const Support = () => {
     const [selectedUserChat, setSelectedUserChat] = useState<IChat[]>([])
     const [message, setMessage] = useState<string>('')
     const [allMessages, setAllMessages] = useState<IAllMessages[]>([])
+    const [userList, setUserList] = useState<boolean>(true)
 
     const loadChatHistory = async () => {
         if (isAuthenticated) {
@@ -174,12 +176,16 @@ const Support = () => {
         <DashboardTemplate>
             <div className='font-base mb-5 text-center xs:text-left md:font-[32px]'>Suporte</div>
             <div
-                className={`divide-slate-30 grid h-[calc(100vh-300px)] w-full grid-cols-1 divide-x divide-solid divide-slate-200 rounded-[20px] bg-white md:grid-cols-${
-                    isAdmin ? 2 : 1
+                className={`divide-slate-30 grid h-[calc(100vh-300px)] min-h-[500px] w-full grid-cols-1 divide-x divide-solid divide-slate-200 rounded-[20px] bg-white ${
+                    isAdmin ? 'md:grid-cols-2' : 'md:grid-cols-1'
                 } overflow-hidden`}
             >
                 {user?.roles === Roles.ADMIN && (
-                    <div className='relative grid h-[calc(100vh-200px)] grid-rows-[auto_1fr] bg-white md:grid md:rounded-r-none'>
+                    <div
+                        className={`${
+                            userList ? 'grid' : 'hidden'
+                        } relative  h-[calc(100vh-200px)] min-h-[600px]  grid-rows-[auto_1fr] bg-white md:grid md:rounded-r-none`}
+                    >
                         <div className='bg-white p-[12px] pl-1 text-base xs:pl-2 md:p-[20px] md:pl-3 md:text-[20px]'>
                             Todas Mensagens
                         </div>
@@ -210,6 +216,7 @@ const Support = () => {
                                                 }`}
                                                 onClick={() => {
                                                     setSelectedRecipient(userid)
+                                                    setUserList(false)
                                                 }}
                                             >
                                                 <div className='relative h-[50px] w-[50px] md:h-[55px] md:w-[55px]'>
@@ -256,8 +263,20 @@ const Support = () => {
                         </div>
                     </div>
                 )}
-                <div className='relative grid h-[calc(100vh-300px)] grid-rows-[auto_1fr_auto] rounded-[12px] bg-white md:rounded-l-none md:rounded-r-[20px]'>
+                <div
+                    className={`${
+                        user?.roles === Roles.ADMIN && userList ? 'hidden md:grid' : 'grid'
+                    } relative grid h-[calc(100vh-300px)] min-h-[500px] grid-rows-[auto_1fr_auto] rounded-[12px] bg-white md:rounded-l-none md:rounded-r-[20px]`}
+                >
                     <div className='flex items-center gap-x-2 border-b border-slate-200 p-1 xs:p-3 md:p-7'>
+                        {user?.roles === Roles.ADMIN && (
+                            <IconButton
+                                className='hidden md:block'
+                                onClick={() => setUserList(true)}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        )}
                         <div className='relative h-[50px] w-[50px] md:h-[55px] md:w-[55px]'>
                             <img
                                 src={
@@ -345,7 +364,7 @@ const Support = () => {
                             }}
                         />
                         <button
-                            className='translate-all rounded-lg border border-slate-300 px-3 py-1 duration-100 hover:bg-slate-200'
+                            className='rounded-lg border border-slate-300 px-3 py-1 transition-all duration-100 hover:bg-slate-200'
                             onClick={sendMessage}
                         >
                             Send
