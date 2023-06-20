@@ -286,8 +286,7 @@ const Search = () => {
         getLocation()
 
         api.get('/api/v1/adverts/getFilterValues').then((res: any) => {
-            console.log(res.data)
-            setCheckboxFields({ ...checkboxFields, ...res.data.filters })
+            setCheckboxFields({ ...checkboxFields, ...(res.data?.filters ?? {}) })
         })
 
         const resizeListener = () => {
