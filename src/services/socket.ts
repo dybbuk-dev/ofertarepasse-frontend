@@ -4,7 +4,7 @@ import { io } from 'socket.io-client'
 const URL: string =
     process.env.NODE_ENV === 'production'
         ? 'https://api.ofertarepasse.com.br:2083'
-        : 'http://localhost:2083'
+        : 'http://localhost:2082/socket.io'
 
 let user: any = localStorage.getItem('ofertarepasse@user')
 user = JSON.parse(user)

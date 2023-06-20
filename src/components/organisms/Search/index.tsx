@@ -27,6 +27,10 @@ import Radio from 'components/atoms/Input/Radio'
 const gridCols = ['lg:grid-cols-3', 'lg:grid-cols-4', 'lg:grid-cols-5']
 
 const checkboxFields = {
+    vehicleType: [
+        { title: 'Automóvel', value: 'Automovel' },
+        { title: 'Motocicleta', value: 'Motocicleta' },
+    ],
     marcas: [
         { title: 'Adamo', value: 'Adamo' },
         { title: 'Alfa Romeo', value: 'Alfa Romeo' },
@@ -112,9 +116,95 @@ const Search = () => {
     const [currentLocation, setCurrentLocation] = React.useState<string | null>(null)
     const [timer, setTimer] = React.useState<any>(null)
     const [sortByViews, setSortByViews] = React.useState<boolean | null>(null)
+    const [checkboxFields, setCheckboxFields] = React.useState({
+        vehicleType: [
+            { title: 'Automóvel', value: 'Automovel' },
+            { title: 'Motocicleta', value: 'Motocicleta' },
+        ],
+        marcas: [
+            { title: 'Adamo', value: 'Adamo' },
+            { title: 'Alfa Romeo', value: 'Alfa Romeo' },
+            { title: 'Aston Martin', value: 'Aston Martin' },
+            { title: 'Audi', value: 'Audi' },
+            { title: 'Beach', value: 'Beach' },
+            { title: 'Bentley', value: 'Bentley' },
+            { title: 'Bianco', value: 'Bianco' },
+        ],
+        seller: [
+            { title: 'Pessoa Física', value: 'physical' },
+            { title: 'Pessoa Jurídica', value: 'legal' },
+        ],
+        options: [
+            { title: 'Airbag', value: 'Airbag' },
+            { title: 'Alarme', value: 'Alarme' },
+            { title: 'Ar Concidionado', value: 'Ar Concidionado' },
+            { title: 'Ar Quente', value: 'Ar Quente' },
+            { title: 'Computador de Bordo', value: 'Computador de Bordo' },
+            { title: 'Controle de Tração', value: 'Controle de Tração' },
+            { title: 'Desembaçador traseiro', value: 'Desembaçador traseiro' },
+            { title: 'Banco com regulagem de altura', value: 'Banco com regulagem de altura' },
+            { title: 'Freio ABS', value: 'Freio ABS' },
+            {
+                title: 'Controle automático de velocidade',
+                value: 'Controle automático de velocidade',
+            },
+        ],
+        exchange: [
+            { title: 'Automática', value: 'Automática' },
+            { title: 'Automática Sequencial', value: 'Automática Sequencial' },
+            { title: 'Automatizada', value: 'Automatizada' },
+            { title: 'Automatizada dct', value: 'Automatizada dct' },
+            { title: 'Manual', value: 'Manual' },
+        ],
+        fuel: [
+            { title: 'Álcool', value: 'Álcool' },
+            { title: 'Álcool e gás natural', value: 'Álcool e gás natural' },
+            { title: 'Diesel', value: 'Diesel' },
+            { title: 'Gás Natural', value: 'Gás Natural' },
+        ],
+        finalPlate: [
+            { title: '1 e 2', value: '1 e 2' },
+            { title: '3 e 4', value: '3 e 4' },
+            { title: '5 e 6', value: '5 e 6' },
+            { title: '7 e 8', value: '7 e 8' },
+            { title: '9 e 0', value: '9 e 0' },
+        ],
+        armor: [
+            { title: 'Sim', value: 'Sim' },
+            { title: 'Não', value: 'Não' },
+        ],
+        colors: [
+            { title: 'Amarelo', value: 'Amarelo' },
+            { title: 'Azul', value: 'Azul' },
+            { title: 'Bege', value: 'Bege' },
+            { title: 'Branco', value: 'Branco' },
+        ],
+        bodywork: [
+            { title: 'Sedã', value: 'Sedã' },
+            { title: 'Utilitário Esportivo', value: 'Utilitário Esportivo' },
+            { title: 'Cupê', value: 'Cupê' },
+        ],
+        highlight: [
+            { title: 'Único Dono', value: 'Único Dono' },
+            { title: 'IPVA Pago', value: 'IPVA Pago' },
+            { title: 'Não Aceita Troca', value: 'Não Aceita Troca' },
+            { title: 'Licenciado', value: 'Licenciado' },
+            { title: 'Veículo Financiado', value: 'Veículo Financiado' },
+            { title: 'Garantia de Fábrica', value: 'Garantia de Fábrica' },
+            {
+                title: 'Todas Revisões em concessionária',
+                value: 'Todas Revisões em concessionária',
+            },
+            {
+                title: 'Adaptado para pessoas com deficiência',
+                value: 'Adaptado para pessoas com deficiência',
+            },
+
+            { title: 'Veículo de Colecionados', value: 'Veículo de Colecionados' },
+        ],
+    })
 
     const [searchParams, setSearchParams] = useSearchParams()
-    const [vehicleType, setVehicleType] = React.useState(searchParams.get('vehicleType'))
     const [searchByArea, setSearchByArea] = React.useState(false)
     const location = useLocation()
     const { register, getValues, setValue } = useForm()
@@ -154,9 +244,8 @@ const Search = () => {
         clearTimeout(timer)
 
         const newTimer = setTimeout(() => {
-            let newUrlParams = `?vehicleType=${vehicleType}`
+            let newUrlParams = ''
             if (searchByArea) newUrlParams += `&location=${currentLocation}`
-            console.log('Object.entries(getValues())', Object.entries(getValues()))
             Object.entries(getValues()).map((item, index) => {
                 if (item[1] !== null && item[1] !== 'null') {
                     newUrlParams = newUrlParams + `&${item[0]}=${item[1]}`
@@ -184,6 +273,7 @@ const Search = () => {
 
     React.useEffect(() => {
         setValue('exchange', searchParams.get('exchange')?.split(',') ?? [])
+        setValue('vehicleType', searchParams.get('vehicleType')?.split(',') ?? [])
         setValue('armor', searchParams.get('armor')?.split(',') ?? [])
         setValue('bodywork', searchParams.get('bodywork')?.split(',') ?? [])
         setValue('highlight', searchParams.get('highlight')?.split(',') ?? [])
@@ -194,6 +284,11 @@ const Search = () => {
         setValue('withPhoto', searchParams.get('withPhoto')?.split(',') ?? [])
 
         getLocation()
+
+        api.get('/api/v1/adverts/getFilterValues').then((res: any) => {
+            console.log(res.data)
+            setCheckboxFields({ ...checkboxFields, ...res.data.filters })
+        })
 
         const resizeListener = () => {
             if (window.innerWidth < 512) {
@@ -236,6 +331,7 @@ const Search = () => {
     }, [location])
 
     const {
+        vehicleType,
         exchange,
         armor,
         bodywork,
@@ -496,6 +592,14 @@ const Search = () => {
                         </div>
                         <div className='border-b border-gray-700 py-10'>
                             <CategroyGroup
+                                items={checkboxFields.vehicleType}
+                                currentItem={vehicleType ?? []}
+                                title='Tipo de Veículo'
+                                {...register('vehicleType')}
+                            />
+                        </div>
+                        <div className='border-b border-gray-700 py-10'>
+                            <CategroyGroup
                                 items={checkboxFields.seller}
                                 currentItem={seller}
                                 title='Vendedor'
@@ -554,6 +658,7 @@ const Search = () => {
                                 items={checkboxFields.colors}
                                 currentItem={colors ?? []}
                                 title='Cores'
+                                displayItems={4}
                                 {...register('colors')}
                             />
                         </div>
@@ -588,9 +693,9 @@ const Search = () => {
                             className='mt-8 flex items-center gap-2 text-gray-400'
                             onClick={(ev) => {
                                 ev.preventDefault()
-                                const newUrlParams = `?vehicleType=${vehicleType}`
-                                setSearchParams(newUrlParams)
+                                setSearchParams('')
                                 setValue('exchange', [])
+                                setValue('vehicleType', [])
                                 setValue('armor', [])
                                 setValue('bodywork', [])
                                 setValue('highlight', [])
