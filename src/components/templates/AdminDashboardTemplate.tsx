@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Button from 'components/atoms/Button'
 import MenuDasboard from 'components/molecules/Menu/MenuDashboard'
 import {
@@ -25,13 +25,19 @@ import MenuIcon from '@mui/icons-material/Menu'
 
 import LogoAdm from 'assets/images/logoDashboardAdm.png'
 import LogoPro from 'assets/images/logoDashboardPro.png'
+import { getNewMessageCount, readMessages } from 'appStore/slices/Message/thunks'
+import { IChat } from 'components/organisms/Support'
+import { useAppDispatch, useAppSelector } from 'appStore/hooks'
+import { socket } from 'services/socket'
 
 interface IAdminDashboardTemplate {
     children: React.ReactNode
 }
 
 const AdminDashboardTemplate = ({ children }: IAdminDashboardTemplate) => {
-    const { user } = useAuth()
+    const { user, isAuthenticated } = useAuth()
+    const dispatch = useAppDispatch()
+    const newMessageCount = useAppSelector((state) => state.message.newMessageCount)
     const [navbarVisible, setNavbarVisible] = useState(false)
 
     const buttonsMenu = [
@@ -66,6 +72,29 @@ const AdminDashboardTemplate = ({ children }: IAdminDashboardTemplate) => {
             href: '/admin/adverts',
         },
     ]
+
+    const handleSocketConnection = async (data: IChat) => {
+        if (data.recipientId === user?.id) {
+            dispatch(readMessages({ numberOfMessages: -1 }))
+        }
+    }
+
+    const handleSocketConnectionRef = useRef<(arg: IChat) => void>()
+    handleSocketConnectionRef.current = handleSocketConnection
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(getNewMessageCount({ userId: user?.id as string }))
+        }
+        socket.on('message', (data: IChat) => {
+            if (handleSocketConnectionRef.current) {
+                handleSocketConnectionRef.current(data)
+            }
+        })
+        return () => {
+            socket.off('message')
+        }
+    }, [])
 
     return (
         <div className='w-full bg-gray-900'>
@@ -103,7 +132,16 @@ const AdminDashboardTemplate = ({ children }: IAdminDashboardTemplate) => {
                                 </Link>
                                 <div className='flex gap-x-3'>
                                     <IconButton>
-                                        <IoChatboxOutline />
+                                        <Link to='/suporte'>
+                                            <IconButton className='relative'>
+                                                <IoChatboxOutline />
+                                                {!!newMessageCount && (
+                                                    <div className='absolute bottom-0 right-0 h-4 w-4 rounded-full bg-primary text-center text-xs text-white'>
+                                                        {newMessageCount}
+                                                    </div>
+                                                )}
+                                            </IconButton>
+                                        </Link>
                                     </IconButton>
                                     <IconButton>
                                         <IoHeartOutline />
@@ -123,7 +161,16 @@ const AdminDashboardTemplate = ({ children }: IAdminDashboardTemplate) => {
                                 </Button>
                             </Link>
                             <div className='mx-7 flex items-center gap-3 text-xl'>
-                                <IoChatboxOutline />
+                                <Link to='/suporte'>
+                                    <IconButton className='relative'>
+                                        <IoChatboxOutline />
+                                        {!!newMessageCount && (
+                                            <div className='absolute bottom-0 right-0 h-4 w-4 rounded-full bg-primary text-center text-xs text-white'>
+                                                {newMessageCount}
+                                            </div>
+                                        )}
+                                    </IconButton>
+                                </Link>
                                 <IoHeartOutline />
                                 <IoNotificationsOutline />
                             </div>

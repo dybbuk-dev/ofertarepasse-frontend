@@ -12,6 +12,8 @@ import { useAuth } from 'hooks/auth'
 import getUrlAws from 'utils/getUrlAws'
 import { Roles } from 'types'
 import MenuIcon from '@mui/icons-material/Menu'
+import { useAppDispatch, useAppSelector } from 'appStore/hooks'
+import { getNewMessageCount, readMessages } from 'appStore/slices/Message/thunks'
 
 export interface IChat {
     id: string
@@ -44,6 +46,7 @@ const Support = () => {
     const { user, isAuthenticated } = useAuth()
     const isAdmin = user?.roles === Roles.ADMIN
     const userChat = useRef<HTMLDivElement>(null)
+    const dispatch = useAppDispatch()
 
     const [selectedUser, setSelectedUser] = useState<ISelectedUser>({
         id: '',
@@ -61,7 +64,7 @@ const Support = () => {
         if (isAuthenticated) {
             const res = await api.get(`/api/v1/chat/${user?.id}`)
             setAllMessages(res.data.items)
-            if (!res.data.items?.length) {
+            if (res.data.items && !res.data.items.length) {
                 socket.emit('message', {
                     message: '',
                     recipientId: '',
@@ -75,7 +78,6 @@ const Support = () => {
     const loadCurrentChat = async () => {
         if (isAuthenticated && selectedRecipient) {
             const res = await api.get(`/api/v1/chat/${user?.id}/${selectedRecipient}`)
-            console.log('asfdasdfasdf', res.data.items, res.data.user)
             setSelectedUserChat(res.data.items)
             setSelectedUser(res.data.user)
         }
@@ -83,9 +85,16 @@ const Support = () => {
 
     const markAllRead = async () => {
         if (selectedUserChat.find(({ isRead }) => !isRead)) {
-            await api.patch(`api/v1/chat/readAll/${user?.id}/${selectedRecipient}`)
-            if (isAdmin) {
-                loadChatHistory()
+            try {
+                const res = await api.patch(`api/v1/chat/readAll/${user?.id}/${selectedRecipient}`)
+                socket.emit('read-all', { recipientId: selectedRecipient })
+                dispatch(readMessages({ numberOfMessages: res.data.affectedRecords }))
+                if (isAdmin) {
+                    await loadChatHistory()
+                }
+            } catch (err) {
+                console.log('mark all as read error', err)
+                throw err
             }
         }
     }
@@ -133,10 +142,20 @@ const Support = () => {
         }
     }
 
+    const handleReadAll = ({ userWhoRead }: { userWhoRead: string }) => {
+        if (userWhoRead === selectedRecipient) {
+            setSelectedUserChat(
+                selectedUserChat.map(({ isRead, ...res }) => ({ ...res, isRead: true }))
+            )
+        }
+    }
+
     const handleSocketConnectionRef = useRef<(arg: IChat) => void>()
     handleSocketConnectionRef.current = handleSocketConnection
     const handleOnlineStatusRef = useRef<(arg: { id: string; isOnline: boolean }) => void>()
     handleOnlineStatusRef.current = handleOnlineStatus
+    const handleReadAllRef = useRef<(arg: { userWhoRead: string }) => void>()
+    handleReadAllRef.current = handleReadAll
 
     useEffect(() => {
         loadChatHistory()
@@ -152,10 +171,15 @@ const Support = () => {
                 handleOnlineStatusRef.current(data)
             }
         })
+        socket.on('read-all', (data: { userWhoRead: string }) => {
+            if (handleReadAllRef.current) {
+                handleReadAllRef.current(data)
+            }
+        })
         return () => {
             socket.off('message')
             socket.off('online-status')
-            socket.disconnect()
+            socket.off('read-all')
         }
     }, [])
 
@@ -315,7 +339,7 @@ const Support = () => {
                     >
                         {selectedUserChat?.map((chat) => {
                             // todo: add isRead here <-----------------------------
-                            const { senderId, recipientId, message, createdAt: time } = chat
+                            const { senderId, recipientId, message, createdAt: time, isRead } = chat
                             return (
                                 <div
                                     key={time}
@@ -331,12 +355,12 @@ const Support = () => {
                                         <div className='text-sm'>{message}</div>
                                         <div className='text-xs'>
                                             {new Date(time).toLocaleTimeString()}{' '}
-                                            {/* {senderId === user?.id &&
+                                            {senderId === user?.id &&
                                                 (isRead ? (
                                                     <DoneAllIcon sx={{ fontSize: '12px' }} />
                                                 ) : (
                                                     <CheckIcon sx={{ fontSize: '12px' }} />
-                                                ))} */}
+                                                ))}
                                         </div>
                                         <div
                                             className={`absolute top-0 border-transparent ${

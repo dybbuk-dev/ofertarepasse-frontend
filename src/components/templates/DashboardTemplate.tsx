@@ -1,5 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Button from 'components/atoms/Button'
 import MenuDasboard from 'components/molecules/Menu/MenuDashboard'
 import {
@@ -24,13 +24,19 @@ import { IconButton } from '@mui/material'
 
 import LogoAdm from 'assets/images/logoDashboardAdm.png'
 import LogoPro from 'assets/images/logoDashboardPro.png'
+import { useAppDispatch, useAppSelector } from 'appStore/hooks'
+import { getNewMessageCount, readMessages } from 'appStore/slices/Message/thunks'
+import { IChat } from 'components/organisms/Support'
+import { socket } from 'services/socket'
 
 interface IDashboardTemplate {
     children: React.ReactNode
 }
 
 const DashboardTemplate = ({ children }: IDashboardTemplate) => {
-    const { user } = useAuth()
+    const { user, isAuthenticated } = useAuth()
+    const dispatch = useAppDispatch()
+    const newMessageCount = useAppSelector((state) => state.message.newMessageCount)
 
     const [navbarVisible, setNavbarVisible] = useState(false)
 
@@ -56,6 +62,30 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
             href: '/dashboard/sales',
         },
     ]
+
+    const handleSocketConnection = async (data: IChat) => {
+        if (data.recipientId === user?.id) {
+            dispatch(readMessages({ numberOfMessages: -1 }))
+        }
+    }
+
+    const handleSocketConnectionRef = useRef<(arg: IChat) => void>()
+    handleSocketConnectionRef.current = handleSocketConnection
+
+    useEffect(() => {
+        socket.emit('enroll')
+        if (isAuthenticated) {
+            dispatch(getNewMessageCount({ userId: user?.id as string }))
+        }
+        socket.on('message', (data: IChat) => {
+            if (handleSocketConnectionRef.current) {
+                handleSocketConnectionRef.current(data)
+            }
+        })
+        return () => {
+            socket.off('message')
+        }
+    }, [])
 
     return (
         <div className='w-full bg-gray-900'>
@@ -91,9 +121,16 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
                                     </Button>
                                 </Link>
                                 <div className='flex gap-x-3'>
-                                    <IconButton>
-                                        <IoChatboxOutline />
-                                    </IconButton>
+                                    <Link to='/suporte'>
+                                        <IconButton className='relative'>
+                                            <IoChatboxOutline />
+                                            {!!newMessageCount && (
+                                                <div className='absolute bottom-0 right-0 h-4 w-4 rounded-full bg-primary text-center text-xs text-white'>
+                                                    {newMessageCount}
+                                                </div>
+                                            )}
+                                        </IconButton>
+                                    </Link>
                                     <IconButton>
                                         <IoHeartOutline />
                                     </IconButton>
@@ -112,7 +149,16 @@ const DashboardTemplate = ({ children }: IDashboardTemplate) => {
                                 </Button>
                             </Link>
                             <div className='mx-7 flex items-center gap-3 text-xl'>
-                                <IoChatboxOutline />
+                                <Link to='/suporte'>
+                                    <IconButton className='relative'>
+                                        <IoChatboxOutline />
+                                        {!!newMessageCount && (
+                                            <div className='absolute bottom-0 right-0 h-4 w-4 rounded-full bg-primary text-center text-xs text-white'>
+                                                {newMessageCount}
+                                            </div>
+                                        )}
+                                    </IconButton>
+                                </Link>
                                 <IoHeartOutline />
                                 <IoNotificationsOutline />
                             </div>
