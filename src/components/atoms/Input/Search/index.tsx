@@ -56,12 +56,17 @@ const Search = ({ className, onChange, ...props }: ISearch) => {
     return (
         <div className='relative w-full px-8'>
             <input
-                className={`w-full bg-transparent text-xl outline-none placeholder:text-gray-500 ${className}`}
+                className={`w-full bg-transparent text-xs outline-none placeholder:text-gray-500 sm:text-sm md:text-base ${className}`}
                 onFocus={() => {
                     getResearches('')
                     setFocused(true)
                 }}
                 onBlur={() => setTimeout(() => setFocused(false), 100)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        navigate(`/estoque?title=${props.value}`)
+                    }
+                }}
                 onChange={(e) => {
                     getResearches(e.target.value)
 

@@ -12,6 +12,7 @@ import AdminNegotiations from 'pages/Admin/Negotiations'
 import AdminSold from 'pages/Admin/Sold'
 import AdminAdverts from 'pages/Admin/Adverts'
 import AdminConfigurations from 'pages/Admin/Configurations'
+import AdminFinancing from 'pages/Admin/Financing'
 import DashboardHome from 'pages/Dashboard/Home'
 import DashboardSold from 'pages/Dashboard/Sold'
 import DashboardAdverts from 'pages/Dashboard/Adverts'
@@ -21,12 +22,21 @@ import DashboardCreateAdverts from 'pages/Dashboard/Adverts/Create'
 import ProtectedRoute from 'components/atoms/ProtectedRoute'
 import CreateNegociations from 'pages/Dashboard/Sold/Create'
 import MissingPassword from 'components/organisms/MissingPassword'
+import Support from 'components/organisms/Support'
 
 const App = () => {
     const router = createBrowserRouter([
         {
             path: '/',
             element: <Home />,
+        },
+        {
+            path: '/suporte',
+            element: (
+                <ProtectedRoute role={['admin', 'user']}>
+                    <Support />
+                </ProtectedRoute>
+            ),
         },
         {
             path: '/login',
@@ -101,6 +111,14 @@ const App = () => {
             element: (
                 <ProtectedRoute role={['admin']}>
                     <AdminConfigurations />
+                </ProtectedRoute>
+            ),
+        },
+        {
+            path: '/admin/financing',
+            element: (
+                <ProtectedRoute role={['admin']}>
+                    <AdminFinancing />
                 </ProtectedRoute>
             ),
         },

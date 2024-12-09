@@ -141,9 +141,11 @@ const Configurations = () => {
 
     return (
         <section>
-            <p className='text-3xl font-light text-gray-200'>Configurações</p>
+            <p className='text-center text-xl font-light text-gray-200 xs:text-2xl md:text-left md:text-3xl'>
+                Configurações
+            </p>
             <form
-                className='mt-10 grid grid-cols-[auto_1fr] gap-8 rounded-2xl bg-white p-10'
+                className='mt-3 grid grid-cols-none grid-rows-[auto_1fr] gap-2 rounded-2xl bg-white p-3 xs:mt-5 xs:gap-4 xs:p-5 md:mt-10 md:grid-cols-[auto_1fr] md:grid-rows-none md:gap-8 md:p-10'
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <label className='flex w-max cursor-pointer flex-col items-center'>
@@ -160,12 +162,12 @@ const Configurations = () => {
                     <span className='text-xs text-gray-200'>Alterar</span>
                     <input type='file' className='hidden' {...register('image')} />
                 </label>
-                <div className='flex flex-col gap-3 text-gray-200'>
+                <div className='flex w-full flex-col gap-3 text-gray-200'>
                     <label>
                         <p className='text-xs'>Nome completo</p>
                         <Input
                             className='!border-none !px-0'
-                            classInput='border-b border-gray-700 pb-2 !text-base'
+                            classInput='border-b border-gray-700 pb-2 !text-sm md:!text-base'
                             {...register('name')}
                         />
                     </label>
@@ -173,7 +175,7 @@ const Configurations = () => {
                         <p className='text-xs'>Telefone</p>
                         <InputMask
                             mask='(99) 99999-9999'
-                            className='w-full border-b border-gray-700 py-2 text-base text-gray-200 outline-none'
+                            className='w-full border-b border-gray-700 py-2  !text-sm text-gray-200 outline-none md:!text-base'
                             defaultValue={user?.phone ?? ''}
                             {...register('phone')}
                         />
@@ -182,7 +184,7 @@ const Configurations = () => {
                         <p className='text-xs'>Email</p>
                         <Input
                             className='!border-none !px-0'
-                            classInput='border-b border-gray-700 pb-2 !text-base'
+                            classInput='border-b border-gray-700 pb-2 !text-sm md:!text-base'
                             {...register('email')}
                         />
                     </label>
@@ -242,7 +244,7 @@ const Configurations = () => {
                             {...register('cep')}
                         />
                     </label>
-                    <div className='mt-20 flex w-full items-center justify-between'>
+                    <div className='mt-5 flex w-full items-center justify-between xs:mt-10 md:mt-20'>
                         <Button
                             className='flex !w-max items-center gap-1 bg-primary-opacity-100 text-sm font-medium text-primary'
                             colorLoading='#F3722C'
@@ -258,7 +260,9 @@ const Configurations = () => {
                 </div>
             </form>
 
-            <p className='mt-20 mb-10 text-3xl font-light text-gray-200'>Notificações</p>
+            <p className='mt-5 mb-3 text-center text-xl font-light text-gray-200 xs:mb-6 xs:mt-10 md:mb-10 md:mt-20 md:text-left md:text-3xl'>
+                Notificações
+            </p>
             <div className='rounded-2xl bg-white p-8'>
                 <TableCustom>
                     <thead>

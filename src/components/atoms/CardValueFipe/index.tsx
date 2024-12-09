@@ -1,7 +1,7 @@
 import formatMoney from 'utils/formatMoney'
 
 const CardValueFipe = ({ fipe }: { fipe: number }) => (
-    <div className='grid grid-cols-2 gap-8 border-y border-gray-700 bg-[#efefef] px-12 py-5'>
+    <div className='grid grid-cols-none grid-rows-2 gap-8 border-y border-gray-700 bg-[#efefef] px-3 py-2 xs:grid-cols-2 xs:grid-rows-none xs:px-6 xs:py-3 md:py-5 md:px-12'>
         <div>
             <p className='text-sm font-bold'>fipe</p>
             <p className='mt-2 mb-1 text-2xl'>{formatMoney(fipe)}</p>

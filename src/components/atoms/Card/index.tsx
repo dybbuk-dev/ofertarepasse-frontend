@@ -13,7 +13,7 @@ import formatMoney from 'utils/formatMoney'
 import { useFavorite } from 'hooks/favorites'
 import WithoutImage from 'assets/images/withoutImage.png'
 import getUrlAws from 'utils/getUrlAws'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 interface ICard extends React.HTMLAttributes<HTMLDivElement> {
     data: {
@@ -37,9 +37,11 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
 
     return (
         <div
-            className={`h-max ${inline ? 'grid grid-cols-[225px_1fr]' : 'block'} ${
-                inverseColors ? 'bg-white' : 'bg-gray-900'
-            } rounded-xl`}
+            className={`h-max ${
+                inline
+                    ? 'grid grid-cols-[50%_1fr] md:grid-cols-[225px_1fr]'
+                    : 'block overflow-hidden'
+            } ${inverseColors ? 'bg-white' : 'bg-gray-900'} rounded-xl`}
             {...props}
         >
             {data.images && data.images.length > 0 ? (
@@ -112,51 +114,59 @@ const Card = ({ data, inline, inverseColors = false, ...props }: ICard) => {
                 />
             )}
             {inline ? (
-                <div className='px-8 py-3'>
+                <div className='flex flex-col justify-around px-1 py-2 xs:px-2 md:px-3 md:py-3'>
                     <div className='flex items-center justify-between'>
-                        <p className='text-lg font-semibold text-gray-100'>{data.title}</p>
+                        <p className='text-xs font-semibold text-gray-100 xs:text-sm sm:text-base md:text-lg'>
+                            {data.title}
+                        </p>
                         <button>
                             <IoHeartOutline className='text-lg text-gray-500' />
                         </button>
                     </div>
-                    <div className='flex items-center justify-between'>
+                    <div className='flex flex-col items-center justify-between md:flex-row'>
                         <div>
-                            <p className='text-xs font-medium text-gray-500 line-clamp-2'>
+                            <p className='text-[11px] font-medium text-gray-500 line-clamp-2 md:text-xs'>
                                 {data.description}
                             </p>
-                            <div className='my-6 flex flex-wrap items-center gap-4'>
+                            <div className='my-1 hidden flex-wrap items-center gap-0 xs:my-1 xs:flex xs:gap-1 md:my-2 md:gap-2'>
                                 {[
                                     'Aceita Troca',
                                     'Todas revisões feitas pela concessionária',
                                     'Garantia de Fábrica',
                                 ].map((item) => (
-                                    <p key={item} className='flex items-center gap-2 text-xs'>
-                                        <IoCheckmarkOutline /> {item}
+                                    <p
+                                        key={item}
+                                        className='flex items-center gap-0 text-[11px] xs:gap-1 md:gap-2 md:text-xs'
+                                    >
+                                        <div className='min-w-[12px]'>
+                                            <IoCheckmarkOutline />
+                                        </div>{' '}
+                                        {item}
                                     </p>
                                 ))}
                             </div>
                         </div>
-                        <p className='mt-4 mb-6 text-2xl font-medium text-gray-200'>
+                        <p className='mt-1 mb-1 text-sm font-medium text-gray-200 xs:mt-2 xs:mb-3 xs:text-lg md:mt-4 md:mb-6 md:text-2xl'>
                             {formatMoney(data.price)}
                         </p>
                     </div>
-                    <div className='flex items-center justify-between rounded-xl bg-gray-900 px-5 py-3'>
-                        <div className='flex items-center gap-5'>
+                    <div className='hidden flex-col items-center justify-between rounded-xl bg-gray-900 px-1 py-0 xs:px-2 xs:py-1 sm:flex md:px-5 md:py-2 xl:flex-row'>
+                        <div className='flex flex-col items-center gap-1 xs:gap-2 sm:flex-row md:gap-5'>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <Calendar />
-                                <span className='text-sm font-medium text-gray-400'>
+                                <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>
                                     {data.year}
                                 </span>
                             </div>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <BarChart />
-                                <span className='text-sm font-medium text-gray-400'>
+                                <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>
                                     {data.distance}
                                 </span>
                             </div>
                             <div className='grid grid-cols-[20px_1fr] items-center gap-2'>
                                 <Compass />
-                                <span className='text-sm font-medium text-gray-400'>
+                                <span className='text-[11px] font-medium text-gray-400 xs:text-xs sm:text-sm'>
                                     {data.location}
                                 </span>
                             </div>

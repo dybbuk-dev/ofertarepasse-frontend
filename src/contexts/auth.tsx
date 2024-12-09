@@ -28,7 +28,10 @@ interface IAuthProvider {
 interface IAuthContext {
     user: IUser | null
     isAuthenticated: boolean
-    signIn: (email: string, password: string) => Promise<{ error: boolean; message?: string }>
+    signIn: (
+        email: string,
+        password: string
+    ) => Promise<{ error: boolean; message?: string; data?: any }>
     signOut: () => void
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
     handleAuthGoogle: (provider: 'google' | 'facebook', token: string) => void
@@ -62,6 +65,7 @@ const AuthProvider: React.FC<IAuthProvider> = ({ children }) => {
 
             return {
                 error: false,
+                data,
             }
         }
     }

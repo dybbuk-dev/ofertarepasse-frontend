@@ -4,6 +4,7 @@ import Person from 'assets/icon/Person'
 import { useAuth } from 'hooks/auth'
 import DefaultProfile from 'assets/images/defaultProfile.png'
 import getUrlAws from 'utils/getUrlAws'
+import { Roles } from 'types'
 
 const Menu = () => {
     const { user } = useAuth()
@@ -18,7 +19,7 @@ const Menu = () => {
         },
         {
             label: 'Suporte',
-            href: '/',
+            href: '/suporte',
         },
         {
             label: 'Favoritos',
@@ -30,8 +31,8 @@ const Menu = () => {
         <header className='absolute top-0 left-0 w-full'>
             <nav>
                 <div className='bg-white py-3 text-xs'>
-                    <div className='container mx-auto flex items-center justify-between'>
-                        <p className='font-medium'>
+                    <div className='container mx-auto flex flex-col items-center justify-center md:flex-row md:divide-y-0 lg:justify-between'>
+                        <p className='hidden font-medium lg:block'>
                             <span className='underline underline-offset-2'>
                                 Encontre milhares de veículos
                             </span>{' '}
@@ -48,10 +49,12 @@ const Menu = () => {
                     </div>
                 </div>
                 <div>
-                    <div className='container mx-auto flex items-center justify-between bg-transparent py-8'>
-                        <Link to='/'>
-                            <img src={Logo} />
-                        </Link>
+                    <div className='container mx-auto flex flex-col items-end justify-between bg-transparent pt-6 md:flex-row md:items-center lg:pt-8'>
+                        <div className='w-full md:w-auto'>
+                            <Link to='/'>
+                                <img src={Logo} />
+                            </Link>
+                        </div>
                         {user ? (
                             <div className='flex items-center gap-2'>
                                 <p className='text-sm font-medium text-gray-400'>{user.name}</p>
